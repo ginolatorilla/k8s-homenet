@@ -2,10 +2,12 @@
 
 ## Installation
 
+Install VMWare Fusion and VMWare Utility for Vagrant.
+
 ```sh
 brew install hashicorp/tap/hashicorp-vagrant
 brew install qemu
-vagrant plugin install vagrant-qemu
+vagrant plugin install vagrant-wmware-desktop
 vagrant up
 ```
 
