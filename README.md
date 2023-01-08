@@ -34,6 +34,15 @@ vagrant plugin install vagrant-vmware-desktop
 vagrant up
 ```
 
+Add this file to `/etc/resolver/net`
+
+```text
+domain net
+nameserver 192.168.0.200
+search_order 1
+timeout 5
+```
+
 ## Topology
 
 ```plaintext
