@@ -35,10 +35,10 @@ vagrant plugin install vagrant-vmware-desktop
 vagrant up
 ```
 
-Add this file to `/etc/resolver/net`
+Add this file to `/etc/resolver/homenet`
 
 ```text
-domain net
+domain homenet
 nameserver 192.168.0.200
 search_order 1
 timeout 5
