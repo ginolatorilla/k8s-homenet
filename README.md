@@ -2,6 +2,29 @@
 
 ## Installation
 
+The following assumes that the router has the following properties:
+
+- Built-in DHCP server
+- DHCP server address pool range is from 192.168.0.2 to 192.168.0.249
+- Router's LAN subnet is 255.255.255.0
+- Router's default gateway is 192.168.0.1
+
+In the router's DHCP server settings, reserve these IPs.
+
+| Node                         | MAC address       | IP address reservation |
+| ---------------------------- | ----------------- | ---------------------- |
+| host0-darwin-aarch64-dns     | 00:0C:29:69:2A:FB | 192.168.0.200          |
+| host0-darwin-aarch64-infra-0 | 00:0C:29:69:2A:FB | 192.168.0.201          |
+
+The MAC addresses may be found in the Vagrantfile where the node/vm is defined.
+
+In the router's DHCP server settings, set the DNS servers.
+
+| Property      | Value                         |
+| ------------- | ----------------------------- |
+| Primary DNS   | 192.168.0.200                 |
+| Secondary DNS | _Same as the Default Gateway_ |
+
 Install VMWare Fusion/Player and VMWare Utility for Vagrant.
 
 ```sh
