@@ -24,7 +24,7 @@ def dns(config, vmhost:, name:, macaddr:)
             echo "because we need to resolve Ubuntu servers)."
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             apt-get update
-            apt-get install -y dnsmasq
+            apt-get install -y dnsmasq avahi-daemon
             
             systemctl disable systemd-resolved
             systemctl stop systemd-resolved
