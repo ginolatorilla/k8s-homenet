@@ -53,14 +53,12 @@ def master(config, vmhost:, name:)
             systemctl enable containerd
         SCRIPT
 
-        node.vm.provision "configure", type: "file", source: "./etc", destination: "/tmp/etc"
-
         node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
+            systemctl restart systemd-resolved
             kubeadm reset -f
-            # mkdir -p /etc/kubernetes/pki/etcd
-            # mv /tmp/etc/kubernetes/pki/*.{key,crt} /etc/kubernetes/pki
-            # mv /tmp/etc/kubernetes/pki/etcd/*.{key,crt} /etc/kubernetes/pki
-            rm -rf /tmp/etc
+            mkdir -p /etc/kubernetes/pki/etcd
+            cp /vagrant/etc/kubernetes/pki/*.{key,crt} /etc/kubernetes/pki
+            cp /vagrant/etc/kubernetes/pki/etcd/*.{key,crt} /etc/kubernetes/pki/etcd
 
             # Install Kubernetes
             kubeadm config images pull

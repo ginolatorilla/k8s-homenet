@@ -21,11 +21,8 @@ def infra(config, vmhost:, name:, macaddr:)
             apt-get install -y haproxy
         SCRIPT
 
-        node.vm.provision "configure", type: "file", source: "./etc", destination: "/tmp/etc"
-
-        node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
-            mv /tmp/etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
-            rm -rf /tmp/etc/
+        node.vm.provision "reload", after: "install", type: "shell", inline: <<-SCRIPT
+            cp /vagrant/etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
             systemctl reload haproxy
         SCRIPT
     end
