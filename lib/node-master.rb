@@ -63,6 +63,10 @@ def master(config, vmhost:, name:)
             # Install Kubernetes
             kubeadm config images pull
             kubeadm init --pod-network-cidr=#{POD_CIDR} --control-plane-endpoint=#{CLUSTER_ENDPOINT}
+
+            # Install CNI
+            export KUBECONFIG=/etc/kubernetes/admin.conf
+            curl -fsSL https://docs.projectcalico.org/manifests/calico.yaml | kubectl apply -f-
         SCRIPT
     end
 end
