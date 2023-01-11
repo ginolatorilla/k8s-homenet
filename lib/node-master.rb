@@ -1,12 +1,11 @@
 require 'socket'
 require_relative 'node-base.rb'
 
-def master(config, vmhost:, name:)
+def k8s_node(config, vmhost:, name:, type: "control-leader")
     return if Socket.gethostname != vmhost
 
-    base(config, vmhost)
-
     config.vm.define name do |node|
+        base(config, vmhost)
         node.vm.hostname = name
 
         node.vm.provider :vmware_desktop do |v|
@@ -14,8 +13,8 @@ def master(config, vmhost:, name:)
             v.vmx["memsize"] = "2048"
         end
 
-        node.vm.provision "install", type: "shell", inline: <<-SCRIPT
-            /vagrant/scripts/install-base.sh
+        node.vm.provision "install", type: "shell", inline: <<~SCRIPT
+            export DEBIAN_FRONTEND=noninteractive
 
             # Install Kubernetes CLI tools
             apt-get install -y apt-transport-https ca-certificates curl
@@ -53,21 +52,37 @@ def master(config, vmhost:, name:)
             systemctl enable containerd
         SCRIPT
 
-        node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
+        node.vm.provision "reload", type: "shell", run: "never",
+            inline: <<~BASE << {"control-leader" => <<~CONTROL_LEADER, "control" => <<~CONTROL, "worker" => <<~WORKER }[type]
             systemctl restart systemd-resolved
+
             kubeadm reset -f
+            rm -rf /etc/kubernetes/pki
+
             mkdir -p /etc/kubernetes/pki/etcd
-            cp /vagrant/etc/kubernetes/pki/*.{key,crt} /etc/kubernetes/pki
-            cp /vagrant/etc/kubernetes/pki/etcd/*.{key,crt} /etc/kubernetes/pki/etcd
+            cp /vagrant/etc/kubernetes/pki/ca.{key,crt} /etc/kubernetes/pki
+            cp /vagrant/etc/kubernetes/pki/front-proxy-ca.{key,crt} /etc/kubernetes/pki
+            cp /vagrant/etc/kubernetes/pki/etcd/ca.{key,crt} /etc/kubernetes/pki/etcd
 
             # Install Kubernetes
             kubeadm config images pull
+        BASE
             kubeadm init --pod-network-cidr=#{POD_CIDR} --control-plane-endpoint=#{CLUSTER_ENDPOINT}
+            kubeadm token create --ttl 15m --print-join-command > /vagrant/var/kubeadm-join
+            cp /etc/kubernetes/admin.conf /vagrant/var/admin.kubeconfig
+            cp /etc/kubernetes/pki/sa.{key,pub} /vagrant/etc/kubernetes/pki
 
             # Install CNI
             export KUBECONFIG=/etc/kubernetes/admin.conf
             curl -fsSL https://docs.projectcalico.org/manifests/calico.yaml | kubectl apply -f-
-        SCRIPT
+        CONTROL_LEADER
+            cp /vagrant/etc/kubernetes/pki/sa.{key,pub} /etc/kubernetes/pki
+            $(cat /vagrant/var/kubeadm-join) --control-plane
+        CONTROL
+            cp /vagrant/etc/kubernetes/pki/sa.{key,pub} /etc/kubernetes/pki
+            $(cat /vagrant/var/kubeadm-join) --control-plane
+        WORKER
+
     end
 end
 
