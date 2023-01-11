@@ -80,7 +80,7 @@ def k8s_node(config, vmhost:, name:, type: "control-leader")
             $(cat /vagrant/var/kubeadm-join) --control-plane
         CONTROL
             cp /vagrant/etc/kubernetes/pki/sa.{key,pub} /etc/kubernetes/pki
-            $(cat /vagrant/var/kubeadm-join) --control-plane
+            $(cat /vagrant/var/kubeadm-join)
         WORKER
 
     end
