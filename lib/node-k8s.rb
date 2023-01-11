@@ -68,7 +68,7 @@ def k8s_node(config, vmhost:, name:, type: "control-leader")
             kubeadm config images pull
         BASE
             kubeadm init --pod-network-cidr=#{POD_CIDR} --control-plane-endpoint=#{CLUSTER_ENDPOINT}
-            kubeadm token create --ttl 15m --print-join-command > /vagrant/var/kubeadm-join
+            kubeadm token create --ttl 2h --print-join-command > /vagrant/var/kubeadm-join
             cp /etc/kubernetes/admin.conf /vagrant/var/admin.kubeconfig
             cp /etc/kubernetes/pki/sa.{key,pub} /vagrant/etc/kubernetes/pki
 
