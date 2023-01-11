@@ -38,8 +38,9 @@ brew install hashicorp/tap/hashicorp-vagrant
 brew install qemu
 vagrant plugin install vagrant-vmware-desktop
 scripts/generate-custom-ca.sh # Run this command once, or else you have to upload all new certificates
-vagrant up --provision-with install
-vagrant provision --provision-with reload
+
+vagrant up
+vagrant reload --provision-with reload
 ```
 
 Add this file to `/etc/resolver/homenet`
