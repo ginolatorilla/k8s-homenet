@@ -40,7 +40,7 @@ vagrant plugin install vagrant-vmware-desktop
 scripts/generate-custom-ca.sh # Run this command once, or else you have to upload all new certificates
 
 vagrant up
-vagrant reload --provision-with reload
+vagrant reload --provision-with reload [VM_NAME]
 
 # For any subsequent reconfiguration that does not require VM reboot:
 vagrant provision --provision-with reload [VM_NAME]
@@ -53,6 +53,14 @@ domain homenet
 nameserver 192.168.0.53
 search_order 1
 timeout 5
+```
+
+Add these lines to `/etc/resolv.conf`. If you have a VPN client, you have to replace this file.
+
+```text
+nameserver 192.168.0.53
+nameserver 192.168.0.1
+nameserver 127.0.0.1
 ```
 
 ## Topology
