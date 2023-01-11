@@ -1,16 +1,20 @@
 require 'socket'
 require_relative 'node-base.rb'
 
-def k8s_node(config, vmhost:, name:, type: "control-leader")
+def k8s_node(config, vmhost:, name:, type: "control-leader", size: :medium)
     return if Socket.gethostname != vmhost
 
     config.vm.define name do |node|
         base(config, vmhost)
         node.vm.hostname = name
 
+        if ["control-leader", "control"].include? type
+            size = :small
+        end 
+
         node.vm.provider :vmware_desktop do |v|
-            v.vmx["numvcpus"] = "2"
-            v.vmx["memsize"] = "2048"
+            v.vmx["numvcpus"] = NODE_SIZE[size][:cpu]
+            v.vmx["memsize"] = NODE_SIZE[size][:mem]
         end
 
         node.vm.provision "install", type: "shell", inline: <<~SCRIPT
@@ -59,14 +63,14 @@ def k8s_node(config, vmhost:, name:, type: "control-leader")
             kubeadm reset -f
             rm -rf /etc/kubernetes/pki
 
+            # Install Kubernetes
+            kubeadm config images pull
+        BASE
             mkdir -p /etc/kubernetes/pki/etcd
             cp /vagrant/etc/kubernetes/pki/ca.{key,crt} /etc/kubernetes/pki
             cp /vagrant/etc/kubernetes/pki/front-proxy-ca.{key,crt} /etc/kubernetes/pki
             cp /vagrant/etc/kubernetes/pki/etcd/ca.{key,crt} /etc/kubernetes/pki/etcd
 
-            # Install Kubernetes
-            kubeadm config images pull
-        BASE
             kubeadm init --pod-network-cidr=#{POD_CIDR} --control-plane-endpoint=#{CLUSTER_ENDPOINT}
             kubeadm token create --ttl 2h --print-join-command > /vagrant/var/kubeadm-join
             cp /etc/kubernetes/admin.conf /vagrant/var/admin.kubeconfig
@@ -76,9 +80,15 @@ def k8s_node(config, vmhost:, name:, type: "control-leader")
             export KUBECONFIG=/etc/kubernetes/admin.conf
             curl -fsSL https://docs.projectcalico.org/manifests/calico.yaml | kubectl apply -f-
         CONTROL_LEADER
+            mkdir -p /etc/kubernetes/pki/etcd
+            cp /vagrant/etc/kubernetes/pki/ca.{key,crt} /etc/kubernetes/pki
+            cp /vagrant/etc/kubernetes/pki/front-proxy-ca.{key,crt} /etc/kubernetes/pki
+            cp /vagrant/etc/kubernetes/pki/etcd/ca.{key,crt} /etc/kubernetes/pki/etcd
+
             cp /vagrant/etc/kubernetes/pki/sa.{key,pub} /etc/kubernetes/pki
             $(cat /vagrant/var/kubeadm-join) --control-plane
         CONTROL
+            mkdir -p /etc/kubernetes/pki/etcd
             cp /vagrant/etc/kubernetes/pki/sa.{key,pub} /etc/kubernetes/pki
             $(cat /vagrant/var/kubeadm-join)
         WORKER
