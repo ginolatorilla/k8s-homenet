@@ -4,6 +4,6 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = *.homenet
-DNS.2 = homenet
+DNS.1 = *.apps.homenet
+DNS.2 = apps.homenet
 IP.1 = 192.168.0.200
