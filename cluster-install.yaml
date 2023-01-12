@@ -180,14 +180,17 @@ spec:
     port: 80
     protocol: TCP
     targetPort: 80
+    nodePort: 31916
   - name: https
     port: 443
     protocol: TCP
     targetPort: 443
+    nodePort: 30684
   - name: stat
     port: 1024
     protocol: TCP
     targetPort: 1024
+    nodePort: 30742
 # -----------------------------------------------------------------------------
 # ArgoCD
 #
