@@ -85,3 +85,43 @@ Router
   Node: Worker 5
   Node: Worker 6
 ```
+
+## Limitations
+
+- The number of VMs that you can spawn is limited by your host resources and the router's DHCP subnet address range.
+- Multiple VMs defined in the Vagrant file will always be assigned by DHCP the same IP, because VMWare will clone
+  the base images (Ubuntu 20.04) especially the value in `/etc/machine-id`. Higher versions of Ubuntu use machine ids
+  when requesting for IPs with DHCP, so you must reacquire the unique machine ids for every new VM.
+- Vagrant unmounts all shared drives (eg the default `/vagrant` share in the VMs) when shell provisioners have
+  `reboot: true` set. Any subsequent `vagrant provision` call will fail unless you run `vagrant reboot`. For example,
+  the machine id workaround needs a reboot so the VM can pick up a new IP and relay it to Vagrant.
+- Provisioning network interfaces with Vagrant is inconsistent, so they must be configured in the VMX key/value pairs.
+- `dnsmasq` cannot have address records pointing to domains (eg vm.local), so VMs that will require domains must have
+  fixed IPs. This can be achieved in VMX by setting `address=<static-mac-address>` and `addressType=static`, and then
+  configuring the router to reserve an IP for that MAC address.
+
+### Specific to macOS with Apple Silicon
+
+The following applies to macOS 12 "Monterey" with Apple Silicon M1.
+
+- VirtualBox doesn't work so the default provisioner must be VMWare (ie VMWare Fusion).
+- Vagrant needs to launch VMs with GUI.
+
+## Troubleshooting
+
+### "Could not resolve api.k8s.homenet"
+
+- Ensure that the router's DHCP primary DNS setting is set to the static IP of the DNS VM.
+- Ensure that the DNS VM is running and that `dnsmasq` is serving at port 53.
+- MacOS host: If you have VPN running, every time you connect/disconnect, you have to modify `/etc/resolv.conf`
+- Ubuntu VM: Run `resolvectl status` and check the Current DNS Server. If it's incorrect, run
+  `sudo systemctl restart systemd-resolved` to reset the primary DNS from the router's DHCP server.
+
+### Error message during dnsmasq installation: "failed to create listening socket for port 53: Address already in use"
+
+Ignore it. Port 53 is currently taken by `systemd-resolved`, and you cannot deactivate it otherwise `apt` cannot
+resolve addresses from the internet properly.
+
+### HAProxy service fails with "Start request repeated too quickly"
+
+Run `haproxy -c -f /etc/haproxy/haproxy.cfg` to check if there are any errors in the config file, and then restart.
