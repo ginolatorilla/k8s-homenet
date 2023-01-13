@@ -29,6 +29,7 @@ Generate custom certificate authority.
 
 ```sh
 scripts/generate-custom-ca.sh
+scripts/renew-ingress-certs.sh
 ```
 
 Install VMWare Fusion/Player and VMWare Utility for Vagrant.
