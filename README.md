@@ -134,5 +134,10 @@ resume them from VMWare Fusion.
 ### After `vagrant resume`, IPs are assigned host-only (eg 172.X.X.X)
 
 It appears that the VM will be using host-only networks, but eventually it will revert back to bridged-mode and
-re-acquire proper IPs from the router's DHCP. You can verify this by inspecting the VMs in VMWare after Vagrant 
+re-acquire proper IPs from the router's DHCP. You can verify this by inspecting the VMs in VMWare after Vagrant
 finishes resuming them.
+
+### After `vagrant resume`, the VM's IPs could not be detected
+
+If you see the error message "The IP of the guest VM could not be detected", try running `vagrant ssh` on the errant
+VM. The error message provides recommendations should the VM become unreachable.
