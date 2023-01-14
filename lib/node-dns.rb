@@ -33,9 +33,10 @@ def dns(config, vmhost:, name:, macaddr:)
         SCRIPT
 
         node.vm.provision "reload", after: "install", type: "shell", run: "never", inline: <<~SCRIPT
+            cp /vagrant/etc/dnsmasq.conf.template /etc/dnsmasq.conf.template
+            cp /vagrant/scripts/reconfig-dns.sh /usr/local/bin/reconfig-dns.sh
             crontab /vagrant/etc/cron.d/resolve_infra
-            cp /vagrant/etc/dnsmasq.conf /etc/dnsmasq.conf
-            systemctl start dnsmasq
+            reconfig-dns.sh && systemctl start dnsmasq
         SCRIPT
     end
 end

@@ -3,7 +3,6 @@ bogus-priv
 no-resolv
 no-poll
 cache-size=1000
-addn-hosts=/etc/hosts_mdns
 # log-queries
 
 # Upstream DNS servers
@@ -12,4 +11,4 @@ server=8.8.8.8
 server=8.8.4.4
 
 # DNS records
-cname=apps.homenet,vh0-mac-vm-ub20-infra0.local
+address=/homenet/{infra0_ip}
