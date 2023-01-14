@@ -1,0 +1,1 @@
+* * * * * avahi-resolve-host-name -4 vh0-mac-vm-ub20-infra0.local | awk '{print $2 " " $1}' > /etc/hosts_mdns 2>/dev/null && systemctl reload dnsmasq

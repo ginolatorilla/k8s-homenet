@@ -1,7 +1,7 @@
 require 'socket'
 require_relative 'node-base.rb'
 
-def infra(config, vmhost:, name:, macaddr:)
+def infra(config, vmhost:, name:)
     return if Socket.gethostname != vmhost
 
     config.vm.define name do |node|
@@ -11,8 +11,6 @@ def infra(config, vmhost:, name:, macaddr:)
         node.vm.provider :vmware_desktop do |v|
             v.vmx["numvcpus"] = "1"
             v.vmx["memsize"] = "1024"
-            v.vmx["ethernet0.addressType"] = "static"
-            v.vmx["ethernet0.address"] = macaddr
         end
 
         node.vm.provision "install", type: "shell", inline: <<~SCRIPT
