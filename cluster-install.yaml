@@ -111,7 +111,7 @@ kind: ConfigMap
 metadata:
   name: haproxy-kubernetes-ingress
   namespace: haproxy-controller
-data:
+data: {}
   # syslog-server: "address:stdout, format: raw, facility:daemon"
 ---
 apiVersion: apps/v1
@@ -9951,6 +9951,8 @@ metadata:
     app.kubernetes.io/name: argocd-cmd-params-cm
     app.kubernetes.io/part-of: argocd
   name: argocd-cmd-params-cm
+data:
+  server.insecure: "true"
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -11395,7 +11397,7 @@ metadata:
 spec:
   ingressClassName: haproxy
   rules:
-  - host: argocd.homenet
+  - host: argocd.apps.homenet
     http:
       paths:
       - pathType: Prefix
