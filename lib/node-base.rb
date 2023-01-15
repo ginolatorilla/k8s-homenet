@@ -21,7 +21,7 @@ def base(config, vmhost, reboot_after_up: true)
     config.vm.provision "pre-install", type: "shell", reboot: reboot_after_up, inline: <<~SCRIPT
         export DEBIAN_FRONTEND=noninteractive
         apt-get update
-        apt-get install -y avahi-daemon
+        apt-get install -y avahi-daemon avahi-utils
 
         # Permanently disable swap
         swapoff -a
