@@ -1,0 +1,18 @@
+[ req ]
+prompt = no
+default_bits = 4096
+default_md = sha256
+distinguished_name = req_distinguished_name
+subjetAltName = DNS:kubernetes
+x509_extensions = v3_ca
+
+[ req_distinguished_name ]
+C = PH
+O = The Home Network of Gino Latorilla and Rowejoi Romulo
+CN = homenet
+
+[ v3_ca ]
+keyUsage = digitalSignature, keyEncipherment, keyCertSign
+basicConstraints = critical, CA:true
+subjectKeyIdentifier = hash
+subjectAltName = DNS:kubernetes
