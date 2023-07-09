@@ -27,15 +27,18 @@ Vagrant.configure("2") do |config|
     node.vm.provision "shell", path: "../scripts/install-master.sh", args: ["k8s-homenet", POD_CIDR]
   end
 
-  config.vm.define "#{HOST_NAME}-k8s-infra-0" do |node|
-    node.vm.hostname = "#{HOST_NAME}-k8s-infra-0"
+  config.vm.define "host0-darwin-aarch64-k8s-infra-0" do |node|
+    node.vm.hostname = "host0-darwin-aarch64-k8s-infra-0"
     node.vm.provider :vmware_desktop do |v, override|
       v.vmx["numvcpus"] = "1"
       v.vmx["memsize"] = "1024"
       v.vmx["ethernet0.addressType"] = "static"
       v.vmx["ethernet0.address"] = "00:0C:29:09:7D:78"
     end
-    node.vm.provision "shell", path: "../scripts/install-infra.sh"
+
+    node.vm.provision "install-app", type: "shell", path: "./scripts/install-haproxy.sh"
+    node.vm.provision "put-config", after: "install-app", type: "file", source: "./etc/haproxy.cfg", destination: "/tmp/etc/haproxy.cfg"
+    node.vm.provision "reload-config", after: "put-config", type: "shell", path: "./scripts/reload-haproxy.sh"
   end
 
   config.vm.define "host0-darwin-aarch64-dns" do |node|
