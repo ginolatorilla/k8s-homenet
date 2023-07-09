@@ -4,8 +4,7 @@
 # Kubernetes for Home Network provisioner
 # Inspired by Artur Scheiner - artur.scheiner@gmail.com
 
-CLUSTER_NAME = "k8s-homenet"
-HOST_NAME = "host-0-darwin-aarch64"
+CLUSTER_ENDPOINT = "api.k8s.home.net"
 POD_CIDR = "172.18.0.0/16"
 
 Vagrant.configure("2") do |config|
@@ -18,13 +17,16 @@ Vagrant.configure("2") do |config|
     v.vmx["ethernet0.connectiontype"] = "bridged"
   end
 
-  config.vm.define "#{HOST_NAME}-k8s-master-0" do |node|
-    node.vm.hostname = "#{HOST_NAME}-k8s-master-0"
+  config.vm.define "host-0-darwin-aarch64-k8s-master-0" do |node|
+    node.vm.hostname = "host-0-darwin-aarch64-k8s-master-0"
     node.vm.provider :vmware_desktop do |v, override|
       v.vmx["numvcpus"] = "2"
       v.vmx["memsize"] = "2048"
+      v.vmx["ethernet0.addressType"] = "static"
+      v.vmx["ethernet0.address"] = "00:0C:29:93:79:0E"
     end
-    node.vm.provision "shell", path: "../scripts/install-master.sh", args: ["k8s-homenet", POD_CIDR]
+
+    node.vm.provision "install-app", type: "shell", path: "./scripts/install-k8s.sh", args: [CLUSTER_ENDPOINT, POD_CIDR]
   end
 
   config.vm.define "host0-darwin-aarch64-k8s-infra-0" do |node|
@@ -37,7 +39,7 @@ Vagrant.configure("2") do |config|
     end
 
     node.vm.provision "install-app", type: "shell", path: "./scripts/install-haproxy.sh"
-    node.vm.provision "put-config", after: "install-app", type: "file", source: "./etc/haproxy.cfg", destination: "/tmp/etc/haproxy.cfg"
+    node.vm.provision "put-config", after: "install-app", type: "file", source: "./etc/haproxy/haproxy.cfg", destination: "/tmp/etc/haproxy/haproxy.cfg"
     node.vm.provision "reload-config", after: "put-config", type: "shell", path: "./scripts/reload-haproxy.sh"
   end
 
