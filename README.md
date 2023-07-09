@@ -37,7 +37,7 @@ Add this file to `/etc/resolver/homenet`
 
 ```text
 domain homenet
-nameserver 192.168.0.200
+nameserver 192.168.0.53
 search_order 1
 timeout 5
 ```

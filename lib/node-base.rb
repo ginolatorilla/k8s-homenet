@@ -1,7 +1,7 @@
 def base(config, vmhost)
 
-    os = $hosts[vmhost][:os]
-    arch = $hosts[vmhost][:arch]
+    os = HOSTS[vmhost][:os]
+    arch = HOSTS[vmhost][:arch]
 
     if os == "mac" && arch == "arm64"
         config.vm.box = "starboard/ubuntu-arm64-20.04.5"
