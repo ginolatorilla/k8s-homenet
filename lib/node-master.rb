@@ -15,9 +15,9 @@ def master(config, vmhost:, name:)
         end
 
         node.vm.provision "install", type: "shell", inline: <<-SCRIPT
-            # Install kubeadm
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update
+            /vagrant/scripts/install-base.sh
+
+            # Install Kubernetes CLI tools
             apt-get install -y apt-transport-https ca-certificates curl
             curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --no-tty --dearmor -o /etc/apt/trusted.gpg.d/k8s.gpg
             curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
@@ -25,24 +25,21 @@ def master(config, vmhost:, name:)
             apt-get update
             apt-get install -y kubelet kubeadm kubectl
             apt-mark hold kubelet kubeadm kubectl
-            
-            # Disable swap
-            swapoff -a
-            
+
             # Required for CNI
             echo overlay >> /etc/modules-load.d/k8s.conf
             echo br_netfilter >> /etc/modules-load.d/k8s.conf
             modprobe overlay
             modprobe br_netfilter
-            
+
             # Ensure sysctl params are set
             echo 'net.bridge.bridge-nf-call-ip6tables = 1' >> /etc/sysctl.d/kubernetes.conf
             echo 'net.bridge.bridge-nf-call-iptables = 1' >> /etc/sysctl.d/kubernetes.conf
             echo 'net.ipv4.ip_forward = 1' >> /etc/sysctl.d/kubernetes.conf
-            
+
             # Reload configs
             sysctl --system
-            
+
             # Install CRI
             mkdir -p /etc/apt/keyrings
             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --no-tty  --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -54,8 +51,6 @@ def master(config, vmhost:, name:)
             systemctl daemon-reload
             systemctl restart containerd
             systemctl enable containerd
-
-            apt-get install -y avahi-daemon
         SCRIPT
 
         node.vm.provision "configure", type: "file", source: "./etc", destination: "/tmp/etc"

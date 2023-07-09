@@ -17,9 +17,8 @@ def infra(config, vmhost:, name:, macaddr:)
         end
 
         node.vm.provision "install", type: "shell", inline: <<-SCRIPT
-            export DEBIAN_FRONTEND=noninteractive
-            apt-get update
-            apt-get install -y avahi-daemon haproxy
+            /vagrant/scripts/install-base.sh
+            apt-get install -y haproxy
         SCRIPT
 
         node.vm.provision "configure", type: "file", source: "./etc", destination: "/tmp/etc"
