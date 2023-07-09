@@ -4,3 +4,4 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y avahi-daemon
 swapoff -a
+sed 's|/swap|#/swap|g' -i /etc/fstab
