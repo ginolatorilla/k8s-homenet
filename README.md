@@ -126,3 +126,14 @@ resolve addresses from the internet properly.
 ### HAProxy service fails with "Start request repeated too quickly"
 
 Run `haproxy -c -f /etc/haproxy/haproxy.cfg` to check if there are any errors in the config file, and then restart.
+
+### After `vagrant resume`, IP of guest VMs could not be detected
+
+If Vagrant complains that it could not get the IPs after resuming suspended VMs, simply re-run `vagrant resume` or
+resume them from VMWare Fusion.
+
+### After `vagrant resume`, IPs are assigned host-only (eg 172.X.X.X)
+
+It appears that the VM will be using host-only networks, but eventually it will revert back to bridged-mode and
+re-acquire proper IPs from the router's DHCP. You can verify this by inspecting the VMs in VMWare after Vagrant 
+finishes resuming them.
