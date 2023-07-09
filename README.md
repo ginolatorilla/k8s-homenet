@@ -44,6 +44,9 @@ vagrant reload --provision-with reload [VM_NAME]
 
 # For any subsequent reconfiguration that does not require VM reboot:
 vagrant provision --provision-with reload [VM_NAME]
+
+# Bootstrap the cluster
+kubectl apply -f cluster-install.yaml
 ```
 
 Add this file to `/etc/resolver/homenet`
