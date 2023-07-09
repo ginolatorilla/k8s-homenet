@@ -4,7 +4,7 @@
 require_relative "config.rb"
 require_relative "lib/node-dns.rb"
 require_relative "lib/node-infra.rb"
-require_relative "lib/node-master.rb"
+require_relative "lib/node-k8s.rb"
 
 Vagrant.configure("2") do |conf|
     dns(conf, name: "vh0-mac-vm-ub20-dns0", vmhost: "GPH00093m", macaddr: "00:0C:29:93:79:0E")
