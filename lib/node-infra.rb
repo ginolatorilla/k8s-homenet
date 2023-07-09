@@ -22,7 +22,7 @@ def infra(config, vmhost:, name:)
             cp /vagrant/etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
             mkdir -p /etc/ssl/homenet/
             cat /vagrant/etc/kubernetes/pki/ingress.crt /vagrant/etc/kubernetes/pki/ingress.key /vagrant/etc/kubernetes/pki/ca.crt > \
-                /etc/ssl/homenet/STAR_apps.homenet.pem
+                /etc/ssl/homenet/STAR.apps.homenet.pem
             systemctl reload haproxy
         SCRIPT
     end
