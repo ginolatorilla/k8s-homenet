@@ -1,0 +1,5 @@
+resources:
+  - haproxy-ingress.yaml
+  - haproxy-ingress-user-defined.yaml
+  - argocd.yaml
+  - argocd-user-defined.yaml
