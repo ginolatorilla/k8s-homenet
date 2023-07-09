@@ -41,6 +41,9 @@ scripts/generate-custom-ca.sh # Run this command once, or else you have to uploa
 
 vagrant up
 vagrant reload --provision-with reload
+
+# For any subsequent reconfiguration that does not require VM reboot:
+vagrant provision --provision-with reload [VM_NAME]
 ```
 
 Add this file to `/etc/resolver/homenet`
