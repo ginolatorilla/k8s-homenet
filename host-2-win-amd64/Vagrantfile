@@ -4,9 +4,6 @@
 # Kubernetes for Home Network provisioner
 # Inspired by by Artur Scheiner - artur.scheiner@gmail.com
 
-CLUSTER_ENDPOINT = "api.k8s.home.net"
-POD_CIDR = "172.18.0.0/16"
-
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-20.04"
   config.vm.box_version = "202112.19.0"
@@ -22,44 +19,14 @@ Vagrant.configure("2") do |config|
     node.vm.provider :vmware_desktop do |v, override|
       v.vmx["numvcpus"] = "2"
       v.vmx["memsize"] = "2048"
-      # v.vmx["ethernet0.addressType"] = "static"
-      # v.vmx["ethernet0.address"] = "00:0C:29:93:79:0E"
+      v.vmx["ethernet0.addressType"] = "static"
+      v.vmx["ethernet0.address"] = "00:0C:29:0F:F6:C3"
     end
 
-    # node.vm.provision "install-app", type: "shell", path: "./scripts/install-k8s.sh", args: [CLUSTER_ENDPOINT, POD_CIDR]
+    node.vm.provision "install-app", type: "shell", path: "./scripts/install-k8s.sh", args: [CLUSTER_ENDPOINT, POD_CIDR]
   end
 
 end
-
-
-# ```plaintext
-# Your Kubernetes control-plane has initialized successfully!
-
-# To start using your cluster, you need to run the following as a regular user:
-
-#   mkdir -p $HOME/.kube
-#   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-#   sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-# Alternatively, if you are the root user, you can run:
-
-#   export KUBECONFIG=/etc/kubernetes/admin.conf
-
-# You should now deploy a pod network to the cluster.
-# Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
-#   https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
-# You can now join any number of the control-plane node running the following command on each as root:
-
-#   kubeadm join api.k8s.home.net:6443 --token 6yfgj8.nugxn78i0h25ragw \
-#         --discovery-token-ca-cert-hash sha256:0f68338a5b7dc444250545a429724a02446af4f6cfa79ab52e70ea2c5cc28df8 \
-#         --control-plane --certificate-key ef5408101e665947d86b78a25c058894db2f0d8a31e3335ed48eaac51f496a2e
-
-# Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
-# As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
-# "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
-
-# Then you can join any number of worker nodes by running the following on each as root:
 
 # kubeadm join api.k8s.home.net:6443 --token 6yfgj8.nugxn78i0h25ragw \
 #         --discovery-token-ca-cert-hash sha256:0f68338a5b7dc444250545a429724a02446af4f6cfa79ab52e70ea2c5cc28df8

@@ -16,6 +16,7 @@ In the router's DHCP server settings, reserve these IPs.
 | host0-darwin-aarch64-dns      | 00:0C:29:69:2A:FB | 192.168.0.200          |
 | host0-darwin-aarch64-infra-0  | 00:0C:29:69:2A:FB | 192.168.0.201          |
 | host0-darwin-aarch64-master-0 | 00:0C:29:93:79:0E | 192.168.0.202          |
+| host2-win-amd64-master-0      | 00:0C:29:0F:F6:C3 | 192.168.0.203          |
 
 The MAC addresses may be found in the Vagrantfile where the node/vm is defined.
 
