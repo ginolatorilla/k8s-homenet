@@ -9,6 +9,14 @@ metadata:
   name: haproxy-controller
 
 ---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: haproxy
+spec:
+  controller: haproxy.org/ingress-controller
+
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -104,7 +112,7 @@ metadata:
   name: haproxy-kubernetes-ingress
   namespace: haproxy-controller
 data:
-
+  # syslog-server: "address:stdout, format: raw, facility:daemon"
 ---
 apiVersion: apps/v1
 kind: Deployment
