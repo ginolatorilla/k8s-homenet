@@ -23,11 +23,7 @@ Vagrant.configure("2") do |config|
       v.vmx["ethernet0.address"] = "00:0C:29:0F:F6:C3"
     end
 
-    node.vm.provision "install-app", type: "shell", path: "./scripts/install-k8s.sh", args: [CLUSTER_ENDPOINT, POD_CIDR]
+    node.vm.provision "install-app", type: "shell", path: "./scripts/install-k8s.sh"
   end
 
 end
-
-# kubeadm join api.k8s.home.net:6443 --token 6yfgj8.nugxn78i0h25ragw \
-#         --discovery-token-ca-cert-hash sha256:0f68338a5b7dc444250545a429724a02446af4f6cfa79ab52e70ea2c5cc28df8
-# ```
