@@ -18,7 +18,7 @@ def dns(config, vmhost:, name:, macaddr:)
         node.vm.provision "install", type: "shell", inline: <<~SCRIPT
             export DEBIAN_FRONTEND=noninteractive
 
-            apt-get install -y dnsmasq
+            apt-get install -y dnsmasq avahi-utils
 
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             echo "If dnsmasq failed during installation with this error message:"
@@ -33,8 +33,9 @@ def dns(config, vmhost:, name:, macaddr:)
         SCRIPT
 
         node.vm.provision "reload", after: "install", type: "shell", run: "never", inline: <<~SCRIPT
+            crontab /vagrant/etc/cron.d/resolve_infra
             cp /vagrant/etc/dnsmasq.conf /etc/dnsmasq.conf
-            systemctl restart dnsmasq
+            systemctl start dnsmasq
         SCRIPT
     end
 end
