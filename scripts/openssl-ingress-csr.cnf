@@ -1,0 +1,13 @@
+[ req ]
+prompt = no
+default_bits = 4096
+default_md = sha256
+distinguished_name = req_distinguished_name
+extensions = v3_ca
+
+[ req_distinguished_name ]
+C = PH
+ST = Philippines
+L = Metropolitan Manila
+O = The Home Network of Gino Latorilla and Rowejoi Romulo
+CN = homenet

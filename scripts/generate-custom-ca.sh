@@ -10,4 +10,12 @@ cp etc/kubernetes/pki/ca.key etc/kubernetes/pki/front-proxy-ca.key
 cp etc/kubernetes/pki/ca.crt etc/kubernetes/pki/front-proxy-ca.crt
 cp etc/kubernetes/pki/ca.key etc/kubernetes/pki/etcd/ca.key
 cp etc/kubernetes/pki/ca.crt etc/kubernetes/pki/etcd/ca.crt
+
+openssl genrsa -out etc/kubernetes/pki/ingress.key 4096
+openssl req -new -key etc/kubernetes/pki/ingress.key -config scripts/openssl-ingress-csr.cnf -out etc/kubernetes/pki/ingress.csr
+
+openssl x509 -req -sha256 -days 3650 -in etc/kubernetes/pki/ingress.csr \
+    -extfile scripts/openssl-ingress-cert.cnf -out etc/kubernetes/pki/ingress.crt \
+    -CAcreateserial -CA etc/kubernetes/pki/ca.crt -CAkey etc/kubernetes/pki/ca.key
+
 popd

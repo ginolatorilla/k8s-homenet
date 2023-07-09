@@ -8,3 +8,5 @@
 *.crt
 *.key
 *.pub
+*.srl
+*.csr
