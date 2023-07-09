@@ -58,14 +58,18 @@ def k8s_node(config, vmhost:, name:, type: "control-leader", size: :medium)
 
         node.vm.provision "reload", type: "shell", run: "never",
             inline: <<~BASE << {"control-leader" => <<~CONTROL_LEADER, "control" => <<~CONTROL, "worker" => <<~WORKER }[type]
-            systemctl restart systemd-resolved
+
+            # Force all VMs to use provisioned DNS
+            /vagrant/scripts/fix-dns-resolver.sh
 
             kubeadm reset -f
             rm -rf /etc/kubernetes/pki
 
             # Install Kubernetes
             kubeadm config images pull
+
         BASE
+
             mkdir -p /etc/kubernetes/pki/etcd
             cp /vagrant/etc/kubernetes/pki/ca.{key,crt} /etc/kubernetes/pki
             cp /vagrant/etc/kubernetes/pki/front-proxy-ca.{key,crt} /etc/kubernetes/pki
@@ -79,7 +83,9 @@ def k8s_node(config, vmhost:, name:, type: "control-leader", size: :medium)
             # Install CNI
             export KUBECONFIG=/etc/kubernetes/admin.conf
             curl -fsSL https://docs.projectcalico.org/manifests/calico.yaml | kubectl apply -f-
+
         CONTROL_LEADER
+
             mkdir -p /etc/kubernetes/pki/etcd
             cp /vagrant/etc/kubernetes/pki/ca.{key,crt} /etc/kubernetes/pki
             cp /vagrant/etc/kubernetes/pki/front-proxy-ca.{key,crt} /etc/kubernetes/pki
@@ -87,10 +93,13 @@ def k8s_node(config, vmhost:, name:, type: "control-leader", size: :medium)
 
             cp /vagrant/etc/kubernetes/pki/sa.{key,pub} /etc/kubernetes/pki
             $(cat /vagrant/var/kubeadm-join) --control-plane
+
         CONTROL
+
             mkdir -p /etc/kubernetes/pki/etcd
             cp /vagrant/etc/kubernetes/pki/sa.{key,pub} /etc/kubernetes/pki
             $(cat /vagrant/var/kubeadm-join)
+
         WORKER
 
     end

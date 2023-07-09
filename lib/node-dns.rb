@@ -18,7 +18,7 @@ def dns(config, vmhost:, name:, macaddr:)
         node.vm.provision "install", type: "shell", inline: <<~SCRIPT
             export DEBIAN_FRONTEND=noninteractive
 
-            apt-get install -y dnsmasq avahi-utils
+            apt-get install -y dnsmasq
 
             echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             echo "If dnsmasq failed during installation with this error message:"
