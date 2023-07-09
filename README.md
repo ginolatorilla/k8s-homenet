@@ -46,7 +46,7 @@ vagrant reload --provision-with reload [VM_NAME]
 vagrant provision --provision-with reload [VM_NAME]
 
 # Bootstrap the cluster
-kubectl apply -f cluster-install.yaml
+kustomize build | kubectl apply -f-
 ```
 
 Add this file to `/etc/resolver/homenet`
