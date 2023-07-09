@@ -14,6 +14,7 @@ In the router's DHCP server settings, reserve these IPs.
 | Node                          | MAC address       | IP address reservation |
 | ----------------------------- | ----------------- | ---------------------- |
 | vh0-mac-vm-ub20-dns0          | 00:0C:29:93:79:0E | 192.168.0.53           |
+| vh0-mac-vm-ub20-infra0        | 00:0C:29:69:2A:FB | 192.168.0.200          |
 
 The MAC addresses may be found in the Vagrantfile where the node/vm is defined.
 
