@@ -55,19 +55,21 @@ def master(config, vmhost:, name:)
             systemctl restart containerd
             systemctl enable containerd
 
-            apt-get install avahi-daemon
+            apt-get install -y avahi-daemon
         SCRIPT
 
         node.vm.provision "configure", type: "file", source: "./etc", destination: "/tmp/etc"
 
         node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
-            mv /tmp/etc/kubernetes/pki/*.{key,crt} /etc/kubernetes/pki
-            mv /tmp/etc/kubernetes/pki/etcd/*.{key,crt} /etc/kubernetes/pki
+            kubeadm reset -f
+            # mkdir -p /etc/kubernetes/pki/etcd
+            # mv /tmp/etc/kubernetes/pki/*.{key,crt} /etc/kubernetes/pki
+            # mv /tmp/etc/kubernetes/pki/etcd/*.{key,crt} /etc/kubernetes/pki
+            rm -rf /tmp/etc
 
             # Install Kubernetes
-            kubeadm reset
             kubeadm config images pull
-            kubeadm init --pod-network-cidr=#{POD_CIDR} --upload-certs --control-plane-endpoint=#{CLUSTER_ENDPOINT}
+            kubeadm init --pod-network-cidr=#{POD_CIDR} --control-plane-endpoint=#{CLUSTER_ENDPOINT}
         SCRIPT
     end
 end
