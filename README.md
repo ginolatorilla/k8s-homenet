@@ -24,6 +24,12 @@ In the router's DHCP server settings, set the DNS servers.
 | Primary DNS   | 192.168.0.53                  |
 | Secondary DNS | _Same as the Default Gateway_ |
 
+Generate custom certificate authority.
+
+```sh
+scripts/generate-custom-ca.sh
+```
+
 Install VMWare Fusion/Player and VMWare Utility for Vagrant.
 
 ```sh

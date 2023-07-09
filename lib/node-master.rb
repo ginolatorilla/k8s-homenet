@@ -54,11 +54,16 @@ def master(config, vmhost:, name:)
             systemctl daemon-reload
             systemctl restart containerd
             systemctl enable containerd
+
+            apt-get install avahi-daemon
         SCRIPT
 
         node.vm.provision "configure", type: "file", source: "./etc", destination: "/tmp/etc"
 
         node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
+            mv /tmp/etc/kubernetes/pki/*.{key,crt} /etc/kubernetes/pki
+            mv /tmp/etc/kubernetes/pki/etcd/*.{key,crt} /etc/kubernetes/pki
+
             # Install Kubernetes
             kubeadm reset
             kubeadm config images pull

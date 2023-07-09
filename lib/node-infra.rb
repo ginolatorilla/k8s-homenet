@@ -24,6 +24,7 @@ def infra(config, vmhost:, name:)
 
         node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
             mv /tmp/etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg
+            rm -rf /tmp/etc/
             systemctl reload haproxy
         SCRIPT
     end

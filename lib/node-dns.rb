@@ -36,6 +36,7 @@ def dns(config, vmhost:, name:, macaddr:)
 
         node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
             mv /tmp/etc/dnsmasq.conf /etc/dnsmasq.conf
+            rm -rf /tmp/etc/
             systemctl restart dnsmasq
         SCRIPT
     end
