@@ -141,3 +141,12 @@ finishes resuming them.
 
 If you see the error message "The IP of the guest VM could not be detected", try running `vagrant ssh` on the errant
 VM. The error message provides recommendations should the VM become unreachable.
+
+### After `vagrant resume`, the Kubernetes API responds with HTTP 503
+
+Simply reload HAProxy by running `vagrant ssh vh0-mac-vm-ub20-infra0 -c 'sudo systemctl reload haproxy'`
+
+### Resource mapping not found when applying Kubernetes configuration with `kustomize + kubectl`
+
+If the errors are for missing Application resource in group `argoproj.io/v1alpha1`, simply rerun the command
+`kustomize build | kubectl apply -f-` again. The custom resources were created in the previous attempt.
