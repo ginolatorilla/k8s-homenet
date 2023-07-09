@@ -32,11 +32,8 @@ def dns(config, vmhost:, name:, macaddr:)
             systemctl restart dnsmasq
         SCRIPT
 
-        node.vm.provision "configure", type: "file", source: "./etc", destination: "/tmp/etc"
-
-        node.vm.provision "reload", after: "configure", type: "shell", inline: <<-SCRIPT
-            mv /tmp/etc/dnsmasq.conf /etc/dnsmasq.conf
-            rm -rf /tmp/etc/
+        node.vm.provision "reload", after: "install", type: "shell", inline: <<-SCRIPT
+            cp /vagrant/etc/dnsmasq.conf /etc/dnsmasq.conf
             systemctl restart dnsmasq
         SCRIPT
     end
