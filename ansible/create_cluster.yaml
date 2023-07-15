@@ -1,0 +1,7 @@
+---
+- name: Launch Minikube
+  hosts: localhost
+  roles:
+    - role: minikube
+      vars:
+        rebuild_cluster: false
