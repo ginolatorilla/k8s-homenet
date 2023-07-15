@@ -1,0 +1,22 @@
+---
+- name: Install DNSMasq
+  tags: dnsmasq
+  block:
+    - name: Install DNSMasq as external DNS
+      ansible.builtin.package:
+        name: dnsmasq
+    - name: Configure DNSMasq
+      ansible.builtin.template:
+        src: files/dnsmasq.conf.template
+        dest: "{{ ansible_env.HOMEBREW_PREFIX }}/etc/dnsmasq.conf"
+        mode: '0644'
+    - name: Install services for Homebrew
+      community.general.homebrew_tap:
+        name: homebrew/services
+    - name: Start DNSMasq as a service
+      ansible.builtin.command:
+        cmd: brew services restart dnsmasq
+        creates: /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+      environment:
+        HOMEBREW_NO_INSTALL_FROM_API: "1"
+      become: true
