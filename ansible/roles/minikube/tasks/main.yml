@@ -37,6 +37,10 @@
         cmd: "minikube ssh 'sudo rm /etc/resolv.conf && echo nameserver {{ minikube_node_dns }} | sudo tee /etc/resolv.conf && nslookup google.com'"
       register: minikube_ssh
       changed_when: minikube_ssh.rc != 0
+    - name: Restart CoreDNS to get node DNS updates
+      ansible.builtin.command: kubectl rollout restart -n kube-system deploy/coredns
+      register: minikube_k8s_rollout_restart
+      changed_when: minikube_k8s_rollout_restart.rc != 0
     - name: Enable addons
       ansible.builtin.command:
         cmd: minikube addons enable {{ item }}
@@ -75,3 +79,8 @@
         context: minikube
         namespace: argocd
         src: "{{ minikube_fetch_argocd_manifest.dest }}"
+    - name: Bootstrap the cluster
+      kubernetes.core.k8s:
+        context: minikube
+        namespace: argocd
+        src: "{{ playbook_dir }}/../kubernetes/argocd/applicationset.yaml"
