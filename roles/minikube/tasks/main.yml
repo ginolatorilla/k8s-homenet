@@ -21,7 +21,14 @@
       become: true
 
 - name: Launch Minikube
-  ansible.builtin.command: minikube start --driver qemu --network socket_vmnet
-  register: minikube_start
-  changed_when: minikube_start.rc != 0
   tags: minikube
+  block:
+    - name: Destroy cluster if rebuilding
+      when: rebuild_cluster
+      ansible.builtin.command:
+        cmd: minikube delete
+        removes: ~/.minikube/machines/minikube/config.json
+    - name: Create cluster
+      ansible.builtin.command:
+        cmd: minikube start --driver qemu --network socket_vmnet
+        creates: ~/.minikube/machines/minikube/config.json
