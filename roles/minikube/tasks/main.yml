@@ -2,3 +2,24 @@
 - name: Install Minikube
   ansible.builtin.package:
     name: minikube
+
+- name: Install QEMU as a Minikube driver
+  block:
+    - name: Install Minikube drivers
+      ansible.builtin.package:
+        name: "{{ item }}"
+      loop:
+        - socket_vmnet
+        - qemu
+    - name: Install services for Homebrew
+      community.general.homebrew_tap:
+        name: homebrew/services
+    - name: Pre-start update
+      ansible.builtin.command: brew update
+      register: minikube_command
+      changed_when: minikube_command.rc != 0
+    - name: Start service
+      ansible.builtin.command: brew services start socket_vmnet
+      register: minikube_command
+      changed_when: minikube_command.rc != 0
+      become_method: sudo
