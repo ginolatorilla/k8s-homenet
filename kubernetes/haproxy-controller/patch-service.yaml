@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: haproxy-kubernetes-ingress
+  namespace: haproxy-controller
+spec:
+  ports:
+  - name: http
+    nodePort: 30080
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    nodePort: 30444
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  - name: stat
+    nodePort: 31024
+    port: 1024
+    protocol: TCP
+    targetPort: 1024
