@@ -11,3 +11,9 @@
         domain: homenet
         kubernetes_ingress_ip: "192.168.105.15"
     - role: kubernetes
+      vars:
+        manifests:
+          - url: https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
+            namespace: argocd
+          - url: https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml
+            namespace: haproxy-controller

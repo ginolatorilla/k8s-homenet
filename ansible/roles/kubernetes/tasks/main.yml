@@ -8,27 +8,29 @@
     - name: Create temporary directory for the ArgoCD manifest
       ansible.builtin.tempfile:
         state: directory
-      register: minikube_fetch_argocd_destination_dir
-    - name: Download ArgoCD manifest
+      register: kubernetes_fetch_manifest_destination_dir
+    - name: Download manifest
       ansible.builtin.get_url:
-        url: "{{ argocd_manifest_url }}"
-        dest: "{{ minikube_fetch_argocd_destination_dir.path }}/install.yaml"
+        url: "{{ item.url }}"
+        dest: "{{ kubernetes_fetch_manifest_destination_dir.path }}/{{ item.url | basename }}"
         mode: '0644'
         validate_certs: "{{ ansible_os_family != 'Darwin' }}"
-      register: minikube_fetch_argocd_manifest
-    - name: Create ArgoCD namespace
+      loop: "{{ manifests }}"
+    - name: Create the namespace
       kubernetes.core.k8s:
         context: minikube
         resource_definition:
           api_version: v1
           kind: Namespace
           metadata:
-            name: argocd
-    - name: Install ArgoCD
+            name: "{{ item.namespace }}"
+      loop: "{{ manifests }}"
+    - name: Apply manifest
       kubernetes.core.k8s:
         context: minikube
-        namespace: argocd
-        src: "{{ minikube_fetch_argocd_manifest.dest }}"
+        namespace: "{{ item.namespace }}"
+        src: "{{ kubernetes_fetch_manifest_destination_dir.path }}/{{ item.url | basename }}"
+      loop: "{{ manifests }}"
     - name: Bootstrap the cluster
       kubernetes.core.k8s:
         context: minikube
