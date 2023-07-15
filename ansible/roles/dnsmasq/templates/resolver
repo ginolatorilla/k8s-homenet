@@ -1,0 +1,4 @@
+domain {{ domain }}
+nameserver {{ listen_address }}
+search_order 1
+timeout 5
