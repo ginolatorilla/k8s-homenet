@@ -29,6 +29,9 @@ Run `./bootstrap.sh` and it will install all needed software and start the follo
 - ARM64 images can only run. Minikube doesn't use emulation when it uses QEMU.
   Most of Minikube's addons will not work because of this.
 
+- ArgoCD will always report Ingresses to be healthy to workaround an [issue](https://github.com/argoproj/argo-cd/issues/1704)
+  with the HAProxy ingress controller.
+
 ## Troubleshooting
 
 ### `nslookup apps.homenet` fails in macOS
