@@ -5,7 +5,7 @@
     - name: Install kubectl
       community.general.homebrew:
         name: kubernetes-cli
+
     - name: Bootstrap the cluster
-      ansible.builtin.command: kubectl apply -k ../kubernetes/argocd
-      register: minikube_apply_kustomize
+      ansible.builtin.command: kubectl apply -k {{ bootstrap_kustomize_dir }}
       changed_when: true
