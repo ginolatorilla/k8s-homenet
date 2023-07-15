@@ -32,6 +32,11 @@
       ansible.builtin.command:
         cmd: minikube start --driver qemu --network socket_vmnet
         creates: ~/.minikube/machines/minikube/config.json
+    - name: Workaround to force node DNS
+      ansible.builtin.command:
+        cmd: "minikube ssh 'sudo rm /etc/resolv.conf && echo nameserver {{ minikube_node_dns }} | sudo tee /etc/resolv.conf && nslookup google.com'"
+      register: minikube_ssh
+      changed_when: minikube_ssh.rc != 0
 
 - name: Bootstrap the cluster
   tags: kubernetes

@@ -1,2 +1,3 @@
 ---
 rebuild_cluster: false
+minikube_node_dns: 8.8.8.8
