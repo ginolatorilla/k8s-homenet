@@ -71,6 +71,7 @@
           metadata:
             name: argocd
     - name: Install ArgoCD
-      ansible.builtin.command: "kubectl --context=minikube apply -n argocd -f {{ minikube_fetch_argocd_manifest.dest }}"
-      register: minikube_k8s_apply
-      changed_when: minikube_k8s_apply.rc != 0
+      kubernetes.core.k8s:
+        context: minikube
+        namespace: argocd
+        src: "{{ minikube_fetch_argocd_manifest.dest }}"
