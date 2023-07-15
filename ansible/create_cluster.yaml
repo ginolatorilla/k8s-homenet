@@ -7,9 +7,9 @@
         rebuild_cluster: true
     - role: dnsmasq
       vars:
-        listen_address: "192.168.105.1"
+        listen_address: "{{ minikube_get_default_route.stdout }}"
         domain: homenet
-        kubernetes_ingress_ip: "192.168.105.15"
+        kubernetes_ingress_ip: "{{ minikube_ip.stdout }}"
     - role: kubernetes
       vars:
         manifests:
