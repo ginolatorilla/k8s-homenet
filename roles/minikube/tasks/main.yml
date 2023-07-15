@@ -2,8 +2,10 @@
 - name: Install Minikube
   ansible.builtin.package:
     name: minikube
+  tags: minikube
 
 - name: Install QEMU as a Minikube driver
+  tags: minikube
   block:
     - name: Install Minikube drivers
       ansible.builtin.package:
@@ -26,3 +28,4 @@
   ansible.builtin.command: minikube start --driver qemu --network socket_vmnet
   register: minikube_start
   changed_when: minikube_start.rc != 0
+  tags: minikube
