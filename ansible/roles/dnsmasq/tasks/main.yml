@@ -16,7 +16,8 @@
     - name: Start DNSMasq as a service
       ansible.builtin.command:
         cmd: brew services restart dnsmasq
-        creates: /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+      register: dnsmasq_service_restart
+      changed_when: true
       environment:
         HOMEBREW_NO_INSTALL_FROM_API: "1"
       become: true
