@@ -1,4 +1,5 @@
 ---
-- hosts: localhost
+- name: Launch Minikube
+  hosts: localhost
   roles:
     - minikube
