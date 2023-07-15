@@ -21,3 +21,8 @@
       environment:
         HOMEBREW_NO_INSTALL_FROM_API: "1"
       become: true
+
+- name: Launch Minikube
+  ansible.builtin.command: minikube start --driver qemu --network socket_vmnet
+  register: minikube_start
+  changed_when: minikube_start.rc != 0
