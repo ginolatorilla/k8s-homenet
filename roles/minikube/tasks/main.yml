@@ -1,2 +1,4 @@
 ---
-# tasks file for minikube
+- name: Install Minikube
+  ansible.builtin.package:
+    name: minikube
