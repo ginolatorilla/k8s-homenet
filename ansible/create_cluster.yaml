@@ -6,7 +6,7 @@
 
     - role: minikube
       vars:
-        rebuild_cluster: false
+        rebuild_cluster: true
 
     - role: dnsmasq
       vars:
@@ -15,5 +15,3 @@
         kubernetes_ingress_ip: "{{ minikube_ip.stdout }}"
 
     - role: kubernetes
-      vars:
-        bootstrap_kustomize_dir: "../kubernetes/argocd"

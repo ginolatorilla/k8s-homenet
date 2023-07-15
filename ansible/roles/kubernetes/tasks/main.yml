@@ -6,5 +6,9 @@
 
 - name: Bootstrap the cluster
   tags: kubernetes
-  ansible.builtin.command: kubectl apply -k {{ bootstrap_kustomize_dir }}
+  ansible.builtin.command: "kubectl apply -k {{ item }}"
   changed_when: true
+  loop:
+    - ../kubernetes/haproxy-controller
+    - ../kubernetes/argocd
+    - ../kubernetes/app-of-apps
