@@ -1,0 +1,9 @@
+resources:
+  - applicationset.yaml
+  - ingress.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.7.7/manifests/install.yaml
+
+patchesStrategicMerge:
+  - patch-configmap.yaml
+
+namespace: argocd
