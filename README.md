@@ -23,15 +23,6 @@ Run `./bootstrap.sh` and it will install all needed software and start the follo
 - A DNSMasq has to run in the host because if there is nothing listening to 192.168.105.1:53/UDP,
   then the QEMU VMs will not be able to resolve internet addresses.
 
-- When visiting sites, you must always append these ports:
-
-    | **Name** | **Port** |
-    | -------- | -------- |
-    | HTTP     | 30080    |
-    | HTTPS    | 30443    |
-
-    For example: `http://your-service.apps.homenet:30080`
-
 - Do not use the **Minikube Ingress** addon, otherwise you'll get stuck in a redirect loop when visiting
   your app's websites. This is why I used the HAProxy ingress controller instead.
 
