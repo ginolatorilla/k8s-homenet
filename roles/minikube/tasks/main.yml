@@ -57,7 +57,7 @@
       register: minikube_fetch_argocd_destination_dir
     - name: Download ArgoCD manifest
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
+        url: "{{ argocd_manifest_url }}"
         dest: "{{ minikube_fetch_argocd_destination_dir.path }}/install.yaml"
         mode: '0644'
         validate_certs: "{{ ansible_os_family != 'Darwin' }}"
