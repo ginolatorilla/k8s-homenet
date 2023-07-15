@@ -15,5 +15,3 @@
         kubernetes_ingress_ip: "{{ minikube_ip.stdout }}"
 
     - role: kubernetes
-      vars:
-        bootstrap_kustomize_dir: "../kubernetes/argocd"

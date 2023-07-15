@@ -6,10 +6,12 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/ginolatorilla/k8s-homenet.git
-        revision: HEAD
+        revision: allow-nodeports-for-haproxy-ingress
         directories:
           - path: kubernetes/*
           - path: kubernetes/argocd
+            exclude: true
+          - path: kubernetes/app-of-apps
             exclude: true
   template:
     metadata:
@@ -18,7 +20,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/ginolatorilla/k8s-homenet.git
-        targetRevision: HEAD
+        targetRevision: allow-nodeports-for-haproxy-ingress
         path: "{{path}}"
       destination:
         server: https://kubernetes.default.svc
