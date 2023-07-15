@@ -15,5 +15,3 @@
         manifests:
           - url: https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
             namespace: argocd
-          - url: https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml
-            namespace: haproxy-controller
