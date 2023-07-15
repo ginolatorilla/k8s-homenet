@@ -1,7 +1,6 @@
 resources:
   - https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/v1.10.4/deploy/haproxy-ingress.yaml
   - ingressclass.yaml
-  - ingress.yaml
 
 patchesStrategicMerge:
   - patch-service.yaml
