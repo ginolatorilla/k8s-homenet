@@ -5,34 +5,7 @@
     - name: Install kubectl
       community.general.homebrew:
         name: kubernetes-cli
-    - name: Create temporary directory for the ArgoCD manifest
-      ansible.builtin.tempfile:
-        state: directory
-      register: kubernetes_fetch_manifest_destination_dir
-    - name: Download manifest
-      ansible.builtin.get_url:
-        url: "{{ item.url }}"
-        dest: "{{ kubernetes_fetch_manifest_destination_dir.path }}/{{ item.url | basename }}"
-        mode: '0644'
-        validate_certs: "{{ ansible_os_family != 'Darwin' }}"
-      loop: "{{ manifests }}"
-    - name: Create the namespace
-      kubernetes.core.k8s:
-        context: minikube
-        resource_definition:
-          api_version: v1
-          kind: Namespace
-          metadata:
-            name: "{{ item.namespace }}"
-      loop: "{{ manifests }}"
-    - name: Apply manifest
-      kubernetes.core.k8s:
-        context: minikube
-        namespace: "{{ item.namespace }}"
-        src: "{{ kubernetes_fetch_manifest_destination_dir.path }}/{{ item.url | basename }}"
-      loop: "{{ manifests }}"
     - name: Bootstrap the cluster
-      kubernetes.core.k8s:
-        context: minikube
-        namespace: argocd
-        src: "{{ playbook_dir }}/../kubernetes/argocd/applicationset.yaml"
+      ansible.builtin.command: kubectl apply -k ../kubernetes/argocd
+      register: minikube_apply_kustomize
+      changed_when: true
