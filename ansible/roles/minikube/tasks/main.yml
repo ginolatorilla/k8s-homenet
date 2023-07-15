@@ -37,8 +37,7 @@
         cmd: minikube addons enable {{ item }}
       register: minikube_addons_enable
       changed_when: minikube_addons_enable.rc != 0
-      loop:
-        - ingress
+      loop: []
     - name: Get Minikube IP
       ansible.builtin.command:
         cmd: minikube ip
