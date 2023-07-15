@@ -6,7 +6,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/ginolatorilla/k8s-homenet.git
-        revision: ansible-minikube
+        revision: HEAD
         directories:
           - path: kubernetes/*
   template:
@@ -16,7 +16,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/ginolatorilla/k8s-homenet.git
-        targetRevision: ansible-minikube
+        targetRevision: HEAD
         path: "{{path}}"
       destination:
         server: https://kubernetes.default.svc
