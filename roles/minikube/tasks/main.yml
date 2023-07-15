@@ -1,16 +1,12 @@
 ---
 - name: Install Minikube
-  ansible.builtin.package:
-    name: minikube
-  tags: minikube
-
-- name: Install QEMU as a Minikube driver
-  tags: minikube
+  tags: minikube_deps
   block:
-    - name: Install Minikube drivers
+    - name: Install Minikube and drivers
       ansible.builtin.package:
         name: "{{ item }}"
       loop:
+        - minikube
         - socket_vmnet
         - qemu
     - name: Install services for Homebrew
