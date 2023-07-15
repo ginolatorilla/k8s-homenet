@@ -1,4 +1,3 @@
 ---
 rebuild_cluster: false
-minikube_node_dns: 8.8.8.8
 argocd_manifest_url: https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
