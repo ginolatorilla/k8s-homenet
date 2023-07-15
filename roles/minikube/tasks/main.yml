@@ -62,7 +62,15 @@
         mode: '0644'
         validate_certs: "{{ ansible_os_family != 'Darwin' }}"
       register: minikube_fetch_argocd_manifest
+    - name: Create ArgoCD namespace
+      kubernetes.core.k8s:
+        context: minikube
+        resource_definition:
+          api_version: v1
+          kind: Namespace
+          metadata:
+            name: argocd
     - name: Install ArgoCD
-      ansible.builtin.command: "kubectl --context=minikube apply -f {{ minikube_fetch_argocd_manifest.dest }}"
+      ansible.builtin.command: "kubectl --context=minikube apply -n argocd -f {{ minikube_fetch_argocd_manifest.dest }}"
       register: minikube_k8s_apply
       changed_when: minikube_k8s_apply.rc != 0
