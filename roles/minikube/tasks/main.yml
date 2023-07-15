@@ -32,3 +32,25 @@
       ansible.builtin.command:
         cmd: minikube start --driver qemu --network socket_vmnet
         creates: ~/.minikube/machines/minikube/config.json
+
+- name: Bootstrap the cluster
+  tags: kubernetes
+  block:
+    - name: Install kubectl
+      community.general.homebrew:
+        name: kubernetes-cli
+    - name: Create temporary directory for the ArgoCD manifest
+      ansible.builtin.tempfile:
+        state: directory
+      register: minikube_fetch_argocd_destination_dir
+    - name: Download ArgoCD manifest
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
+        dest: "{{ minikube_fetch_argocd_destination_dir.path }}/install.yaml"
+        mode: '0644'
+        validate_certs: "{{ ansible_os_family != 'Darwin' }}"
+      register: minikube_fetch_argocd_manifest
+    - name: Install ArgoCD
+      ansible.builtin.command: "kubectl --context=minikube apply -f {{ minikube_fetch_argocd_manifest.dest }}"
+      register: minikube_k8s_apply
+      changed_when: minikube_k8s_apply.rc != 0
