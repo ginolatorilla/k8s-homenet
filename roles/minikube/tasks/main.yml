@@ -37,6 +37,13 @@
         cmd: "minikube ssh 'sudo rm /etc/resolv.conf && echo nameserver {{ minikube_node_dns }} | sudo tee /etc/resolv.conf && nslookup google.com'"
       register: minikube_ssh
       changed_when: minikube_ssh.rc != 0
+    - name: Enable addons
+      ansible.builtin.command:
+        cmd: minikube addons enable {{ item }}
+      register: minikube_addons_enable
+      changed_when: minikube_addons_enable.rc != 0
+      loop:
+        - ingress
 
 - name: Bootstrap the cluster
   tags: kubernetes
