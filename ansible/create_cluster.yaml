@@ -5,4 +5,9 @@
     - role: minikube
       vars:
         rebuild_cluster: true
+    - role: dnsmasq
+      vars:
+        listen_address: "192.168.105.1"
+        domain: homenet
+        kubernetes_ingress_ip: "192.168.105.15"
     - role: kubernetes

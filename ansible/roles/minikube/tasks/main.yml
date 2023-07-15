@@ -12,7 +12,7 @@
     - name: Install services for Homebrew
       community.general.homebrew_tap:
         name: homebrew/services
-    - name: Start service
+    - name: Start socket_vmnet service
       ansible.builtin.command:
         cmd: brew services restart socket_vmnet
         creates: /Library/LaunchDaemons/homebrew.mxcl.socket_vmnet.plist
