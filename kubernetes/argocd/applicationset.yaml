@@ -9,6 +9,8 @@ spec:
         revision: HEAD
         directories:
           - path: kubernetes/*
+          - path: kubernetes/argocd
+            exclude: true
   template:
     metadata:
       name: "{{path.basename}}"
