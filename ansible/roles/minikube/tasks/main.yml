@@ -14,7 +14,11 @@
 - name: Create cluster
   tags: minikube
   ansible.builtin.command:
-    cmd: minikube start --driver qemu --network socket_vmnet
+    cmd: >-
+      minikube start
+        --driver qemu
+        --network socket_vmnet
+        --extra-config=apiserver.service-node-port-range=80-32767
     creates: ~/.minikube/machines/minikube/config.json
 
 - name: Enable addons
