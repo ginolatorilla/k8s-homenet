@@ -1,0 +1,34 @@
+---
+- name: Install Minikube
+  ansible.builtin.package:
+    name: minikube
+
+- name: Destroy cluster if rebuilding
+  when: rebuild_cluster
+  ansible.builtin.command:
+    cmd: minikube delete
+    removes: ~/.minikube/machines/minikube/config.json
+
+- name: Create cluster
+  ansible.builtin.command:
+    cmd: minikube start --driver qemu --network socket_vmnet
+    creates: ~/.minikube/machines/minikube/config.json
+
+- name: Enable addons
+  ansible.builtin.command: minikube addons enable {{ item }}
+  register: minikube_addons_enable
+  changed_when: minikube_addons_enable.rc != 0
+  loop: []
+
+- name: Get Minikube IP
+  ansible.builtin.command: minikube ip
+  register: minikube_ip
+  changed_when: minikube_ip.rc != 0
+  tags: [minikube, dnsmasq]
+
+- name: Get Minikube default route
+  ansible.builtin.command: >
+    minikube ssh 'ip route show | grep default | cut -d " " -f 3'
+  register: minikube_get_default_route
+  changed_when: minikube_get_default_route.rc != 0
+  tags: [minikube, dnsmasq]

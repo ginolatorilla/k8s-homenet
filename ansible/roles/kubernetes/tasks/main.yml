@@ -1,0 +1,10 @@
+---
+- name: Install kubectl
+  tags: kubernetes
+  community.general.homebrew:
+    name: kubernetes-cli
+
+- name: Bootstrap the cluster
+  tags: kubernetes
+  ansible.builtin.command: kubectl apply -k {{ bootstrap_kustomize_dir }}
+  changed_when: true

@@ -1,0 +1,19 @@
+---
+- name: Launch the Kubernetes cluster
+  hosts: localhost
+  roles:
+    - role: qemu
+
+    - role: minikube
+      vars:
+        rebuild_cluster: false
+
+    - role: dnsmasq
+      vars:
+        listen_address: "{{ minikube_get_default_route.stdout }}"
+        domain: homenet
+        kubernetes_ingress_ip: "{{ minikube_ip.stdout }}"
+
+    - role: kubernetes
+      vars:
+        bootstrap_kustomize_dir: "../kubernetes/argocd"
