@@ -1,7 +1,8 @@
 ---
-- name: Launch Minikube
+- name: Launch the Kubernetes cluster
   hosts: localhost
   roles:
     - role: minikube
       vars:
-        rebuild_cluster: false
+        rebuild_cluster: true
+    - role: kubernetes
