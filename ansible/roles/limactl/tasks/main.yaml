@@ -1,0 +1,31 @@
+---
+- name: Install limactl
+  tags: limactl
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop:
+    - lima
+    - socket_vmnet
+
+- name: Configure Lima networks
+  tags: limactl
+  ansible.builtin.copy:
+    src: files/networks.yaml
+    dest: ~/.lima/_config/networks.yaml
+
+- name: Regenerate sudoers for Lima
+  tags: limactl
+  ansible.builtin.shell:
+    cmd: limactl sudoers > /tmp/etc_sudoers.d_lima
+
+- name: Install sudoers for Lima
+  tags: limactl
+  ansible.builtin.command:
+    cmd: install -o root /tmp/etc_sudoers.d_lima /etc/sudoers.d/lima
+  become: true
+
+- name: Launch the master node
+  tags: limactl
+  ansible.builtin.command:
+    cmd: limactl start roles/limactl/files/master-node.yaml
+    creates: ~/.lima/master-node/lima.yaml
