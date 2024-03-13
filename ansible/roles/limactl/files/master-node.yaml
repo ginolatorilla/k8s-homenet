@@ -23,4 +23,7 @@ containerd:
 networks:
   - vzNAT: true
   - lima: user-v2
+    interface: private
   - lima: bridged
+    interface: bridge
+    macAddress: "52:7b:31:6a:fc:34"
