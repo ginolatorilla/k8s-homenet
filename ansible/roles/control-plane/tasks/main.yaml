@@ -1,4 +1,50 @@
 ---
+- name: Container runtime prerequisites
+  block:
+    - name: Add kernel modules
+      ansible.builtin.copy:
+        src: files/etc/modules-load.d/k8s.conf
+        dest: /etc/modules-load.d/k8s.conf
+
+    - name: Modprobe
+      ansible.builtin.command: "modprobe {{ item }}"
+      loop:
+        - overlay
+        - br_netfilter
+
+    - name: Forward IPv4 and let iptables see bridged traffic
+      ansible.builtin.copy:
+        src: files/etc/sysctl.d/k8s.conf
+        dest: /etc/sysctl.d/k8s.conf
+
+    - name: Apply sysctl params without reboot
+      ansible.builtin.command: sysctl --system
+
+- name: Install container runtime
+  block:
+    - name: Get signing key 1
+      ansible.builtin.apt_key:
+        url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/Release.key
+        keyring: /usr/share/keyrings/libcontainers-archive-keyring.gpg
+    - name: Get signing key 2
+      ansible.builtin.apt_key:
+        url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.28/xUbuntu_22.04/Release.key
+        keyring: /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+    - name: Add repo 1
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/ /
+        state: present
+    - name: Add repo 2
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.28/xUbuntu_22.04/ /
+        state: present
+    - name: Install CRI-O
+      ansible.builtin.apt:
+        update_cache: true
+        package:
+          - cri-o
+          - cri-o-runc
+
 - name: Add Kubernetes APT repository
   block:
     - name: Install apt repo deps
