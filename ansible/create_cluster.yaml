@@ -1,9 +1,9 @@
 ---
-- name: Launch the Kubernetes cluster
-  hosts: localhost
+- name: Launch Virtual Machines
+  hosts: baremetal
   roles:
-    - role: limactl
-    - role: control-plane
+    - role: hypervisor
+    - role: control-plane-nodes
       vars:
         control_node_name: k8s-homenet-control-0
         mac_address: "52:7b:31:6a:fc:34"

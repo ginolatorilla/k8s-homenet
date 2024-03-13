@@ -1,6 +1,5 @@
 ---
 - name: Install limactl
-  tags: limactl
   ansible.builtin.package:
     name: "{{ item }}"
   loop:
@@ -8,20 +7,18 @@
     - socket_vmnet
 
 - name: Configure Lima networks
-  tags: limactl
   ansible.builtin.copy:
     src: files/networks.yaml
     dest: ~/.lima/_config/networks.yaml
+    mode: "0644"
   register: lima_networks
 
 - name: Regenerate sudoers for Lima
-  tags: limactl
   ansible.builtin.shell:
     cmd: limactl sudoers > /tmp/etc_sudoers.d_lima
   when: lima_networks.changed
 
 - name: Install sudoers for Lima
-  tags: limactl
   ansible.builtin.command:
     cmd: install -o root /tmp/etc_sudoers.d_lima /etc/sudoers.d/lima
   when: lima_networks.changed
