@@ -1,5 +1,6 @@
 ---
 - name: Launch Virtual Machines
+  tags: s1
   hosts: baremetal
   roles:
     - role: hypervisor
@@ -7,3 +8,10 @@
       vars:
         control_node_name: k8s-homenet-control-0
         mac_address: "52:7b:31:6a:fc:34"
+
+- name: Setup Kubernetes Control Plane
+  tags: s2
+  hosts: control-plane-vms
+  roles:
+    - role: control-plane
+  become: true

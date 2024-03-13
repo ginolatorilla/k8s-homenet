@@ -1,3 +1,0 @@
----
-- name: Test
-  ansible.builtin.command: echo Hello
