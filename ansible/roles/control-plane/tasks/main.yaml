@@ -1,4 +1,13 @@
 ---
+- name: Install apt repo deps
+  ansible.builtin.apt:
+    update_cache: true
+    package:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gpg
+
 - name: Container runtime prerequisites
   block:
     - name: Add kernel modules
@@ -45,17 +54,8 @@
           - cri-o
           - cri-o-runc
 
-- name: Add Kubernetes APT repository
+- name: Install Kubernetes deployer
   block:
-    - name: Install apt repo deps
-      ansible.builtin.apt:
-        update_cache: true
-        package:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gpg
-
     - name: Get signing key
       ansible.builtin.apt_key:
         url: https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
@@ -66,13 +66,13 @@
         repo: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
         state: present
 
-- name: Install kubeadm
-  ansible.builtin.apt:
-    update_cache: true
-    package:
-      - kubelet
-      - kubeadm
-      - kubectl
+    - name: Install kubeadm
+      ansible.builtin.apt:
+        update_cache: true
+        package:
+          - kubelet
+          - kubeadm
+          - kubectl
 
 - name: Enable the kubelet
   ansible.builtin.systemd_service:
