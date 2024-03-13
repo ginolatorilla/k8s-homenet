@@ -1,0 +1,9 @@
+baremetal:
+  hosts:
+    localhost:
+      ansible_connection: local
+
+vms:
+  hosts:
+    lima-k8s-homenet-control-0:
+      ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
