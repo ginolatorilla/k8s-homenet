@@ -26,22 +26,3 @@
     cmd: install -o root /tmp/etc_sudoers.d_lima /etc/sudoers.d/lima
   when: lima_networks.changed
   become: true
-
-- name: Configure master node
-  tags: limactl
-  ansible.builtin.copy:
-    src: files/master-node.yaml
-    dest: /tmp/lima-master-node.yaml
-  register: lima_master_node
-
-- name: Delete current master node
-  tags: limactl
-  ansible.builtin.command:
-    cmd: limactl remove master-node --force
-  when: lima_master_node.changed
-
-- name: Launch the master node
-  tags: limactl
-  ansible.builtin.command:
-    cmd: limactl start roles/limactl/files/master-node.yaml
-    creates: ~/.lima/master-node/lima.yaml

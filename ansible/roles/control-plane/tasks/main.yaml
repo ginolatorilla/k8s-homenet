@@ -1,0 +1,15 @@
+- name: Configure control node
+  ansible.builtin.template:
+    src: templates/lima.yaml.j2
+    dest: /tmp/{{control_node_name}}.yaml
+  register: control_node_spec
+
+- name: Delete current control node
+  ansible.builtin.command:
+    cmd: "limactl remove {{control_node_name}} --force"
+  when: control_node_spec.changed
+
+- name: Launch the control node
+  ansible.builtin.command:
+    cmd: "limactl start {{control_node_spec.dest}}"
+    creates: ~/.lima/{{control_node_name}}/lima.yaml
