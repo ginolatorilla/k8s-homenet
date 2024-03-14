@@ -1,5 +1,5 @@
 ---
-- name: Launch Virtual Machines
+- name: Virtual Machines
   tags: s1
   hosts: baremetal
   roles:
@@ -16,13 +16,13 @@
         node_name: k8s-homenet-worker-0
         mac_address: "52:7b:31:6a:fc:35"
 
-- name: Setup Kubernetes Control Plane
+- name: Kubernetes control plane
   tags: s2
   hosts: k8scontrollers
   roles:
     - role: cluster_bootstrap
   become: true
 
-- name: Setup Kubernetes Workers
+- name: Kubernetes workers
   tags: s3
   hosts: k8sworkers
