@@ -4,9 +4,9 @@
   hosts: baremetal
   roles:
     - role: hypervisor
-    - role: control-plane-nodes
+    - role: nodes
       vars:
-        control_node_name: k8s-homenet-control-0
+        node_name: k8s-homenet-control-0
         mac_address: "52:7b:31:6a:fc:34"
 
 - name: Setup Kubernetes Control Plane
@@ -15,3 +15,7 @@
   roles:
     - role: control-plane
   become: true
+
+- name: Setup Kubernetes Workers
+  tags: s3
+  hosts: k8sworkers
