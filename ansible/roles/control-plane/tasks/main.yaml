@@ -53,6 +53,16 @@
         package:
           - cri-o
           - cri-o-runc
+    - name: Use default CNI for crio
+      ansible.builtin.copy:
+        src: files/etc/cni/net.d/10-crio-bridge.conflist
+        dest: /etc/cni/net.d/10-crio-bridge.conflist
+    - name: Enable crio
+      ansible.builtin.systemd_service:
+        name: crio
+        enabled: true
+        masked: false
+        state: started
 
 - name: Install Kubernetes deployer
   block:
@@ -80,3 +90,6 @@
     enabled: true
     masked: false
     state: started
+
+- name: Initialise control plane
+  ansible.builtin.command: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock
