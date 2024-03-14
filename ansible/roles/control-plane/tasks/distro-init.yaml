@@ -1,0 +1,9 @@
+---
+- name: APT repository essentials
+  ansible.builtin.apt:
+    update_cache: true
+    package:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gpg
