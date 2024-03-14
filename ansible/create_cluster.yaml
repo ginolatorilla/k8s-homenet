@@ -8,6 +8,10 @@
       vars:
         node_name: k8s-homenet-control-0
         mac_address: "52:7b:31:6a:fc:34"
+    - role: nodes
+      vars:
+        node_name: k8s-homenet-worker-0
+        mac_address: "52:7b:31:6a:fc:35"
 
 - name: Setup Kubernetes Control Plane
   tags: s2
