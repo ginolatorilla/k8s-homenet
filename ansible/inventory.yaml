@@ -3,7 +3,7 @@ baremetal:
     localhost:
       ansible_connection: local
 
-control-plane-vms:
+k8scontrollers:
   hosts:
     lima-k8s-homenet-control-0:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"

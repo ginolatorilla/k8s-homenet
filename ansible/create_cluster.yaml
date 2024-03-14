@@ -11,7 +11,7 @@
 
 - name: Setup Kubernetes Control Plane
   tags: s2
-  hosts: control-plane-vms
+  hosts: k8scontrollers
   roles:
     - role: control-plane
   become: true
