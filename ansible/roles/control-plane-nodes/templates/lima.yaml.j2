@@ -22,3 +22,8 @@ networks:
   - lima: bridged
     interface: bridge
     macAddress: "{{ mac_address }}"
+
+provision:
+  - # Remove the "lima-" prefix in the hostnames
+    mode: system
+    script: hostnamectl set-hostname {{ control_node_name }}
