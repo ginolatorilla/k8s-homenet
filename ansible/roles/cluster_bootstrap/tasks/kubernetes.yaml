@@ -28,5 +28,21 @@
 
 - name: Cluster bootstrapping
   ansible.builtin.command:
-    cmd: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock
+    cmd: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock # TODO: pod cidr
     creates: /etc/kubernetes/manifests/*.yaml
+  when: kubernetes_node_type == "control-leader"
+
+- name: Cluster join token
+  block:
+    - name: Parse token from kubeadm
+      ansible.builtin.command: kubeadm token list -o jsonpath={.token}
+      register: kubernetes_kubeadm_token_list
+    - name: Save token to facts
+      ansible.builtin.set_fact:
+        kubernetes_join_token: "{{ kubernetes_kubeadm_token_list.stdout }}"
+        cacheable: true
+  when: kubernetes_node_type == "control-leader"
+
+- name: Join cluster
+  ansible.builtin.command: "kubeadm join 192.168.100.25:6443 --token {{ kubernetes_join_token }} --discovery-token-unsafe-skip-ca-verification" # TODO: change apiserver listener
+  when: kubernetes_node_type == "worker"

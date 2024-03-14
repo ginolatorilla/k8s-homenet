@@ -26,3 +26,8 @@
 - name: Kubernetes workers
   tags: s3
   hosts: k8sworkers
+  roles:
+    - role: cluster_bootstrap
+      vars:
+        kubernetes_join_token: "{{ hostvars['lima-k8s-homenet-control-0'].kubernetes_join_token }}"
+  become: true
