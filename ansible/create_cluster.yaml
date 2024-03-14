@@ -4,6 +4,9 @@
   hosts: baremetal
   roles:
     - role: hypervisor
+      vars:
+        node_network_gateway: "10.0.0.1"
+        node_network_mask: "255.0.0.0"
     - role: nodes
       vars:
         node_name: k8s-homenet-control-0

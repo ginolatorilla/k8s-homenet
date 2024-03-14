@@ -19,6 +19,8 @@ containerd:
   user: false
 
 networks:
+  - lima: user-v2
+    interface: vmnet
   - lima: bridged
     interface: bridge
     macAddress: "{{ mac_address }}"
