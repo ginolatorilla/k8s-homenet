@@ -20,7 +20,7 @@
   tags: s2
   hosts: k8scontrollers
   roles:
-    - role: control-plane
+    - role: cluster_bootstrap
   become: true
 
 - name: Setup Kubernetes Workers
