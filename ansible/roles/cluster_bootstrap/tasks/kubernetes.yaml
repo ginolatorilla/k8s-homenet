@@ -44,5 +44,7 @@
   when: kubernetes_node_type == "control-leader"
 
 - name: Join cluster
-  ansible.builtin.command: "kubeadm join 192.168.100.25:6443 --token {{ kubernetes_join_token }} --discovery-token-unsafe-skip-ca-verification" # TODO: change apiserver listener
+  ansible.builtin.command:
+    cmd: "kubeadm join 192.168.100.25:6443 --token {{ kubernetes_join_token }} --discovery-token-unsafe-skip-ca-verification" # TODO: change apiserver listener
+    creates: /etc/kubernetes/pki/ca.crt
   when: kubernetes_node_type == "worker"
