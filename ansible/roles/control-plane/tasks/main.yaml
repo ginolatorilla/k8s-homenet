@@ -53,10 +53,6 @@
         package:
           - cri-o
           - cri-o-runc
-    - name: Use default CNI for crio
-      ansible.builtin.copy:
-        src: files/etc/cni/net.d/10-crio-bridge.conflist
-        dest: /etc/cni/net.d/10-crio-bridge.conflist
     - name: Enable crio
       ansible.builtin.systemd_service:
         name: crio
