@@ -88,7 +88,9 @@
     state: started
 
 - name: Initialise control plane
-  ansible.builtin.command: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock
+  ansible.builtin.command:
+    cmd: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock
+    creates: /etc/kubernetes/manifests/*.yaml
 
 - name: Install CNI (Calico)
   ansible.builtin.command: env KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
