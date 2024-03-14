@@ -15,6 +15,10 @@
       vars:
         node_name: k8s-homenet-worker-0
         mac_address: "52:7b:31:6a:fc:35"
+    - role: nodes
+      vars:
+        node_name: k8s-homenet-worker-1
+        mac_address: "52:7b:31:6a:fc:36"
 
 - name: Kubernetes control plane
   tags: s2
