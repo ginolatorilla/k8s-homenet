@@ -28,25 +28,30 @@
 
 - name: Cluster bootstrapping
   ansible.builtin.command:
-    cmd: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock # TODO: pod cidr
+    cmd: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock # TODO: pod cidr, and teardown on reconfig
     creates: /etc/kubernetes/manifests/*.yaml
   when: kubernetes_node_type == "control-leader"
 
-# TODO: add handling when token expires
-- name: Cluster join token
-  when: kubernetes_node_type == "control-leader"
-  block:
-    - name: Parse token from kubeadm
-      ansible.builtin.command: kubeadm token list -o jsonpath={.token}
-      register: kubernetes_kubeadm_token_list
-      changed_when: kubernetes_kubeadm_token_list.rc != 0
-    - name: Save token to facts
-      ansible.builtin.set_fact:
-        kubernetes_join_token: "{{ kubernetes_kubeadm_token_list.stdout }}"
-        cacheable: true
-
 - name: Join cluster
   when: kubernetes_node_type == "worker"
-  ansible.builtin.command:
-    cmd: "kubeadm join 192.168.100.25:6443 --token {{ kubernetes_join_token }} --discovery-token-unsafe-skip-ca-verification" # TODO: change apiserver listener
-    creates: /etc/kubernetes/pki/ca.crt
+  block:
+    - name: Generate join command
+      ansible.builtin.shell:
+        cmd: |-
+          set -o pipefail
+          if [ "$(kubeadm token list | tail +2 | wc -l)" -gt 0 ]; then
+            token="$(kubeadm token list | tail +2 | head -1 | awk '{print $1}')"
+            hash="$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+              openssl dgst -sha256 -hex | sed 's/^.* //')"
+            echo kubeadm join {{ control_plane_endpoint }} --token $token --discovery-token-ca-cert-hash sha256:${hash}
+          else
+            kubeadm token create --print-join-command --description k8s-homenet
+          fi
+        executable: /bin/bash
+      register: kubernetes_join_cmd
+      changed_when: kubernetes_join_cmd.rc != 0
+      delegate_to: lima-k8s-homenet-control-0
+    - name: Run join command
+      ansible.builtin.command:
+        cmd: "{{ kubernetes_join_cmd.stdout }}"
+        creates: /etc/kubernetes/pki/ca.crt
