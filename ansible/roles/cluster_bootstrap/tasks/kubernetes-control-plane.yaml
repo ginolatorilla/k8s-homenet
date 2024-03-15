@@ -28,6 +28,26 @@
       vars:
         keepalived_api_server: "{{ control_plane_address }}"
 
+- name: HA control plane - haproxy
+  block:
+    - name: HAProxy static pod manifest
+      ansible.builtin.copy:
+        src: files/etc/kubernetes/manifests/haproxy.yaml
+        dest: /etc/kubernetes/manifests/haproxy.yaml
+    - name: HAProxy config directory
+      ansible.builtin.file:
+        path: /etc/haproxy
+        state: directory
+    - name: HAProxy config
+      ansible.builtin.template:
+        src: templates/etc/haproxy/haproxy.cfg.j2
+        dest: /etc/keepalived/haproxy.conf
+        mode: "0644"
+      vars:
+        haproxy_control_plane_hosts:
+          k8s-control-node-0: "192.168.100.25" # Todo: get from con
+
+- name: Cluster bootstrapping
   ansible.builtin.command:
     cmd: kubeadm init --config /etc/kubernetes/kubeadm.yaml
     creates: /etc/kubernetes/manifests/*.yaml
