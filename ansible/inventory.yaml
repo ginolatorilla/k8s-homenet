@@ -8,12 +8,16 @@ k8scontrollers:
     lima-k8s-homenet-control-0:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
       kubernetes_node_type: "control-leader"
+      kubernetes_node_ip: "192.168.100.25" # These are reserved from the router
 
 k8sworkers:
   hosts:
     lima-k8s-homenet-worker-0:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
       kubernetes_node_type: "worker"
+      kubernetes_node_ip: "192.168.100.27"
+
     lima-k8s-homenet-worker-1:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
       kubernetes_node_type: "worker"
+      kubernetes_node_ip: "192.168.100.28"

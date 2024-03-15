@@ -1,4 +1,10 @@
 ---
+- name: Assign node IP to kubelet
+  ansible.builtin.template:
+    src: templates/etc/default/kubelet
+    dest: /etc/default/kubelet
+    mode: "0644"
+
 - name: Join cluster
   block:
     - name: Generate join command
