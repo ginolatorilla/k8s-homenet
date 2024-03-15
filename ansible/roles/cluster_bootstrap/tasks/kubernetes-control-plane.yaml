@@ -1,5 +1,33 @@
 ---
-- name: Cluster bootstrapping
+- name: HA control plane - keepalived
+  block:
+    - name: Keepalived static pod manifest
+      ansible.builtin.copy:
+        src: files/etc/kubernetes/manifests/keepalived.yaml
+        dest: /etc/kubernetes/manifests/keepalived.yaml
+    - name: Keepalived config directory
+      ansible.builtin.file:
+        path: /etc/keepalived
+        state: directory
+    - name: Keepalived config
+      ansible.builtin.template:
+        src: templates/etc/keepalived/keepalived.conf.j2
+        dest: /etc/keepalived/keepalived.conf
+        mode: "0644"
+      vars:
+        keepalived_state: "{{ (kubernetes_node_type == 'control-leader') | ternary('MASTER', 'BACKUP') }}"
+        keepalived_interface: bridge
+        keepalived_priority: "{{ (kubernetes_node_type == 'control-leader') | ternary('101', '100') }}"
+        keepalived_auth_pass: "12345" # TODO: make this secure
+        keepalived_api_server: "{{ control_plane_address }}"
+    - name: Keepalived check script
+      ansible.builtin.template:
+        src: templates/etc/keepalived/check_apiserver.sh.j2
+        dest: /etc/keepalived/check_apiserver.sh
+        mode: "0744"
+      vars:
+        keepalived_api_server: "{{ control_plane_address }}"
+
   ansible.builtin.command:
     cmd: kubeadm init --config /etc/kubernetes/kubeadm.yaml
     creates: /etc/kubernetes/manifests/*.yaml
