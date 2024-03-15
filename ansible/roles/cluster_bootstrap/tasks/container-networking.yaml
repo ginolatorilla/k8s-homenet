@@ -1,4 +1,8 @@
 ---
 - name: Calico
-  ansible.builtin.command: env KUBECONFIG=/etc/kubernetes/admin.conf kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
   when: kubernetes_node_type == "control-leader"
+  ansible.builtin.command: >-
+    env KUBECONFIG=/etc/kubernetes/admin.conf
+    kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/calico.yaml
+  register: cluster_bootstrap_kubectl_apply_calico
+  changed_when: cluster_bootstrap_kubectl_apply_calico.rc != 0

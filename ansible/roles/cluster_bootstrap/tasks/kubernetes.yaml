@@ -32,19 +32,21 @@
     creates: /etc/kubernetes/manifests/*.yaml
   when: kubernetes_node_type == "control-leader"
 
+# TODO: add handling when token expires
 - name: Cluster join token
+  when: kubernetes_node_type == "control-leader"
   block:
     - name: Parse token from kubeadm
       ansible.builtin.command: kubeadm token list -o jsonpath={.token}
       register: kubernetes_kubeadm_token_list
+      changed_when: kubernetes_kubeadm_token_list.rc != 0
     - name: Save token to facts
       ansible.builtin.set_fact:
         kubernetes_join_token: "{{ kubernetes_kubeadm_token_list.stdout }}"
         cacheable: true
-  when: kubernetes_node_type == "control-leader"
 
 - name: Join cluster
+  when: kubernetes_node_type == "worker"
   ansible.builtin.command:
     cmd: "kubeadm join 192.168.100.25:6443 --token {{ kubernetes_join_token }} --discovery-token-unsafe-skip-ca-verification" # TODO: change apiserver listener
     creates: /etc/kubernetes/pki/ca.crt
-  when: kubernetes_node_type == "worker"

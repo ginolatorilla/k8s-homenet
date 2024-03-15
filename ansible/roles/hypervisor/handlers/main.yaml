@@ -1,0 +1,9 @@
+---
+- name: Rebuild sudoers for Lima
+  ansible.builtin.shell: |-
+    limactl sudoers > /tmp/etc_sudoers.d_lima
+    install -o root /tmp/etc_sudoers.d_lima /etc/sudoers.d/lima
+  listen: vm network reconfig
+  become: true
+  register: hypervisor_install_sudoers
+  changed_when: hypervisor_install_sudoers.rc != 0

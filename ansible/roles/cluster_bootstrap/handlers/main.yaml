@@ -1,0 +1,15 @@
+---
+- name: Load kernel modules
+  ansible.builtin.command: "modprobe {{ item }}"
+  loop:
+    - overlay
+    - br_netfilter
+  register: cluster_bootstrap_modprobe
+  changed_when: cluster_bootstrap_modprobe.rc != 0
+  listen: kernel modules reconfig
+
+- name: Apply sysctl params without reboot
+  ansible.builtin.command: sysctl --system
+  register: cluster_bootstrap_sysctl
+  changed_when: cluster_bootstrap_sysctl.rc != 0
+  listen: sysctl reconfig

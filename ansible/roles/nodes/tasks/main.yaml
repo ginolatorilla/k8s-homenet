@@ -4,14 +4,4 @@
     src: templates/lima.yaml.j2
     dest: "/tmp/{{ node_name }}.yaml"
     mode: "0644"
-  register: nodes_vm_conf
-
-- name: Delete current virtual machine
-  ansible.builtin.command:
-    cmd: "limactl remove {{ node_name }} --force"
-  when: nodes_vm_conf.changed
-
-- name: Restart the virtual machine
-  ansible.builtin.command:
-    cmd: "limactl start {{ nodes_vm_conf.dest }}"
-    creates: ~/.lima/{{ node_name }}/lima.yaml
+  notify: vm reconfig
