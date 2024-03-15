@@ -25,6 +25,8 @@
   hosts: k8scontrollers
   roles:
     - role: cluster_bootstrap
+      vars:
+        control_plane_address: "10.0.0.1"
   become: true
 
 - name: Kubernetes workers
@@ -33,5 +35,6 @@
   roles:
     - role: cluster_bootstrap
       vars:
-        control_plane_endpoint: 10.0.0.1:6443
+        control_plane_address: "10.0.0.1"
+        control_plane_endpoint: "10.0.0.1:6443"
   become: true

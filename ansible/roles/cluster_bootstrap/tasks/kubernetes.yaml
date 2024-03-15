@@ -26,9 +26,21 @@
     masked: false
     state: started
 
+- name: Kubeadm config
+  ansible.builtin.template:
+    src: templates/etc/kubernetes/kubeadm.conf.j2
+    dest: /etc/kubernetes/kubeadm.yaml
+    mode: "0600"
+  notify:
+    - drain cluster
+    - reset node
+
+- name: Wait for handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: Cluster bootstrapping
   ansible.builtin.command:
-    cmd: kubeadm init --pod-network-cidr "10.85.0.0/16" --cri-socket=unix:///var/run/crio/crio.sock # TODO: pod cidr, and teardown on reconfig
+    cmd: kubeadm init --config /etc/kubernetes/kubeadm.yaml
     creates: /etc/kubernetes/manifests/*.yaml
   when: kubernetes_node_type == "control-leader"
 
