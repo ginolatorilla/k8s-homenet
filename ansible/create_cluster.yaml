@@ -26,6 +26,7 @@
   roles:
     - role: cluster_bootstrap
       vars:
+        cluster_name: k8s-homenet
         control_plane_address: "192.168.100.250"
   become: true
 
@@ -35,6 +36,7 @@
   roles:
     - role: cluster_bootstrap
       vars:
+        cluster_name: k8s-homenet
         control_plane_address: "192.168.100.250"
         control_plane_endpoint: "192.168.100.250:6443"
   become: true

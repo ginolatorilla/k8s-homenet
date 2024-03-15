@@ -14,7 +14,7 @@ kind: ClusterConfiguration
 apiServer:
   timeoutForControlPlane: 4m0s
 certificatesDir: /etc/kubernetes/pki
-clusterName: kubernetes
+clusterName: {{ cluster_name }}
 controllerManager: {}
 dns: {}
 etcd:
