@@ -1,0 +1,23 @@
+---
+- name: Join cluster
+  block:
+    - name: Generate join command
+      ansible.builtin.shell:
+        cmd: |-
+          set -o pipefail
+          if [ "$(kubeadm token list | tail +2 | wc -l)" -gt 0 ]; then
+            token="$(kubeadm token list | tail +2 | head -1 | awk '{print $1}')"
+            hash="$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+              openssl dgst -sha256 -hex | sed 's/^.* //')"
+            echo kubeadm join {{ control_plane_endpoint }} --token $token --discovery-token-ca-cert-hash sha256:${hash}
+          else
+            kubeadm token create --print-join-command --description k8s-homenet
+          fi
+        executable: /bin/bash
+      register: kubernetes_join_cmd
+      changed_when: kubernetes_join_cmd.rc != 0
+      delegate_to: lima-k8s-homenet-control-0
+    - name: Run join command
+      ansible.builtin.command:
+        cmd: "{{ kubernetes_join_cmd.stdout }}"
+        creates: /etc/kubernetes/pki/ca.crt

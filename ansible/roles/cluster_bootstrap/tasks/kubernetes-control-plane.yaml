@@ -1,0 +1,6 @@
+---
+- name: Cluster bootstrapping
+  ansible.builtin.command:
+    cmd: kubeadm init --config /etc/kubernetes/kubeadm.yaml
+    creates: /etc/kubernetes/manifests/*.yaml
+  when: kubernetes_node_type == "control-leader"
