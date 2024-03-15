@@ -46,6 +46,6 @@ backend apiserverbackend
     mode tcp
     option ssl-hello-chk
     balance     roundrobin
-        {%- for hostid, hostaddr in haproxy_control_plane_hosts -%}
+        {%- for hostid, hostaddr in haproxy_control_plane_hosts.items() -%}
         server {{ hostid }} {{ hostaddr }}:6443 check
         {%- endfor -%}
