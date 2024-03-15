@@ -4,9 +4,3 @@
     cmd: "limactl remove {{ node_name }} --force"
     removes: ~/.lima/{{ node_name }}/lima.yaml
   listen: vm reconfig
-
-- name: Restart the virtual machine
-  ansible.builtin.command:
-    cmd: "limactl start {{ nodes_vm_conf.dest }}"
-    creates: ~/.lima/{{ node_name }}/lima.yaml
-  listen: vm reconfig

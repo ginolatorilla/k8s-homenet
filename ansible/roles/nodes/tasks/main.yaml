@@ -4,4 +4,13 @@
     src: templates/lima.yaml.j2
     dest: "/tmp/{{ node_name }}.yaml"
     mode: "0644"
+  register: nodes_vm_conf
   notify: vm reconfig
+
+- name: Wait for handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Restart the virtual machine
+  ansible.builtin.command:
+    cmd: "limactl start {{ nodes_vm_conf.dest }} --tty=false"
+    creates: ~/.lima/{{ node_name }}/lima.yaml
