@@ -5,6 +5,7 @@
       ansible.builtin.copy:
         src: files/etc/kubernetes/manifests/keepalived.yaml
         dest: /etc/kubernetes/manifests/keepalived.yaml
+        mode: "0644"
     - name: Keepalived config directory
       ansible.builtin.file:
         path: /etc/keepalived
@@ -34,6 +35,7 @@
       ansible.builtin.copy:
         src: files/etc/kubernetes/manifests/haproxy.yaml
         dest: /etc/kubernetes/manifests/haproxy.yaml
+        mode: "0644"
     - name: HAProxy config directory
       ansible.builtin.file:
         path: /etc/haproxy
