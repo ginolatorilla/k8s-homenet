@@ -25,7 +25,6 @@ containerd:
 networks:
   - lima: bridged
     interface: bridge
-    macAddress: "{{ virtual_machine_mac_address }}"
 
 provision:
   - # Remove the "lima-" prefix in the hostnames

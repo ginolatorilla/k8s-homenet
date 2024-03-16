@@ -11,28 +11,20 @@ k8scontrollers:
     lima-k8s-homenet-control-0:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
       kubernetes_node_type: "control-leader"
-      kubernetes_node_ip: "192.168.100.128" # These are reserved from the router
-      vm_mac_address: "d5:a0:d8:ca:18:ed"
       vm_host: localhost
     # lima-k8s-homenet-control-1:
     #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-1/ssh.config"
     #   kubernetes_node_type: "control"
-    #   kubernetes_node_ip: "192.168.100.129"
-    #   vm_mac_address: "12:ff:e8:85:7a:0d"
     #   vm_host: localhost
     # lima-k8s-homenet-control-2:
     #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-2/ssh.config"
     #   kubernetes_node_type: "control"
-    #   kubernetes_node_ip: "192.168.100.130"
-    #   vm_mac_address: "ba:b9:3e:ee:05:6a"
     #   vm_host: localhost
     # 136 to 143 - infra nodes
 
     # lima-k8s-homenet-infra-1:
     #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
     #   kubernetes_node_type: "worker"
-    #   kubernetes_node_ip: "192.168.100.136"
-    #   vm_mac_address: "ac:2e:f6:05:3a:bb "
     #   vm_host: localhost
 
 k8sworkers:
@@ -41,13 +33,9 @@ k8sworkers:
     lima-k8s-homenet-worker-0:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
       kubernetes_node_type: "worker"
-      kubernetes_node_ip: "192.168.100.144"
-      vm_mac_address: "ea:7f:cf:ab:52:d1"
       vm_host: localhost
 
-    # lima-k8s-homenet-worker-1:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
-    #   kubernetes_node_type: "worker"
-    #   kubernetes_node_ip: "192.168.100.145"
-    #   vm_mac_address: "a2:51:ef:4a:9a:a4"
-    #   vm_host: localhost
+    lima-k8s-homenet-worker-1:
+      ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
+      kubernetes_node_type: "worker"
+      vm_host: localhost
