@@ -4,9 +4,6 @@
   hosts: baremetal
   roles:
     - role: hypervisor
-      vars:
-        node_network_gateway: "10.0.0.0"
-        node_network_mask: "255.0.0.0"
   tasks:
     - name: Provision VMs
       ansible.builtin.include_role:
@@ -24,8 +21,7 @@
   roles:
     - role: cluster_bootstrap
       vars:
-        cluster_name: k8s-homenet
-        control_plane_address: "192.168.100.250"
+        kubernetes_node_ip: "{{ ansible_bridge.ipv4.address }}"
         haproxy_control_plane_hosts:
           k8s-control-node-0: "{{ hostvars['lima-k8s-homenet-control-0'].ansible_bridge.ipv4.address }}"
   become: true
@@ -36,7 +32,6 @@
   roles:
     - role: cluster_bootstrap
       vars:
-        cluster_name: k8s-homenet
-        control_plane_address: "192.168.100.250"
-        control_plane_endpoint: "192.168.100.250:6443"
+        kubernetes_node_ip: "{{ ansible_bridge.ipv4.address }}"
+        control_plane_endpoint: "{{ control_plane_address }}:{{ control_plane_port }}"
   become: true

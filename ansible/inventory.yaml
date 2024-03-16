@@ -1,3 +1,11 @@
+all:
+  vars:
+    cluster_name: k8s-homenet
+    control_plane_address: "192.168.100.250"
+    control_plane_port: "6443"
+    node_network_gateway: "10.0.0.0"
+    node_network_mask: "255.0.0.0"
+
 baremetal:
   hosts:
     localhost:
