@@ -10,10 +10,7 @@
         name: virtual_machine
       vars:
         virtual_machine_name: "{{ item }}"
-      loop:
-        - k8s-homenet-control-0
-        - k8s-homenet-worker-0
-        - k8s-homenet-worker-1
+      loop: "{{ groups.all | difference(groups.baremetal) | map('replace', 'lima-', '') }}"
 
 - name: Kubernetes control plane
   tags: s2
