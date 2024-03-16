@@ -10,15 +10,15 @@
     - role: nodes
       vars:
         node_name: k8s-homenet-control-0
-        mac_address: "52:7b:31:6a:fc:34"
+        mac_address: "d5:a0:d8:ca:18:ed"
     - role: nodes
       vars:
         node_name: k8s-homenet-worker-0
-        mac_address: "52:7b:31:6a:fc:35"
+        mac_address: "ea:7f:cf:ab:52:d1"
     - role: nodes
       vars:
         node_name: k8s-homenet-worker-1
-        mac_address: "52:7b:31:6a:fc:36"
+        mac_address: "a2:51:ef:4a:9a:a4"
 
 - name: Kubernetes control plane
   tags: s2
@@ -28,6 +28,8 @@
       vars:
         cluster_name: k8s-homenet
         control_plane_address: "192.168.100.250"
+        haproxy_control_plane_hosts:
+          k8s-control-node-0: "192.168.100.128"
   become: true
 
 - name: Kubernetes workers
