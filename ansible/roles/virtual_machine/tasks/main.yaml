@@ -9,8 +9,8 @@
 - name: Restart the virtual machine
   ansible.builtin.shell:
     cmd: |-
-      if [ "{{ virtual_machine_config.changed" == "true" ]; then
-        limactl remove {{ virtual_machine_name }} --force"
+      if [ "{{ virtual_machine_config.changed }}" == "true" ]; then
+        limactl remove {{ virtual_machine_name }} --force
       fi
       limactl start {{ virtual_machine_config.dest }} --tty=false
     creates: ~/.lima/{{ virtual_machine_name }}/lima.yaml

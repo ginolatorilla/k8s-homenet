@@ -8,24 +8,19 @@
         node_network_gateway: "10.0.0.0"
         node_network_mask: "255.0.0.0"
   tasks:
-    - name: Provision control node 0
+    - name: Provision VMs
       ansible.builtin.include_role:
         name: virtual_machine
       vars:
-        node_name: k8s-homenet-control-0
-        mac_address: "d5:a0:d8:ca:18:ed"
-    - name: Provision worker node 0
-      ansible.builtin.include_role:
-        name: virtual_machine
-      vars:
-        node_name: k8s-homenet-worker-0
-        mac_address: "ea:7f:cf:ab:52:d1"
-    - name: Provision worker node 1
-      ansible.builtin.include_role:
-        name: virtual_machine
-      vars:
-        node_name: k8s-homenet-worker-1
-        mac_address: "a2:51:ef:4a:9a:a4"
+        virtual_machine_name: "{{ item.name }}"
+        virtual_machine_mac_address: "{{ item.mac_address }}"
+      loop:
+        - name: k8s-homenet-control-0
+          mac_address: "d5:a0:d8:ca:18:ed"
+        - name: k8s-homenet-worker-0
+          mac_address: "ea:7f:cf:ab:52:d1"
+        - name: k8s-homenet-worker-1
+          mac_address: "a2:51:ef:4a:9a:a4"
 
 - name: Kubernetes control plane
   tags: s2
