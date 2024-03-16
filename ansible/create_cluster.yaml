@@ -27,7 +27,7 @@
         cluster_name: k8s-homenet
         control_plane_address: "192.168.100.250"
         haproxy_control_plane_hosts:
-          k8s-control-node-0: "192.168.100.128"
+          k8s-control-node-0: "{{ hostvars['lima-k8s-homenet-control-0'].ansible_bridge.ipv4.address }}"
   become: true
 
 - name: Kubernetes workers
