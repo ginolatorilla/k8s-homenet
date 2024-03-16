@@ -6,11 +6,13 @@
     mode: "0644"
   register: virtual_machine_config
 
-- name: Restart the virtual machine
-  ansible.builtin.shell:
-    cmd: |-
-      if [ "{{ virtual_machine_config.changed }}" == "true" ]; then
-        limactl remove {{ virtual_machine_name }} --force
-      fi
-      limactl start {{ virtual_machine_config.dest }} --tty=false
+- name: Delete the virtual machine
+  when: virtual_machine_config.changed
+  ansible.builtin.command:
+    cmd: limactl remove {{ virtual_machine_name }} --force
+    removes: ~/.lima/{{ virtual_machine_name }}/lima.yaml
+
+- name: Start the virtual machine
+  ansible.builtin.command:
+    cmd: limactl start {{ virtual_machine_config.dest }} --tty=false
     creates: ~/.lima/{{ virtual_machine_name }}/lima.yaml
