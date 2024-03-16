@@ -1,6 +1,0 @@
----
-- name: Delete current virtual machine
-  ansible.builtin.command:
-    cmd: "limactl remove {{ node_name }} --force"
-    removes: ~/.lima/{{ node_name }}/lima.yaml
-  listen: vm reconfig

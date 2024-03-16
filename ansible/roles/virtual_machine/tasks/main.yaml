@@ -2,15 +2,15 @@
 - name: Virtual machine config
   ansible.builtin.template:
     src: templates/lima.yaml.j2
-    dest: "/tmp/{{ node_name }}.yaml"
+    dest: "/tmp/{{ virtual_machine_name }}.yaml"
     mode: "0644"
-  register: nodes_vm_conf
-  notify: vm reconfig
-
-- name: Wait for handlers
-  ansible.builtin.meta: flush_handlers
+  register: virtual_machine_config
 
 - name: Restart the virtual machine
-  ansible.builtin.command:
-    cmd: "limactl start {{ nodes_vm_conf.dest }} --tty=false"
-    creates: ~/.lima/{{ node_name }}/lima.yaml
+  ansible.builtin.shell:
+    cmd: |-
+      if [ "{{ virtual_machine_config.changed" == "true" ]; then
+        limactl remove {{ virtual_machine_name }} --force"
+      fi
+      limactl start {{ virtual_machine_config.dest }} --tty=false
+    creates: ~/.lima/{{ virtual_machine_name }}/lima.yaml
