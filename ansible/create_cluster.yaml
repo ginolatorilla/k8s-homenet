@@ -10,19 +10,19 @@
   tasks:
     - name: Provision control node 0
       ansible.builtin.include_role:
-        name: nodes
+        name: virtual_machine
       vars:
         node_name: k8s-homenet-control-0
         mac_address: "d5:a0:d8:ca:18:ed"
     - name: Provision worker node 0
       ansible.builtin.include_role:
-        name: nodes
+        name: virtual_machine
       vars:
         node_name: k8s-homenet-worker-0
         mac_address: "ea:7f:cf:ab:52:d1"
     - name: Provision worker node 1
       ansible.builtin.include_role:
-        name: nodes
+        name: virtual_machine
       vars:
         node_name: k8s-homenet-worker-1
         mac_address: "a2:51:ef:4a:9a:a4"
