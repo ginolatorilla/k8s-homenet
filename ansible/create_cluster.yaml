@@ -19,8 +19,6 @@
     - role: cluster_bootstrap
       vars:
         kubernetes_node_ip: "{{ ansible_bridge.ipv4.address }}"
-        haproxy_control_plane_hosts:
-          k8s-control-node-0: "{{ hostvars['lima-k8s-homenet-control-0'].ansible_bridge.ipv4.address }}"
   become: true
 
 - name: Kubernetes workers
