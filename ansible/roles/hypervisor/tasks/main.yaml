@@ -12,3 +12,6 @@
     dest: ~/.lima/_config/networks.yaml
     mode: "0644"
   notify: vm network reconfig
+
+- name: Wait for handlers
+  ansible.builtin.meta: flush_handlers
