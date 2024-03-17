@@ -18,7 +18,7 @@
   roles:
     - role: cluster_bootstrap
       vars:
-        kubernetes_node_ip: "{{ ansible_bridge.ipv4.address }}"
+        kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
   become: true
 
 - name: Kubernetes workers
@@ -27,6 +27,6 @@
   roles:
     - role: cluster_bootstrap
       vars:
-        kubernetes_node_ip: "{{ ansible_bridge.ipv4.address }}"
+        kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
         control_plane_endpoint: "{{ control_plane_address }}:{{ control_plane_port }}"
   become: true

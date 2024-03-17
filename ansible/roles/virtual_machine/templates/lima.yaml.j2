@@ -25,6 +25,8 @@ containerd:
 networks:
   - lima: bridged
     interface: bridge
+  - lima: shared
+    interface: vm
 
 provision:
   - # Remove the "lima-" prefix in the hostnames
