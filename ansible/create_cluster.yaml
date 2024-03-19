@@ -30,3 +30,11 @@
         kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
         control_plane_endpoint: "{{ control_plane_address }}:{{ control_plane_port }}"
   become: true
+
+- name: Kubernetes config
+  tags: s4
+  hosts: localhost
+  roles:
+    - role: cluster_config
+      vars:
+        kubeconfig: /tmp/kubeconfig

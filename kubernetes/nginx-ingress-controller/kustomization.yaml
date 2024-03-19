@@ -1,0 +1,7 @@
+resources:
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.4.3/deployments/common/ns-and-sa.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.4.3/deployments/rbac/rbac.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.4.3/deployments/common/nginx-config.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.4.3/deployments/common/ingress-class.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.4.3/deploy/crds.yaml
+  - https://raw.githubusercontent.com/nginxinc/kubernetes-ingress/v3.4.3/deployments/deployment/nginx-ingress.yaml

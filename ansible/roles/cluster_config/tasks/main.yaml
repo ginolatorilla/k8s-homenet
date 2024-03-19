@@ -1,0 +1,12 @@
+---
+- name: Install kubectl
+  community.general.homebrew:
+    name: kubernetes-cli
+
+- name: Apply initial manifests
+  ansible.builtin.command: |-
+    env KUBECONFIG="{{ kubeconfig }}" kubectl apply -k {{ item }}
+  register: cluster_config_kubectl_apply
+  changed_when: cluster_config_kubectl_apply.rc != 0
+  loop:
+    - ../kubernetes/nginx-ingress-controller
