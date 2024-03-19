@@ -51,3 +51,10 @@
     cmd: kubeadm init --config /etc/kubernetes/kubeadm.yaml
     creates: /etc/kubernetes/manifests/kube*.yaml
   when: kubernetes_node_type == "control-leader"
+
+- name: Get kubeconfig
+  ansible.builtin.fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: /tmp/kubeconfig
+    flat: true
+  when: kubernetes_node_type == "control-leader"
