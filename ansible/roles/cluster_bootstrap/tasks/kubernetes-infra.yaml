@@ -1,5 +1,5 @@
 ---
-- name: HA control plane - keepalived
+- name: VIP for ingress
   block:
     - name: Keepalived static pod manifest
       ansible.builtin.copy:
