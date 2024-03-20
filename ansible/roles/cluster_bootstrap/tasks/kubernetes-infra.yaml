@@ -31,3 +31,11 @@
 
 - name: Provision as worker node
   ansible.builtin.include_tasks: kubernetes-worker.yaml
+
+- name: Taint node
+  ansible.builtin.command: |-
+    env KUBECONFIG=/etc/kubernetes/admin.conf
+    kubectl taint node {{ ansible_nodename }} node-role.kubernetes.io/{{ kubernetes_node_type }}:NoSchedule
+  register: cluster_bootstrap_taint_node
+  changed_when: cluster_bootstrap_taint_node.rc != 0
+  delegate_to: lima-k8s-homenet-control-0
