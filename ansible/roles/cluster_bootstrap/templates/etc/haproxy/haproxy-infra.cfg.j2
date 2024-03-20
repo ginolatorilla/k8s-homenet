@@ -35,18 +35,18 @@ frontend apps
     bind *:{{ ingress_controller_port }}
     mode tcp
     option tcplog
-    default_backend apiserverbackend
+    default_backend appsbackend
 
 #---------------------------------------------------------------------
 # round robin balancing for apps
 #---------------------------------------------------------------------
-backend apiserverbackend
+backend appsbackend
     option httpchk GET /healthz
     http-check expect status 200
     mode tcp
     option ssl-hello-chk
     balance     roundrobin
-        {%- for host in groups.k8sinfra -%}
+        {% for host in groups.k8sinfra -%}
         server {{ host | replace('lima-', '') }}-bridge {{ hostvars[host].ansible_bridge.ipv4.address }}:{{ ingress_controller_port }} check
         server {{ host | replace('lima-', '') }}-vmnet {{ hostvars[host].ansible_vm.ipv4.address }}:{{ ingress_controller_port }} check
-        {%- endfor -%}
+        {% endfor -%}

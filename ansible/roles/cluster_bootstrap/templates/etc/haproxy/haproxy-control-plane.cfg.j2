@@ -46,7 +46,7 @@ backend apiserverbackend
     mode tcp
     option ssl-hello-chk
     balance     roundrobin
-        {%- for host in groups.k8scontrollers -%}
+        {% for host in groups.k8scontrollers -%}
         server {{ host | replace('lima-', '') }}-bridge {{ hostvars[host].ansible_bridge.ipv4.address }}:{{ control_plane_port }} check
         server {{ host | replace('lima-', '') }}-vmnet {{ hostvars[host].ansible_vm.ipv4.address }}:{{ control_plane_port }} check
-        {%- endfor -%}
+        {% endfor -%}
