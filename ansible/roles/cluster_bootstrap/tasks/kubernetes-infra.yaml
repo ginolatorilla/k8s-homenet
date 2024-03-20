@@ -29,22 +29,5 @@
       vars:
         keepalived_api_server: "{{ ingress_controller_address }}"
 
-- name: HA control plane - haproxy
-  block:
-    - name: HAProxy static pod manifest
-      ansible.builtin.copy:
-        src: files/etc/kubernetes/manifests/haproxy.yaml
-        dest: /etc/kubernetes/manifests/haproxy.yaml
-        mode: "0644"
-    - name: HAProxy config directory
-      ansible.builtin.file:
-        path: /etc/haproxy
-        state: directory
-    - name: HAProxy config
-      ansible.builtin.template:
-        src: templates/etc/haproxy/haproxy-infra.cfg.j2
-        dest: /etc/haproxy/haproxy.cfg
-        mode: "0644"
-
 - name: Provision as worker node
   ansible.builtin.include_tasks: kubernetes-worker.yaml
