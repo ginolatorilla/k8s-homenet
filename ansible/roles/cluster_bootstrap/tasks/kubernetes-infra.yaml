@@ -1,0 +1,50 @@
+---
+- name: HA control plane - keepalived
+  block:
+    - name: Keepalived static pod manifest
+      ansible.builtin.copy:
+        src: files/etc/kubernetes/manifests/keepalived.yaml
+        dest: /etc/kubernetes/manifests/keepalived.yaml
+        mode: "0644"
+    - name: Keepalived config directory
+      ansible.builtin.file:
+        path: /etc/keepalived
+        state: directory
+    - name: Keepalived config
+      ansible.builtin.template:
+        src: templates/etc/keepalived/keepalived.conf.j2
+        dest: /etc/keepalived/keepalived.conf
+        mode: "0644"
+      vars:
+        keepalived_state: "{{ cluster_bootstrap_keepalived_state }}"
+        keepalived_interface: bridge
+        keepalived_priority: "{{ cluster_bootstrap_keepalived_priority }}"
+        keepalived_auth_pass: "12345" # TODO: make this secure
+        keepalived_api_server: "{{ ingress_controller_address }}"
+    - name: Keepalived check script
+      ansible.builtin.template:
+        src: templates/etc/keepalived/check_apiserver.sh.j2
+        dest: /etc/keepalived/check_apiserver.sh
+        mode: "0744"
+      vars:
+        keepalived_api_server: "{{ ingress_controller_address }}"
+
+- name: HA control plane - haproxy
+  block:
+    - name: HAProxy static pod manifest
+      ansible.builtin.copy:
+        src: files/etc/kubernetes/manifests/haproxy.yaml
+        dest: /etc/kubernetes/manifests/haproxy.yaml
+        mode: "0644"
+    - name: HAProxy config directory
+      ansible.builtin.file:
+        path: /etc/haproxy
+        state: directory
+    - name: HAProxy config
+      ansible.builtin.template:
+        src: templates/etc/haproxy/haproxy-infra.cfg.j2
+        dest: /etc/keepalived/haproxy.conf
+        mode: "0644"
+
+- name: Provision as worker node
+  ansible.builtin.include_tasks: kubernetes-worker.yaml

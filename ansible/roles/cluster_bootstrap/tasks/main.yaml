@@ -13,6 +13,10 @@
   ansible.builtin.include_tasks: kubernetes-control-plane.yaml
 
 - name: Install Kubernetes components for worker nodes
+  when: kubernetes_node_type == "infra"
+  ansible.builtin.include_tasks: kubernetes-infra.yaml
+
+- name: Install Kubernetes components for worker nodes
   when: kubernetes_node_type == "worker"
   ansible.builtin.include_tasks: kubernetes-worker.yaml
 

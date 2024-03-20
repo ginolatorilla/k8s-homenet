@@ -23,6 +23,16 @@
 
 - name: Kubernetes workers
   tags: s3
+  hosts: k8sinfra
+  roles:
+    - role: cluster_bootstrap
+      vars:
+        kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
+        control_plane_endpoint: "{{ control_plane_address }}:{{ control_plane_port }}"
+  become: true
+
+- name: Kubernetes workers
+  tags: s4
   hosts: k8sworkers
   roles:
     - role: cluster_bootstrap
@@ -32,7 +42,7 @@
   become: true
 
 - name: Kubernetes config
-  tags: s4
+  tags: s5
   hosts: localhost
   roles:
     - role: cluster_config
