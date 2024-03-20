@@ -27,3 +27,10 @@
       ansible.builtin.command:
         cmd: "{{ kubernetes_join_cmd.stdout }}"
         creates: /etc/kubernetes/pki/ca.crt
+
+- name: Add node role
+  ansible.builtin.command: |-
+    env KUBECONFIG=/etc/kubernetes/admin.conf kubectl label node/{{ ansible_nodename }} node-role.kubernetes.io/{{ kubernetes_node_type }}=""
+  register: cluster_bootstrap_node_role
+  changed_when: cluster_bootstrap_node_role.rc != 0
+  delegate_to: lima-k8s-homenet-control-0
