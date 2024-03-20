@@ -27,6 +27,9 @@ k8scontrollers:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
       kubernetes_node_type: "control-leader"
       vm_host: localhost
+      cluster_bootstrap_keepalived_state: MASTER
+      cluster_bootstrap_keepalived_priority: "101"
+
     # lima-k8s-homenet-control-1:
     #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-1/ssh.config"
     #   kubernetes_node_type: "control"

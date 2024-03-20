@@ -16,9 +16,9 @@
         dest: /etc/keepalived/keepalived.conf
         mode: "0644"
       vars:
-        keepalived_state: "{{ (kubernetes_node_type == 'control-leader') | ternary('MASTER', 'BACKUP') }}"
+        keepalived_state: "{{ cluster_bootstrap_keepalived_state }}"
         keepalived_interface: bridge
-        keepalived_priority: "{{ (kubernetes_node_type == 'control-leader') | ternary('101', '100') }}"
+        keepalived_priority: "{{ cluster_bootstrap_keepalived_priority }}"
         keepalived_auth_pass: "12345" # TODO: make this secure
         keepalived_api_server: "{{ control_plane_address }}"
     - name: Keepalived check script
