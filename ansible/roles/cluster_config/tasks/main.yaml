@@ -9,4 +9,5 @@
   register: cluster_config_kubectl_apply
   changed_when: cluster_config_kubectl_apply.rc != 0
   loop:
-    - ../kubernetes/nginx-ingress-controller
+    - ../kubernetes/core/00-container-networking
+    - ../kubernetes/core/10-ingress-controller

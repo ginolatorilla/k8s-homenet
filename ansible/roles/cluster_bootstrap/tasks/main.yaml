@@ -19,6 +19,3 @@
 - name: Install Kubernetes components for worker nodes
   when: kubernetes_node_type == "worker"
   ansible.builtin.include_tasks: kubernetes-worker.yaml
-
-- name: Install a container networking provider
-  ansible.builtin.include_tasks: container-networking.yaml
