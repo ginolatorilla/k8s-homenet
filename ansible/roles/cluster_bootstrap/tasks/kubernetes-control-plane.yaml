@@ -42,7 +42,7 @@
         state: directory
     - name: HAProxy config
       ansible.builtin.template:
-        src: templates/etc/haproxy/haproxy.cfg.j2
+        src: templates/etc/haproxy/haproxy-control-plane.cfg.j2
         dest: /etc/keepalived/haproxy.conf
         mode: "0644"
 

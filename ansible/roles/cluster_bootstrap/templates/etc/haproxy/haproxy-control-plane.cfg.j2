@@ -32,7 +32,7 @@ defaults
 # apiserver frontend which proxys to the control plane nodes
 #---------------------------------------------------------------------
 frontend apiserver
-    bind *:6443
+    bind *:{{ control_plane_port }}
     mode tcp
     option tcplog
     default_backend apiserverbackend
@@ -47,6 +47,6 @@ backend apiserverbackend
     option ssl-hello-chk
     balance     roundrobin
         {%- for host in groups.k8scontrollers -%}
-        server {{ host | replace('lima-', '') }}-bridge {{ hostvars[host].ansible_bridge.ipv4.address }}:6443 check
-        server {{ host | replace('lima-', '') }}-vmnet {{ hostvars[host].ansible_vm.ipv4.address }}:6443 check
+        server {{ host | replace('lima-', '') }}-bridge {{ hostvars[host].ansible_bridge.ipv4.address }}:{{ control_plane_port }} check
+        server {{ host | replace('lima-', '') }}-vmnet {{ hostvars[host].ansible_vm.ipv4.address }}:{{ control_plane_port }} check
         {%- endfor -%}
