@@ -27,7 +27,7 @@ k8scontrollers:
     # 128 to 135 - control plane
     lima-k8s-homenet-control-0:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
-      kubernetes_node_type: "control-leader"
+      kubernetes_node_type: "control"
       vm_host: localhost
       cluster_bootstrap_keepalived_state: MASTER
       cluster_bootstrap_keepalived_priority: "101"
