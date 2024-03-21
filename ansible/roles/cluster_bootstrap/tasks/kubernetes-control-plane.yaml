@@ -16,18 +16,18 @@
         dest: /etc/keepalived/keepalived.conf
         mode: "0644"
       vars:
-        keepalived_state: "{{ cluster_bootstrap_keepalived_state }}"
-        keepalived_interface: bridge
-        keepalived_priority: "{{ cluster_bootstrap_keepalived_priority }}"
-        keepalived_auth_pass: "12345" # TODO: make this secure
-        keepalived_api_server: "{{ control_plane_address }}"
+        cluster_bootstrap_vips: "{{ control_plane_addresses }}"
     - name: Keepalived check script
       ansible.builtin.template:
-        src: templates/etc/keepalived/check_apiserver.sh.j2
-        dest: /etc/keepalived/check_apiserver.sh
+        src: templates/etc/keepalived/check_server.sh.j2
+        dest: /etc/keepalived/check_server_{{ i + 1 }}.sh
         mode: "0744"
       vars:
-        keepalived_api_server: "{{ control_plane_address }}"
+        server: "{{ item.address }}"
+        port: "{{ control_plane_port }}"
+      loop: "{{ control_plane_addresses }}"
+      loop_control:
+        index_var: i
 
 - name: HA control plane - haproxy
   block:

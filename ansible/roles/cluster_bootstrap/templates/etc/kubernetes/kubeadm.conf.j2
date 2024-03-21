@@ -1,7 +1,7 @@
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: {{ control_plane_address }}
+  advertiseAddress: {{ control_plane_addresses[0].address }}
   bindPort: {{ control_plane_port }}
 nodeRegistration:
   criSocket: unix:///var/run/crio/crio.sock

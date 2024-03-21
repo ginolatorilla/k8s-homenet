@@ -17,7 +17,7 @@ spec:
       volumeMounts:
         - mountPath: /usr/local/etc/keepalived/keepalived.conf
           name: config
-        - mountPath: /etc/keepalived/check_apiserver.sh
+        - mountPath: /etc/keepalived/
           name: check
   hostNetwork: true
   volumes:
@@ -25,5 +25,5 @@ spec:
         path: /etc/keepalived/keepalived.conf
       name: config
     - hostPath:
-        path: /etc/keepalived/check_apiserver.sh
+        path: /etc/keepalived/
       name: check
