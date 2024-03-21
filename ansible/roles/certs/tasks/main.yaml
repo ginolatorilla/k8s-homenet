@@ -1,0 +1,25 @@
+---
+- name: Personal Certificate Authority
+  block:
+    - name: Signing key
+      community.crypto.openssl_privatekey:
+        path: "/tmp/{{ ansible_user_id }}.pem"
+    - name: Signing request
+      community.crypto.openssl_csr:
+        path: "/tmp/{{ ansible_user_id }}.csr"
+        privatekey_path: "/tmp/{{ ansible_user_id }}.pem"
+        common_name: "{{ ansible_user_id }}"
+        create_subject_key_identifier: true
+        use_common_name_for_san: false
+        basic_constraints:
+          - "CA:TRUE"
+        basic_constraints_critical: true
+        key_usage:
+          - keyCertSign
+        key_usage_critical: true
+    - name: Own CA
+      community.crypto.x509_certificate:
+        path: "/tmp/{{ ansible_user_id }}-ca.crt"
+        privatekey_path: "/tmp/{{ ansible_user_id }}.pem"
+        csr_path: "/tmp/{{ ansible_user_id }}.csr"
+        provider: selfsigned

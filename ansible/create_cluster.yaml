@@ -1,4 +1,10 @@
 ---
+- name: SSL certificates
+  tags: s0
+  hosts: baremetal
+  roles:
+    - role: certs
+
 - name: Virtual Machines
   tags: s1
   hosts: baremetal
