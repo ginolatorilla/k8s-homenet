@@ -5,7 +5,7 @@ all:
       - interface: bridge
         address: "192.168.100.250"
       - interface: vm
-        address: "192.168.10.250"
+        address: "192.168.10.25"
     control_plane_port: "6443"
     ingress_controller_address: "192.168.100.251" # This is a virtual IP
     ingress_controller_port: "443"
