@@ -16,18 +16,18 @@
         dest: /etc/keepalived/keepalived.conf
         mode: "0644"
       vars:
-        keepalived_state: "{{ cluster_bootstrap_keepalived_state }}"
-        keepalived_interface: bridge
-        keepalived_priority: "{{ cluster_bootstrap_keepalived_priority }}"
-        keepalived_auth_pass: "12345" # TODO: make this secure
-        keepalived_api_server: "{{ ingress_controller_address }}"
+        keepalived_vips: "{{ ingress_controller_addresses }}"
     - name: Keepalived check script
       ansible.builtin.template:
-        src: templates/etc/keepalived/check_apiserver.sh.j2
-        dest: /etc/keepalived/check_apiserver.sh
+        src: templates/etc/keepalived/check_server.sh.j2
+        dest: /etc/keepalived/check_server_{{ i + 1 }}.sh
         mode: "0744"
       vars:
-        keepalived_api_server: "{{ ingress_controller_address }}"
+        server: "{{ item.address }}"
+        port: "{{ ingress_controller_port }}"
+      loop: "{{ ingress_controller_addresses }}"
+      loop_control:
+        index_var: i
 
 - name: Provision as worker node
   ansible.builtin.include_tasks: kubernetes-worker.yaml
@@ -35,7 +35,7 @@
 - name: Taint node
   ansible.builtin.command: |-
     env KUBECONFIG=/etc/kubernetes/admin.conf
-    kubectl taint node {{ ansible_nodename }} node-role.kubernetes.io/{{ kubernetes_node_type }}:NoSchedule
+    kubectl taint node {{ ansible_nodename }} --overwrite=true node-role.kubernetes.io/{{ kubernetes_node_type }}:NoSchedule
   register: cluster_bootstrap_taint_node
   changed_when: cluster_bootstrap_taint_node.rc != 0
   delegate_to: lima-k8s-homenet-control-0

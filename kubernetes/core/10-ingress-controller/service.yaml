@@ -17,3 +17,4 @@ spec:
       targetPort: https
   externalIPs:
     - 192.168.100.251 # This is the ingress_controller_address (VIP)
+    - 192.168.10.26 # This is the ingress_controller_address (VIP)
