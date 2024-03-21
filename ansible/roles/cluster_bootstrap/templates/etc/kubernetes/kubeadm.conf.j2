@@ -15,6 +15,10 @@ apiServer:
   timeoutForControlPlane: 4m0s
   certSANs:
     - {{ kubernetes_node_ip }}
+{% for item in control_plane_addresses %}
+    - {{ item.address }}
+{% endfor %}
+
 certificatesDir: /etc/kubernetes/pki
 clusterName: {{ cluster_name }}
 controllerManager: {}
