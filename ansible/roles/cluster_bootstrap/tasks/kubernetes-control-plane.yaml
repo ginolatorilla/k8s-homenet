@@ -16,7 +16,7 @@
         dest: /etc/keepalived/keepalived.conf
         mode: "0644"
       vars:
-        cluster_bootstrap_vips: "{{ control_plane_addresses }}"
+        keepalived_vips: "{{ control_plane_addresses }}"
     - name: Keepalived check script
       ansible.builtin.template:
         src: templates/etc/keepalived/check_server.sh.j2

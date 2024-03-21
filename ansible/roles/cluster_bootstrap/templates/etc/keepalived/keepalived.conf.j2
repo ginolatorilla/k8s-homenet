@@ -4,7 +4,7 @@ global_defs {
     router_id LVS_DEVEL
 }
 
-{% for vip in cluster_bootstrap_vips %}
+{% for vip in keepalived_vips %}
 ! ---
 ! vip {{ loop.index }}
 vrrp_script check_server_{{ loop.index }} {
