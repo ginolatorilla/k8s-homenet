@@ -4,6 +4,7 @@
   loop:
     - overlay
     - br_netfilter
+    - ip_vs
   register: cluster_bootstrap_modprobe
   changed_when: cluster_bootstrap_modprobe.rc != 0
   listen: kernel modules reconfig
@@ -27,7 +28,7 @@
 
       kubeadm reset -f
       iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
-      command -v ipvsadm && ipvsadm -C
+      ipvsadm -C
     executable: /bin/bash
     removes: /etc/kubernetes/*.conf
   ignore_errors: true

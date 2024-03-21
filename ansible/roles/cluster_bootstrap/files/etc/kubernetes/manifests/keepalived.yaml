@@ -19,6 +19,8 @@ spec:
           name: config
         - mountPath: /etc/keepalived/
           name: check
+        - mountPath: /lib/modules
+          name: modprobe
   hostNetwork: true
   volumes:
     - hostPath:
@@ -27,3 +29,6 @@ spec:
     - hostPath:
         path: /etc/keepalived/
       name: check
+    - hostPath:
+        path: /lib/modules
+      name: modprobe

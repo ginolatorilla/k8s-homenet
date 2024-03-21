@@ -1,6 +1,12 @@
 ---
 - name: Container runtime prerequisites
   block:
+    - name: IPVS
+      ansible.builtin.apt:
+        update_cache: true
+        package:
+          - ipvsadm
+
     - name: Kernel module config
       ansible.builtin.copy:
         src: files/etc/modules-load.d/k8s.conf
