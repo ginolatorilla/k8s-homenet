@@ -4,7 +4,7 @@ global_defs {
     router_id LVS_DEVEL
 }
 
-{%- for vip in cluster_bootstrap_vips -%}
+{% for vip in cluster_bootstrap_vips %}
 ! ---
 ! vip {{ loop.index }}
 vrrp_script check_server_{{ loop.index }} {
@@ -15,7 +15,7 @@ vrrp_script check_server_{{ loop.index }} {
   rise 2
 }
 
-vrrp_instance VI_{{ loop.index }} {
+vrrp_instance {{ vip.interface }}_{{ loop.index }} {
     state {{ cluster_bootstrap_keepalived_state }}
     interface {{ vip.interface }}
     virtual_router_id {{ loop.index + 50 }}
@@ -31,4 +31,5 @@ vrrp_instance VI_{{ loop.index }} {
         check_server_{{ loop.index }}.sh
     }
 }
-{%- endfor -%}
+
+{% endfor %}
