@@ -16,7 +16,7 @@
   listen: sysctl reconfig
 
 - name: Drain cluster
-  when: cluster_bootstrap_keepalived_state == "MASTER"
+  when: kubernetes_node_type == "control" and cluster_bootstrap_keepalived_state == "MASTER"
   ansible.builtin.shell:
     cmd: |-
       set -o pipefail
