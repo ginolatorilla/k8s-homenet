@@ -5,18 +5,14 @@
   roles:
     - role: certs
 
-- name: Virtual Machines
+- name: Virtual machines
   tags: s1
   hosts: baremetal
   roles:
     - role: hypervisor
-  tasks:
-    - name: Provision VMs
-      ansible.builtin.include_role:
-        name: virtual_machine
+    - role: virtual_machine
       vars:
-        virtual_machine_name: "{{ item }}"
-      loop: "{{ groups.all | difference(groups.baremetal) | map('replace', 'lima-', '') }}"
+        virtual_machine_vms: "{{ groups.all | difference(groups.baremetal) | map('replace', 'lima-', '') }}"
 
 - name: Kubernetes control plane
   tags: s2
@@ -27,7 +23,7 @@
         kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
   become: true
 
-- name: Kubernetes workers
+- name: Kubernetes infra nodes
   tags: s3
   hosts: k8sinfra
   roles:
