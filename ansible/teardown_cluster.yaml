@@ -1,0 +1,15 @@
+---
+- name: Tear down the cluster
+  hosts: baremetal
+  tasks:
+    - name: Confirmation
+      ansible.builtin.pause:
+        prompt: Are you sure you want to destroy the Kubernetes cluster [y|N]?
+      register: teardown_cluster_confirmation
+
+    - name: Destroy all virtual machines
+      when: teardown_cluster_confirmation.user_input in ["y", "Y"]
+      ansible.builtin.command:
+        cmd: limactl remove {{ item }} --force
+        removes: ~/.lima/{{ item }}/lima.yaml
+      loop: "{{ groups.all | difference(groups.baremetal) | map('replace', 'lima-', '') }}"
