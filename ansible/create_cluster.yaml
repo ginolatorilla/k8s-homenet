@@ -50,3 +50,5 @@
     - role: cluster_config
       vars:
         kubeconfig: /tmp/kubeconfig
+        ingress_cert: "{{ certs_ingress_self_signed_cert.filename }}"
+        ingress_cert_key: "{{ certs_ingress_self_signed_privatekey.filename }}"

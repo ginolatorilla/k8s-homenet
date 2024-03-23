@@ -3,6 +3,22 @@
   community.general.homebrew:
     name: kubernetes-cli
 
+- name: Ingress TLS certificate
+  ansible.builtin.shell:
+    cmd: |-
+      set -o pipefail
+      export KUBECONFIG="{{ kubeconfig }}"
+      kubectl create secret tls tls \
+        -n nginx-ingress \
+        --cert {{ ingress_cert }} \
+        --key {{ ingress_cert_key }} \
+        --dry-run=client \
+        -o yaml \
+      | kubectl apply -f -
+    executable: bash
+  register: apply_tls
+  changed_when: apply_tls.rc != 0
+
 - name: Apply initial manifests
   ansible.builtin.command: |-
     env KUBECONFIG="{{ kubeconfig }}" kubectl apply -k {{ item }}
