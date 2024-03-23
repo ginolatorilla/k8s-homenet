@@ -4,10 +4,12 @@
     - name: Signing key
       community.crypto.openssl_privatekey:
         path: "/tmp/{{ ansible_user_id }}.pem"
+      register: privatekey
+
     - name: Signing request
       community.crypto.openssl_csr:
         path: "/tmp/{{ ansible_user_id }}.csr"
-        privatekey_path: "/tmp/{{ ansible_user_id }}.pem"
+        privatekey_path: "{{ privatekey.filename }}"
         common_name: "{{ ansible_user_id }}"
         create_subject_key_identifier: true
         use_common_name_for_san: false
@@ -17,9 +19,32 @@
         key_usage:
           - keyCertSign
         key_usage_critical: true
+      register: ca_csr
+
     - name: Own CA
       community.crypto.x509_certificate:
         path: "/tmp/{{ ansible_user_id }}-ca.crt"
-        privatekey_path: "/tmp/{{ ansible_user_id }}.pem"
-        csr_path: "/tmp/{{ ansible_user_id }}.csr"
+        privatekey_path: "{{ privatekey.filename }}"
+        csr_path: "{{ ca_csr.filename }}"
         provider: selfsigned
+      register: ca_crt
+
+- name: Ingress SSL certificate
+  block:
+    - name: Signing request
+      community.crypto.openssl_csr:
+        path: "/tmp/{{ cluster_name }}.csr"
+        privatekey_path: "{{ privatekey.filename }}"
+        common_name: "{{ cluster_name }}"
+        subject_alt_name: >-
+          {{ ['DNS:k8s-homenet'] + (ingress_controller_addresses | map(attribute='address') | map('regex_replace', '^', 'DNS:') | list) }}
+      register: csr
+
+    - name: Self-signed certificate
+      community.crypto.x509_certificate:
+        path: "/tmp/{{ cluster_name }}.crt"
+        privatekey_path: "{{ privatekey.filename }}"
+        csr_path: "{{ csr.filename }}"
+        ownca_path: "{{ ca_crt.filename }}"
+        ownca_privatekey_path: "{{ privatekey.filename }}"
+        provider: ownca
