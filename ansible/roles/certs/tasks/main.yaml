@@ -36,8 +36,9 @@
         path: "/tmp/{{ cluster_name }}.csr"
         privatekey_path: "{{ privatekey.filename }}"
         common_name: "{{ cluster_name }}"
-        subject_alt_name: >-
-          {{ ['DNS:k8s-homenet'] + (ingress_controller_addresses | map(attribute='address') | map('regex_replace', '^', 'DNS:') | list) }}
+        subject_alt_name: "{{ dns_names | map('regex_replace', '^', 'DNS:') | list }}"
+      vars:
+        dns_names: "{{ [cluster_name] + (ingress_controller_addresses | map(attribute='address') | list) }}"
       register: csr
 
     - name: Self-signed certificate
