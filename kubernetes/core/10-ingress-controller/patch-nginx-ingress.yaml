@@ -12,3 +12,8 @@ spec:
         - key: node-role.kubernetes.io/infra
           operator: Exists
           effect: NoSchedule
+      containers:
+        - name: nginx-ingress
+          args:
+            - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+            - -default-server-tls-secret=$(POD_NAMESPACE)/tls
