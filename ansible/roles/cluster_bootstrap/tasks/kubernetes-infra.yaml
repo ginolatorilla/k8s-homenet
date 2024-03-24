@@ -10,21 +10,23 @@
       ansible.builtin.file:
         path: /etc/keepalived
         state: directory
+        mode: "0755"
+      register: keepalived_config_dir
     - name: Keepalived config
       ansible.builtin.template:
         src: templates/etc/keepalived/keepalived.conf.j2
-        dest: /etc/keepalived/keepalived.conf
+        dest: "{{ keepalived_config_dir.path }}/keepalived.conf"
         mode: "0644"
       vars:
         keepalived_vips: "{{ ingress_controller_addresses }}"
     - name: Keepalived check script
       ansible.builtin.template:
         src: templates/etc/keepalived/check_server.sh.j2
-        dest: /etc/keepalived/check_server_{{ i + 1 }}.sh
+        dest: "{{ keepalived_config_dir.path }}/check_server_{{ i + 1 }}.sh"
         mode: "0744"
       vars:
-        server: "{{ item.address }}"
-        port: "{{ ingress_controller_port }}"
+        virtual_server_ip: "{{ item.address }}"
+        virtual_server_port: "{{ ingress_controller_port }}"
       loop: "{{ ingress_controller_addresses }}"
       loop_control:
         index_var: i

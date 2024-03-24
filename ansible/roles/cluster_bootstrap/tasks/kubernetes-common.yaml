@@ -31,6 +31,7 @@
     src: templates/etc/kubernetes/kubeadm.conf.j2
     dest: /etc/kubernetes/kubeadm.yaml
     mode: "0600"
+  register: kubeadm
   notify:
     - drain cluster
     - reset node

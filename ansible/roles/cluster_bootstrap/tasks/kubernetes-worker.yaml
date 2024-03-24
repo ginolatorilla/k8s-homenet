@@ -17,7 +17,7 @@
               openssl dgst -sha256 -hex | sed 's/^.* //')"
             echo kubeadm join {{ control_plane_endpoint }} --token $token --discovery-token-ca-cert-hash sha256:${hash}
           else
-            kubeadm token create --print-join-command --description k8s-homenet
+            kubeadm token create --print-join-command --description {{ cluster_name }}
           fi
         executable: /bin/bash
       register: kubernetes_join_cmd
