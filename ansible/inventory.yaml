@@ -25,16 +25,10 @@ baremetal:
       ansible_connection: local
       node_network_gateway: "192.168.10.1"
       node_network_dhcp_end: "192.168.10.30"
-      node_network_mask: "255.255.255.224" # /27
-    # secondary:
-    #   ansible_connection: "192.168.100.7"
-    #   node_network_gateway: "192.168.10.32"
-    #   node_network_dhcp_end: "192.168.10.62"
-    #   node_network_mask: "255.255.255.224" # /27
+      node_network_mask: "255.255.255.224"
 
 k8scontrollers:
   hosts:
-    # 128 to 135 - control plane
     lima-k8s-homenet-control-0:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
       kubernetes_node_type: "control"
@@ -42,20 +36,6 @@ k8scontrollers:
       cluster_bootstrap_keepalived_state: MASTER
       cluster_bootstrap_keepalived_priority: "101"
 
-    # lima-k8s-homenet-control-1:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-1/ssh.config"
-    #   kubernetes_node_type: "control"
-    #   vm_host: localhost
-    # lima-k8s-homenet-control-2:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-2/ssh.config"
-    #   kubernetes_node_type: "control"
-    #   vm_host: localhost
-    # 136 to 143 - infra nodes
-
-    # lima-k8s-homenet-infra-1:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
-    #   kubernetes_node_type: "worker"
-    #   vm_host: localhost
 k8sinfra:
   hosts:
     lima-k8s-homenet-infra-0:
