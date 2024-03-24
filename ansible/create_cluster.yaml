@@ -28,7 +28,7 @@
       vars:
         kubeconfig: /tmp/kubeconfig
         kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
-        control_plane_endpoint: "{{ control_plane_addresses[0].address }}:{{ control_plane_port }}"
+        control_plane_endpoint: "{{ control_plane_hostname }}:{{ control_plane_port }}"
         static_host_ips:
           control_plane: "{{ control_plane_addresses[1].address }}"
           ingress_controller: "{{ ingress_controller_addresses[1].address }}"
@@ -42,7 +42,7 @@
       vars:
         kubeconfig: /tmp/kubeconfig
         kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
-        control_plane_endpoint: "{{ control_plane_addresses[0].address }}:{{ control_plane_port }}"
+        control_plane_endpoint: "{{ control_plane_hostname }}:{{ control_plane_port }}"
         static_host_ips:
           control_plane: "{{ control_plane_addresses[1].address }}"
           ingress_controller: "{{ ingress_controller_addresses[1].address }}"
