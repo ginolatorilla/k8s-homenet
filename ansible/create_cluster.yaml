@@ -1,10 +1,4 @@
 ---
-- name: SSL certificates
-  tags: s0
-  hosts: baremetal
-  roles:
-    - role: certs
-
 - name: Virtual machines
   tags: s1
   hosts: baremetal
@@ -21,6 +15,9 @@
     - role: cluster_bootstrap
       vars:
         kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
+        static_host_ips:
+          control_plane: "{{ control_plane_addresses[1].address }}"
+          ingress_controller: "{{ ingress_controller_addresses[1].address }}"
   become: true
 
 - name: Kubernetes infra nodes
@@ -32,6 +29,9 @@
         kubeconfig: /tmp/kubeconfig
         kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
         control_plane_endpoint: "{{ control_plane_addresses[0].address }}:{{ control_plane_port }}"
+        static_host_ips:
+          control_plane: "{{ control_plane_addresses[1].address }}"
+          ingress_controller: "{{ ingress_controller_addresses[1].address }}"
   become: true
 
 - name: Kubernetes workers
@@ -43,7 +43,16 @@
         kubeconfig: /tmp/kubeconfig
         kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
         control_plane_endpoint: "{{ control_plane_addresses[0].address }}:{{ control_plane_port }}"
+        static_host_ips:
+          control_plane: "{{ control_plane_addresses[1].address }}"
+          ingress_controller: "{{ ingress_controller_addresses[1].address }}"
   become: true
+
+- name: SSL certificates
+  tags: s5
+  hosts: localhost
+  roles:
+    - role: certs
 
 - name: Kubernetes config
   tags: s5

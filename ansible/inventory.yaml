@@ -1,12 +1,14 @@
 all:
   vars:
     cluster_name: k8s-homenet
+    control_plane_hostname: api.k8s.homenet
     control_plane_addresses:
       - interface: bridge
         address: "192.168.100.250"
       - interface: vm
         address: "192.168.10.25"
     control_plane_port: "6443"
+    ingress_controller_hostname: homenet
     ingress_controller_addresses:
       - interface: bridge
         address: "192.168.100.251"
