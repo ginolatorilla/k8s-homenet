@@ -22,15 +22,29 @@
         executable: /bin/bash
       register: kubernetes_join_cmd
       changed_when: kubernetes_join_cmd.rc != 0
-      delegate_to: lima-k8s-homenet-control-0
+      delegate_to: >-
+        {{
+          hostvars
+          | dict2items
+          | map(attribute='value')
+          | selectattr('kubernetes_node_type', 'defined')
+          | selectattr('kubernetes_node_type', 'eq', 'control')
+          | selectattr('cluster_bootstrap_keepalived_state', 'defined')
+          | selectattr('cluster_bootstrap_keepalived_state', 'eq', 'MASTER')
+          | map(attribute='inventory_hostname')
+          | first
+        }}
     - name: Run join command
       ansible.builtin.command:
         cmd: "{{ kubernetes_join_cmd.stdout }}"
         creates: /etc/kubernetes/pki/ca.crt
 
 - name: Add node role
-  ansible.builtin.command: |-
-    env KUBECONFIG=/etc/kubernetes/admin.conf kubectl label node/{{ ansible_nodename }} node-role.kubernetes.io/{{ kubernetes_node_type }}=""
+  ansible.builtin.command: >-
+    kubectl label node/{{ ansible_nodename }} node-role.kubernetes.io/{{ kubernetes_node_type }}=""
+  environment:
+    KUBECONFIG: "{{ kubeconfig }}"
   register: cluster_bootstrap_node_role
   changed_when: cluster_bootstrap_node_role.rc != 0
-  delegate_to: lima-k8s-homenet-control-0
+  delegate_to: localhost
+  become: false

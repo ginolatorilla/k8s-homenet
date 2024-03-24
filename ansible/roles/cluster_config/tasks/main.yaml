@@ -20,8 +20,9 @@
   changed_when: apply_tls.rc != 0
 
 - name: Apply initial manifests
-  ansible.builtin.command: |-
-    env KUBECONFIG="{{ kubeconfig }}" kubectl apply -k {{ item }}
+  ansible.builtin.command: kubectl apply -k {{ item }}
+  environment:
+    KUBECONFIG: "{{ kubeconfig }}"
   register: cluster_config_kubectl_apply
   changed_when: cluster_config_kubectl_apply.rc != 0
   loop:
