@@ -1,0 +1,14 @@
+---
+# TODO: should trigger deletion of all nodes
+- name: Rebuild sudoers for Lima
+  ansible.builtin.shell:
+    cmd: limactl sudoers > /tmp/etc_sudoers.d_lima
+    creates: /tmp/etc_sudoers.d_lima
+  listen: vm network reconfig
+
+- name: Reinstall sudoers for Lima
+  ansible.builtin.command: install -o root /tmp/etc_sudoers.d_lima /etc/sudoers.d/lima
+  listen: vm network reconfig
+  become: true
+  register: hypervisor_install_sudoers
+  changed_when: hypervisor_install_sudoers.rc != 0

@@ -1,0 +1,58 @@
+all:
+  vars:
+    cluster_name: k8s-homenet
+    control_plane_hostname: api.k8s.homenet
+    control_plane_addresses:
+      - interface: bridge
+        address: "192.168.100.250"
+      - interface: vm
+        address: "192.168.10.25"
+    control_plane_port: "6443"
+    ingress_controller_hostname: homenet
+    ingress_controller_addresses:
+      - interface: bridge
+        address: "192.168.100.251"
+      - interface: vm
+        address: "192.168.10.26"
+    ingress_controller_port: "443"
+    kubernetes_service_cidr: "172.16.0.0/18"
+    kubernetes_pod_cidr: "10.85.0.0/16" # CRIO's default (hardcoded)
+    kubernetes_version: "1.29.0"
+
+baremetal:
+  hosts:
+    localhost:
+      ansible_connection: local
+      node_network_gateway: "192.168.10.1"
+      node_network_dhcp_end: "192.168.10.30"
+      node_network_mask: "255.255.255.224"
+
+k8scontrollers:
+  hosts:
+    lima-k8s-homenet-control-0:
+      ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
+      kubernetes_node_type: "control"
+      vm_host: localhost
+      cluster_bootstrap_keepalived_state: MASTER
+      cluster_bootstrap_keepalived_priority: "101"
+
+k8sinfra:
+  hosts:
+    lima-k8s-homenet-infra-0:
+      ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-infra-0/ssh.config"
+      kubernetes_node_type: "infra"
+      vm_host: localhost
+      cluster_bootstrap_keepalived_state: MASTER
+      cluster_bootstrap_keepalived_priority: "101"
+
+k8sworkers:
+  hosts:
+    lima-k8s-homenet-worker-0:
+      ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
+      kubernetes_node_type: "worker"
+      vm_host: localhost
+
+    lima-k8s-homenet-worker-1:
+      ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
+      kubernetes_node_type: "worker"
+      vm_host: localhost

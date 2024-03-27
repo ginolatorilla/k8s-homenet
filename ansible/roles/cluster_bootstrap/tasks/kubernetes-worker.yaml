@@ -1,0 +1,50 @@
+---
+- name: Assign node IP to kubelet
+  ansible.builtin.template:
+    src: templates/etc/default/kubelet
+    dest: /etc/default/kubelet
+    mode: "0644"
+
+- name: Join cluster
+  block:
+    - name: Generate join command
+      ansible.builtin.shell:
+        cmd: |-
+          set -o pipefail
+          if [ "$(kubeadm token list | tail +2 | wc -l)" -gt 0 ]; then
+            token="$(kubeadm token list | tail +2 | head -1 | awk '{print $1}')"
+            hash="$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+              openssl dgst -sha256 -hex | sed 's/^.* //')"
+            echo kubeadm join {{ control_plane_endpoint }} --token $token --discovery-token-ca-cert-hash sha256:${hash}
+          else
+            kubeadm token create --print-join-command --description {{ cluster_name }}
+          fi
+        executable: /bin/bash
+      register: kubernetes_join_cmd
+      changed_when: kubernetes_join_cmd.rc != 0
+      delegate_to: >-
+        {{
+          hostvars
+          | dict2items
+          | map(attribute='value')
+          | selectattr('kubernetes_node_type', 'defined')
+          | selectattr('kubernetes_node_type', 'eq', 'control')
+          | selectattr('cluster_bootstrap_keepalived_state', 'defined')
+          | selectattr('cluster_bootstrap_keepalived_state', 'eq', 'MASTER')
+          | map(attribute='inventory_hostname')
+          | first
+        }}
+    - name: Run join command
+      ansible.builtin.command:
+        cmd: "{{ kubernetes_join_cmd.stdout }}"
+        creates: /etc/kubernetes/pki/ca.crt
+
+- name: Add node role
+  ansible.builtin.command: >-
+    kubectl label node/{{ ansible_nodename }} node-role.kubernetes.io/{{ kubernetes_node_type }}=""
+  environment:
+    KUBECONFIG: "{{ kubeconfig }}"
+  register: cluster_bootstrap_node_role
+  changed_when: cluster_bootstrap_node_role.rc != 0
+  delegate_to: localhost
+  become: false

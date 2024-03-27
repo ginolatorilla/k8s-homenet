@@ -1,0 +1,54 @@
+---
+- name: Container runtime prerequisites
+  block:
+    - name: Kernel module config
+      ansible.builtin.copy:
+        src: files/etc/modules-load.d/k8s.conf
+        dest: /etc/modules-load.d/k8s.conf
+        mode: "0644"
+      notify: kernel modules reconfig
+
+    - name: IPv4 forwarding and bridged traffic for iptables config
+      ansible.builtin.copy:
+        src: files/etc/sysctl.d/k8s.conf
+        dest: /etc/sysctl.d/k8s.conf
+        mode: "0644"
+      notify: sysctl reconfig
+
+    - name: Wait for handlers
+      ansible.builtin.meta: flush_handlers
+
+- name: CRIO
+  block:
+    - name: CRIO apt repo signing keys
+      ansible.builtin.apt_key:
+        url: "{{ item.url }}"
+        keyring: "{{ item.keyring }}"
+      loop:
+        - url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/Release.key
+          keyring: /usr/share/keyrings/libcontainers-archive-keyring.gpg
+        - url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.28/xUbuntu_22.04/Release.key
+          keyring: /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+    - name: CRIO apt repo
+      ansible.builtin.apt_repository:
+        repo: "{{ item }}"
+        state: present
+      loop:
+        - >-
+          deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg]
+          https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/ /
+        - >-
+          deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg]
+          https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.28/xUbuntu_22.04/ /
+    - name: CRIO packages
+      ansible.builtin.apt:
+        update_cache: true
+        package:
+          - cri-o
+          - cri-o-runc
+    - name: CRIO as a systemd service
+      ansible.builtin.systemd_service:
+        name: crio
+        enabled: true
+        masked: false
+        state: started

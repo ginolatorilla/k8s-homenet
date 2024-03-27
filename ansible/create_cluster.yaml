@@ -1,17 +1,65 @@
 ---
-- name: Launch the Kubernetes cluster
+- name: Virtual machines
+  tags: s1
+  hosts: baremetal
+  roles:
+    - role: hypervisor
+    - role: virtual_machine
+      vars:
+        virtual_machine_vms: "{{ groups.all | difference(groups.baremetal) | map('replace', 'lima-', '') }}"
+
+- name: Kubernetes control plane
+  tags: s2
+  hosts: k8scontrollers
+  roles:
+    - role: cluster_bootstrap
+      vars:
+        kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
+        static_host_ips:
+          control_plane: "{{ control_plane_addresses[1].address }}"
+          ingress_controller: "{{ ingress_controller_addresses[1].address }}"
+  become: true
+
+- name: Kubernetes infra nodes
+  tags: s3
+  hosts: k8sinfra
+  roles:
+    - role: cluster_bootstrap
+      vars:
+        kubeconfig: /tmp/kubeconfig
+        kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
+        control_plane_endpoint: "{{ control_plane_hostname }}:{{ control_plane_port }}"
+        static_host_ips:
+          control_plane: "{{ control_plane_addresses[1].address }}"
+          ingress_controller: "{{ ingress_controller_addresses[1].address }}"
+  become: true
+
+- name: Kubernetes workers
+  tags: s3
+  hosts: k8sworkers
+  roles:
+    - role: cluster_bootstrap
+      vars:
+        kubeconfig: /tmp/kubeconfig
+        kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
+        control_plane_endpoint: "{{ control_plane_hostname }}:{{ control_plane_port }}"
+        static_host_ips:
+          control_plane: "{{ control_plane_addresses[1].address }}"
+          ingress_controller: "{{ ingress_controller_addresses[1].address }}"
+  become: true
+
+- name: SSL certificates
+  tags: s5
   hosts: localhost
   roles:
-    - role: qemu
+    - role: certs
 
-    - role: minikube
+- name: Kubernetes config
+  tags: s5
+  hosts: localhost
+  roles:
+    - role: cluster_config
       vars:
-        rebuild_cluster: true
-
-    - role: dnsmasq
-      vars:
-        listen_address: "{{ minikube_get_default_route.stdout }}"
-        domain: homenet
-        kubernetes_ingress_ip: "{{ minikube_ip.stdout }}"
-
-    - role: kubernetes
+        kubeconfig: /tmp/kubeconfig
+        ingress_cert: "{{ certs_ingress_self_signed_cert.filename }}"
+        ingress_cert_key: "{{ certs_ingress_self_signed_privatekey.filename }}"

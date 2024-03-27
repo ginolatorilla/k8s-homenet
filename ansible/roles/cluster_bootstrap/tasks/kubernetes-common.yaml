@@ -1,0 +1,40 @@
+---
+- name: Kubernetes binaries
+  block:
+    - name: Kubernetes apt repo signing keys
+      ansible.builtin.apt_key:
+        url: https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
+        keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Kubernetes apt repo
+      ansible.builtin.apt_repository:
+        repo: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
+        state: present
+
+    - name: Kubernetes packages
+      ansible.builtin.apt:
+        update_cache: true
+        package:
+          - kubelet
+          - kubeadm
+          - kubectl
+
+- name: Kubelet as a systemd service
+  ansible.builtin.systemd_service:
+    name: kubelet
+    enabled: true
+    masked: false
+    state: started
+
+- name: Kubeadm config
+  ansible.builtin.template:
+    src: templates/etc/kubernetes/kubeadm.conf.j2
+    dest: /etc/kubernetes/kubeadm.yaml
+    mode: "0600"
+  register: kubeadm
+  notify:
+    - drain cluster
+    - reset node
+
+- name: Wait for handlers
+  ansible.builtin.meta: flush_handlers

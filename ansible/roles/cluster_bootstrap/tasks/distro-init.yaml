@@ -1,0 +1,22 @@
+---
+- name: APT repository essentials
+  ansible.builtin.apt:
+    update_cache: true
+    package:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gpg
+
+- name: Add static hostnames
+  block:
+    - name: Control plane static hostname
+      ansible.builtin.lineinfile:
+        dest: /etc/hosts
+        regexp: "\\s{{ control_plane_hostname }}$"
+        line: "{{ static_host_ips.control_plane }} {{ control_plane_hostname }}"
+    - name: Ingress controller static hostname
+      ansible.builtin.lineinfile:
+        dest: /etc/hosts
+        regexp: "\\s{{ ingress_controller_hostname }}$"
+        line: "{{ static_host_ips.ingress_controller }} {{ ingress_controller_hostname }}"

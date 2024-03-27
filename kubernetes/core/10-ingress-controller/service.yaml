@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ingress
+  namespace: nginx-ingress
+spec:
+  selector:
+    app.kubernetes.io/name: nginx-ingress
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: https
+  externalIPs:
+    - 192.168.100.251 # This is the ingress_controller_address (VIP)
+    - 192.168.10.26 # This is the ingress_controller_address (VIP)

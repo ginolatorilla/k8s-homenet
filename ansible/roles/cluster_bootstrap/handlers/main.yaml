@@ -1,0 +1,45 @@
+---
+- name: Load kernel modules
+  ansible.builtin.command: "modprobe {{ item }}"
+  loop:
+    - overlay
+    - br_netfilter
+  register: cluster_bootstrap_modprobe
+  changed_when: cluster_bootstrap_modprobe.rc != 0
+  listen: kernel modules reconfig
+
+- name: Apply sysctl params without reboot
+  ansible.builtin.command: sysctl --system
+  register: cluster_bootstrap_sysctl
+  changed_when: cluster_bootstrap_sysctl.rc != 0
+  listen: sysctl reconfig
+
+- name: Drain cluster
+  when: kubernetes_node_type == "control" and cluster_bootstrap_keepalived_state == "MASTER"
+  ansible.builtin.shell:
+    cmd: |-
+      set -o pipefail
+      export KUBECONFIG=/etc/kubernetes/admin.conf
+
+      for node in $(kubectl get --no-headers nodes | awk '{print $1}'); do
+        kubectl drain $node --delete-emptydir-data --force --ignore-daemonsets
+      done
+
+      kubeadm reset -f
+      iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
+      command -v ipvsadm && ipvsadm -C
+    executable: /bin/bash
+    removes: /etc/kubernetes/*.conf
+  ignore_errors: true
+  listen: drain cluster
+
+- name: Reset node
+  ansible.builtin.shell:
+    cmd: |-
+      kubeadm reset -f
+      iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
+      command -v ipvsadm && ipvsadm -C
+    removes: /etc/kubernetes/*.conf
+  register: cluster_bootstrap_reset_node
+  ignore_errors: true
+  listen: reset node
