@@ -29,10 +29,9 @@ spec:
           targetRevision: "{{ .helmChartVersion }}"
           helm:
             valueFiles:
-              - $values/{{ .helmChart }}/values.yaml
+              - $values/kubernetes/helm-chart-apps/{{ .helmChart }}/values.yaml
         - repoURL: "https://github.com/ginolatorilla/k8s-homenet.git"
           targetRevision: HEAD
-          path: kubernetes/helm-chart-apps
           ref: values
 
   syncPolicy:
