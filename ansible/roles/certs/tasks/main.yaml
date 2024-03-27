@@ -40,10 +40,16 @@
       community.crypto.openssl_csr:
         path: "/tmp/{{ cluster_name }}.csr"
         privatekey_path: "{{ certs_ingress_self_signed_privatekey.filename }}"
-        common_name: "{{ cluster_name }}"
+        common_name: "{{ ingress_controller_hostname }}"
         subject_alt_name: "{{ dns_names | map('regex_replace', '^', 'DNS:') | list }}"
       vars:
-        dns_names: "{{ [ingress_controller_hostname] + (ingress_controller_addresses | map(attribute='address') | list) }}"
+        dns_names: >-
+          {{
+            [ingress_controller_hostname] +
+            ['*.' + ingress_controller_hostname] +
+            ['*.apps.' + ingress_controller_hostname] +
+            (ingress_controller_addresses | map(attribute='address') | list)
+          }}
       register: csr
 
     - name: Self-signed certificate
