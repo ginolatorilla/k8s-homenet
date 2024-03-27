@@ -1,0 +1,4 @@
+helmChart: openebs
+helmChartVersion: 15.7.1
+helmChartURL: https://openebs.github.io/charts
+namespace: openebs
