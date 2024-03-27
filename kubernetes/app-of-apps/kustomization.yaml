@@ -1,4 +1,0 @@
-resources:
-  - applicationset.yaml
-
-namespace: argocd
