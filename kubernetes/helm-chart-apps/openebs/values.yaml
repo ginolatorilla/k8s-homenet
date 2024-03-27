@@ -1,0 +1,4 @@
+localprovisioner:
+  deviceClass:
+    name: openebs-device
+    isDefaultClass: true
