@@ -17,3 +17,4 @@ spec:
           args:
             - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
             - -default-server-tls-secret=$(POD_NAMESPACE)/tls
+            - -wildcard-tls-secret=$(POD_NAMESPACE)/tls
