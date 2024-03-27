@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/ginolatorilla/k8s-homenet.git
     targetRevision: HEAD
-    path: /kubernetes/app-of-apps
+    path: /kubernetes/argocd
 
   syncPolicy:
     automated:
