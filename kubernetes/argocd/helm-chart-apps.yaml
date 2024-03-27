@@ -32,7 +32,7 @@ spec:
               - $values/{{ .helmChart }}/values.yaml
         - repoURL: "https://github.com/ginolatorilla/k8s-homenet.git"
           targetRevision: HEAD
-          path: kubernetes/helm-values
+          path: kubernetes/helm-chart-apps
           ref: values
 
   syncPolicy:
