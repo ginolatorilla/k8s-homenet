@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/ginolatorilla/k8s-homenet.git
     targetRevision: HEAD
-    path: /kubernetes/argocd
+    path: kubernetes/argocd
   destination:
     name: in-cluster
     namespace: argocd
