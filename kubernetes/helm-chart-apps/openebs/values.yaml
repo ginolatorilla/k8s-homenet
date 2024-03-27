@@ -2,3 +2,7 @@ localprovisioner:
   deviceClass:
     name: openebs-device
     isDefaultClass: true
+
+ndm:
+  filters:
+    includePaths: /dev/vda1
