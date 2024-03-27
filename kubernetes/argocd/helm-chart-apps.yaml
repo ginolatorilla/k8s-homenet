@@ -17,7 +17,7 @@ spec:
 
   template:
     metadata:
-      name: "{{ .helmChart }}"
+      name: "helm-chart-apps-{{ .helmChart }}"
     spec:
       project: default
       destination:
