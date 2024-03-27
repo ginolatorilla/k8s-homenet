@@ -5,4 +5,4 @@ localprovisioner:
 
 ndm:
   filters:
-    includePaths: /dev/vda1
+    includePaths: /dev/vda
