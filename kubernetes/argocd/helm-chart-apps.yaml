@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helm-chart-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - "missingkey=error"
+
+  generators:
+    - git:
+        repoURL: https://github.com/ginolatorilla/k8s-homenet.git
+        revision: HEAD
+        files:
+          - path: kubernetes/helm-chart-apps/*/appset-config.yaml
+
+  template:
+    metadata:
+      name: "{{ .helmChart }}"
+    spec:
+      project: default
+      destination:
+        name: in-cluster
+        namespace: "{{ .namespace }}"
+      sources:
+        - repoURL: "{{ .helmChartURL }}"
+          chart: "{{ .helmChart }}"
+          targetRevision: "{{ .helmChartVersion }}"
+          helm:
+            valueFiles:
+              - $values/{{ .helmChart }}/values.yaml
+        - repoURL: "https://github.com/ginolatorilla/k8s-homenet.git"
+          targetRevision: HEAD
+          path: kubernetes/helm-values
+          ref: values
+
+  syncPolicy:
+    preserveResourcesOnDeletion: false
