@@ -6,7 +6,3 @@ localprovisioner:
 
   hostpathClass:
     isDefaultClass: true
-
-ndm:
-  filters:
-    includePaths: /dev/vda
