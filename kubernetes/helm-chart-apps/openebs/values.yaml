@@ -1,6 +1,9 @@
 localprovisioner:
   deviceClass:
     enabled: false
+
+  basePath: /var/openebs/local
+
   hostpathClass:
     isDefaultClass: true
 
