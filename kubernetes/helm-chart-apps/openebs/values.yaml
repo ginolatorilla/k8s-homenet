@@ -6,3 +6,8 @@ localprovisioner:
 
   hostpathClass:
     isDefaultClass: true
+
+jiva:
+  enabled: true
+  openebsLocalpv:
+    enabled: true
