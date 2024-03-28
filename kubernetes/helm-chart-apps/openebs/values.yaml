@@ -9,5 +9,3 @@ localprovisioner:
 
 jiva:
   enabled: true
-  openebsLocalpv:
-    enabled: true
