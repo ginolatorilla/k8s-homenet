@@ -18,3 +18,5 @@ spec:
             - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
             - -default-server-tls-secret=$(POD_NAMESPACE)/tls
             - -wildcard-tls-secret=$(POD_NAMESPACE)/tls
+            - -external-service=nginx-ingress
+            - -report-ingress-status
