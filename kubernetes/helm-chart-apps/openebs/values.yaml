@@ -1,7 +1,6 @@
 localprovisioner:
   deviceClass:
-    name: openebs-device
-    isDefaultClass: true
+    enabled: false
 
 ndm:
   filters:
