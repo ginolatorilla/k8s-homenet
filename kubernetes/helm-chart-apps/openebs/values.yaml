@@ -1,8 +1,11 @@
 localprovisioner:
   deviceClass:
-    name: openebs-device
-    isDefaultClass: true
+    enabled: false
 
-ndm:
-  filters:
-    includePaths: /dev/vda
+  basePath: /var/openebs/local
+
+jiva:
+  enabled: true
+
+  storageClass:
+    isDefaultClass: true
