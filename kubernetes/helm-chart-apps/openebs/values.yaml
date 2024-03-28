@@ -4,8 +4,8 @@ localprovisioner:
 
   basePath: /var/openebs/local
 
-  hostpathClass:
-    isDefaultClass: true
-
 jiva:
   enabled: true
+
+  storageClass:
+    isDefaultClass: true
