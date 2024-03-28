@@ -2,3 +2,4 @@ helmChart: prometheus
 helmChartVersion: 15.7.1
 helmChartURL: https://prometheus-community.github.io/helm-charts
 namespace: prometheus
+valuesRevision: enable-prometheus-ingress
