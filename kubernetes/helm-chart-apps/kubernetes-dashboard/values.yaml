@@ -6,9 +6,8 @@ extras:
         name: kubernetes-dashboard
         namespace: kubernetes-dashboard # This must be the same as namespace in appset-config.yaml
         annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+          nginx.ingress.kubernetes.io/backend-protocol: HTTP
           nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-          nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       spec:
         ingressClassName: nginx
         rules:
@@ -17,11 +16,14 @@ extras:
               paths:
                 - backend:
                     service:
-                      name: helm-chart-apps-kubernetes-dashboard-kong-proxy
+                      name: helm-chart-apps-kubernetes-dashboard-web
                       port:
-                        number: 443
+                        name: web
                   path: /
                   pathType: ImplementationSpecific
         tls:
           - hosts:
               - kubernetes-dashboard.apps.homenet
+
+kong:
+  enabled: false
