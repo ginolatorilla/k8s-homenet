@@ -9,3 +9,7 @@ jiva:
 
   storageClass:
     name: openebs-jiva-csi-default
+
+  defaultPolicy:
+    name: openebs-jiva-default-policy
+    replicas: 1
