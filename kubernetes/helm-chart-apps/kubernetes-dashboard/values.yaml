@@ -21,6 +21,41 @@ extras:
                         name: web
                   path: /
                   pathType: ImplementationSpecific
+                - backend:
+                    service:
+                      name: helm-chart-apps-kubernetes-dashboard-auth
+                      port:
+                        name: auth
+                  path: /api/v1/login
+                  pathType: ImplementationSpecific
+                - backend:
+                    service:
+                      name: helm-chart-apps-kubernetes-dashboard-auth
+                      port:
+                        name: auth
+                  path: /api/v1/csrftoken/login
+                  pathType: ImplementationSpecific
+                - backend:
+                    service:
+                      name: helm-chart-apps-kubernetes-dashboard-auth
+                      port:
+                        name: auth
+                  path: /api/v1/me
+                  pathType: ImplementationSpecific
+                - backend:
+                    service:
+                      name: helm-chart-apps-kubernetes-dashboard-api
+                      port:
+                        name: api
+                  path: /api
+                  pathType: ImplementationSpecific
+                - backend:
+                    service:
+                      name: helm-chart-apps-kubernetes-dashboard-api
+                      port:
+                        name: api
+                  path: /metrics
+                  pathType: ImplementationSpecific
         tls:
           - hosts:
               - kubernetes-dashboard.apps.homenet
