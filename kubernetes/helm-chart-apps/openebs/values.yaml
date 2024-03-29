@@ -8,4 +8,4 @@ jiva:
   enabled: true
 
   storageClass:
-    isDefaultClass: true
+    name: openebs-jiva-csi-default

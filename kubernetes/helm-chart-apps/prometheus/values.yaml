@@ -10,3 +10,7 @@ server:
     tls:
       - hosts:
           - prometheus.apps.homenet
+
+  persistentVolume:
+    size: 8Gi
+    storageClass: openebs-jiva-csi-default
