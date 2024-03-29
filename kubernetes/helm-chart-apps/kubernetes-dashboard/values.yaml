@@ -10,3 +10,4 @@ app:
     tls:
       - hosts:
           - kubernetes-dashboard.apps.homenet
+      secretName: null
