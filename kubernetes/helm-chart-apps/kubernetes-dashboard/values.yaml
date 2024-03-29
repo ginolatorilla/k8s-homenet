@@ -5,9 +5,9 @@ extras:
       metadata:
         name: kubernetes-dashboard
         namespace: kubernetes-dashboard # This must be the same as namespace in appset-config.yaml
-      annotations:
-        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+          nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       spec:
         ingressClassName: nginx
         rules:
