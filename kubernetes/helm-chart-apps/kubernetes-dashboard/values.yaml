@@ -1,11 +1,21 @@
-app:
-  ingress:
-    enabled: true
-    ingressClassName: nginx
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    hosts:
-      - kubernetes-dashboard.apps.homenet
-    tls:
-      secretName: null
+extras:
+  manifests:
+    - apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      name: kubernetes-dashboard
+      spec:
+        ingressClassName: nginx
+        rules:
+          - host: kubernetes-dashboard.apps.homenet
+            http:
+              paths:
+                - backend:
+                    service:
+                      name: helm-chart-apps-kubernetes-dashboard-kong-proxy
+                      port:
+                        number: 443
+                  path: /
+                  pathType: ImplementationSpecific
+        tls:
+          - hosts:
+              - kubernetes-dashboard.apps.homenet
