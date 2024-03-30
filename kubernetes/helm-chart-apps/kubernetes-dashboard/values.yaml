@@ -1,6 +1,7 @@
 app:
   ingress:
     enabled: true
+    useDefaultAnnotations: false
     annotations:
       nginx.org/ssl-services: helm-chart-apps-kubernetes-dashboard-kong-proxy
     hosts:
