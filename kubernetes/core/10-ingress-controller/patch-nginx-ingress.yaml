@@ -20,5 +20,3 @@ spec:
             - -wildcard-tls-secret=$(POD_NAMESPACE)/tls
             - -external-service=nginx-ingress
             - -report-ingress-status
-            - -enable-custom-resources
-            - -enable-tls-passthrough
