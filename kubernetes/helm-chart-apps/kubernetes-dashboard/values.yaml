@@ -1,3 +1,13 @@
+app:
+  ingress:
+    enabled: true
+    hosts:
+      - kubernetes-dashboard.apps.homenet
+    ingressClassName: nginx
+    issuer:
+      name: ingress-cert-issuer
+      scope: cluster
+
 extras:
   manifests:
     - apiVersion: v1
