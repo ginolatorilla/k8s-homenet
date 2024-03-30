@@ -48,12 +48,6 @@
           ingress_controller: "{{ ingress_controller_addresses[1].address }}"
   become: true
 
-- name: SSL certificates
-  tags: s5
-  hosts: localhost
-  roles:
-    - role: certs
-
 - name: Kubernetes config
   tags: s5
   hosts: localhost
@@ -61,5 +55,3 @@
     - role: cluster_config
       vars:
         kubeconfig: /tmp/kubeconfig
-        ingress_cert: "{{ certs_ingress_self_signed_cert.filename }}"
-        ingress_cert_key: "{{ certs_ingress_self_signed_privatekey.filename }}"
