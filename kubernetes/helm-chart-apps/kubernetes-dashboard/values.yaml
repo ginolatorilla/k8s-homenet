@@ -1,6 +1,8 @@
 app:
   ingress:
     enabled: true
+    annotations:
+      nginx.org/ssl-services: helm-chart-apps-kubernetes-dashboard-kong-proxy
     hosts:
       - kubernetes-dashboard.apps.homenet
     ingressClassName: nginx
@@ -10,23 +12,6 @@ app:
 
 extras:
   manifests:
-    - apiVersion: k8s.nginx.org/v1
-      kind: TransportServer
-      metadata:
-        name: kubernetes-dashboard
-        namespace: kubernetes-dashboard
-      spec:
-        listener:
-          name: tls-passthrough
-          protocol: TLS_PASSTHROUGH
-        host: kubernetes-dashboard.apps.homenet
-        upstreams:
-          - name: kubernetes-dashboard-kong-proxy
-            service: helm-chart-apps-kubernetes-dashboard-kong-proxy
-            port: 443
-        action:
-          pass: kubernetes-dashboard-kong-proxy
-
     - apiVersion: v1
       kind: ServiceAccount
       metadata:
