@@ -21,10 +21,10 @@ spec:
       destination:
         name: in-cluster
         namespace: "{{ .namespace }}"
-      source:
-        repoURL: "https://github.com/ginolatorilla/k8s-homenet.git"
-        targetRevision: '{{ default "HEAD" .revision }}'
-        path: kubernetes/kustomize-apps/{{ .name }}
+      sources:
+        - repoURL: "https://github.com/ginolatorilla/k8s-homenet.git"
+          targetRevision: '{{ default "HEAD" .revision }}'
+          path: kubernetes/kustomize-apps/{{ .name }}
       syncPolicy:
         automated:
           prune: true
