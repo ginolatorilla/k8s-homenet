@@ -5,11 +5,13 @@ server:
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      cert-manager.io/cluster-issuer: "ingress-cert-issuer"
     hosts:
       - prometheus.apps.homenet
     tls:
       - hosts:
           - prometheus.apps.homenet
+        secretName: prometheus-ingress-tls
 
   persistentVolume:
     size: 8Gi
