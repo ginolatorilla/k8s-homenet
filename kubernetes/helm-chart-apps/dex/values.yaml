@@ -7,7 +7,6 @@ config:
     type: sqlite3 # TODO: Upgrade to a DB service later
     config:
       file: /tmp/dex.db
-  enablePasswordDB: true
   connectors:
     - type: github
       id: github
