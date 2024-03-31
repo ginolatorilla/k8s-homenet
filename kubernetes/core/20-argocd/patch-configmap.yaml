@@ -2,15 +2,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: argocd-cmd-params-cm
+  name: argocd-cm
 data:
-  server.insecure: "true"
+  url: https://argocd.apps.homenet
   oidc.config: |
-    name: Dex
+    name: GitHub
     issuer: https://auth.apps.homenet
     clientID: $argocd-client:ARGOCD_CLIENT_ID
     clientSecret: $argocd-client:ARGOCD_CLIENT_SECRET
-
+  oidc.tls.insecure.skip.verify: "true" # TODO: harden
 # ---
 # # Workaround for HAProxy ingress controller
 # apiVersion: v1

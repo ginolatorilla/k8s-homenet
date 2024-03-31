@@ -6,5 +6,7 @@ resources:
 
 patches:
   - path: patch-configmap.yaml
+  - path: patch-configmap-cmd-params.yaml
+  - path: patch-configmap-rbac.yaml
 
 namespace: argocd
