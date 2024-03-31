@@ -1,0 +1,51 @@
+alertmanager:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "ingress-cert-issuer"
+    hosts:
+      - alertmanager.apps.homenet
+    tls:
+      - hosts:
+          - alertmanager.apps.homenet
+        secretName: alertmanager-ingress-tls
+
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "ingress-cert-issuer"
+    hosts:
+      - grafana.apps.homenet
+    tls:
+      - hosts:
+          - grafana.apps.homenet
+        secretName: grafana-ingress-tls
+
+prometheus:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "ingress-cert-issuer"
+    hosts:
+      - prometheus.apps.homenet
+    tls:
+      - hosts:
+          - prometheus.apps.homenet
+        secretName: prometheus-ingress-tls
+
+thanos-ruler:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "ingress-cert-issuer"
+    hosts:
+      - prometheus.apps.homenet
+    tls:
+      - hosts:
+          - thanos-ruler.apps.homenet
+        secretName: thanos-ruler-ingress-tls
