@@ -1,5 +1,8 @@
 config:
   issuer: https://auth.apps.homenet
+  oauth2:
+    skipApprovalScreen: true
+    alwaysShowLoginScreen: false
   storage:
     type: sqlite3 # TODO: Upgrade to a DB service later
     config:
