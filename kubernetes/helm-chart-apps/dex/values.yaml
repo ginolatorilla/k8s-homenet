@@ -18,14 +18,16 @@ config:
         redirectURI: https://auth.apps.homenet/callback
   staticClients:
     - name: ArgoCD
-      id: argocd
-      secret: "1234" # TODO: harden
+      id: "{{ .Env.ARGOCD_CLIENT_ID }}"
+      secret: "{{ .Env.ARGOCD_CLIENT_SECRET }}"
       redirectURIs:
         - https://argocd.apps.homenet/auth/callback
 
 envFrom:
   - secretRef:
       name: github-oauth
+  - secretRef:
+      name: argocd-client
 
 ingress:
   enabled: true
