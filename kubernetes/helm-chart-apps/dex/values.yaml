@@ -1,9 +1,22 @@
 config:
   issuer: https://auth.apps.homenet
-
   storage:
     type: sqlite3 # TODO: Upgrade to a DB service later
     config:
       file: /tmp/dex.db
-
   enablePasswordDB: true
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "ingress-cert-issuer"
+  hosts:
+    - host: auth.apps.homenet
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - auth.apps.homenet
+      secretName: dex-ingress-tls
