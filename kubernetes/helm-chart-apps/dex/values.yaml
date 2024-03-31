@@ -1,0 +1,9 @@
+config:
+  issuer: https://auth.apps.homenet
+
+  storage:
+    type: sqlite3 # TODO: Upgrade to a DB service later
+    config:
+      file: /tmp/dex.db
+
+  enablePasswordDB: true
