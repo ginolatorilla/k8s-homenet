@@ -2,4 +2,3 @@ helmChart: dex
 helmChartVersion: 0.17.0
 helmChartURL: https://charts.dexidp.io
 namespace: dex
-valuesRevision: 22-implement-identity-and-access-management

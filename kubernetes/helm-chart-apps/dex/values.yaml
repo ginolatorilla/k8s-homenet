@@ -1,0 +1,44 @@
+config:
+  issuer: https://auth.apps.homenet
+  oauth2:
+    skipApprovalScreen: true
+    alwaysShowLoginScreen: false
+  storage:
+    type: sqlite3 # TODO: Upgrade to a DB service later
+    config:
+      file: /tmp/dex.db
+  connectors:
+    - type: github
+      id: github
+      name: GitHub
+      config:
+        clientID: $GITHUB_CLIENT_ID
+        clientSecret: $GITHUB_CLIENT_SECRET
+        redirectURI: https://auth.apps.homenet/callback
+  staticClients:
+    - name: ArgoCD
+      id: "{{ .Env.ARGOCD_CLIENT_ID }}"
+      secret: "{{ .Env.ARGOCD_CLIENT_SECRET }}"
+      redirectURIs:
+        - https://argocd.apps.homenet/auth/callback
+
+envFrom:
+  - secretRef:
+      name: github-oauth
+  - secretRef:
+      name: argocd-client
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "ingress-cert-issuer"
+  hosts:
+    - host: auth.apps.homenet
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - auth.apps.homenet
+      secretName: dex-ingress-tls
