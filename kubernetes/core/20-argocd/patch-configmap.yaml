@@ -5,6 +5,12 @@ metadata:
   name: argocd-cmd-params-cm
 data:
   server.insecure: "true"
+  oidc.config: |
+    name: Dex
+    issuer: https://auth.apps.homenet
+    clientID: $argocd-client:ARGOCD_CLIENT_ID
+    clientSecret: $argocd-client:ARGOCD_CLIENT_SECRET
+
 # ---
 # # Workaround for HAProxy ingress controller
 # apiVersion: v1
