@@ -36,6 +36,12 @@
         KUBECONFIG: "{{ kubeconfig }}"
       register: cni_wait
       changed_when: cni_wait.rc != 0
+    - name: Restart CoreDNS # TODO: prevent default CRIO CNI plugin
+      ansible.builtin.command: kubectl rollout -n kube-system deploy/coredns restart
+      environment:
+        KUBECONFIG: "{{ kubeconfig }}"
+      register: coredns_restart
+      changed_when: coredns_restart.rc != 0
 
 - name: Kubernetes infra nodes
   tags: s3
