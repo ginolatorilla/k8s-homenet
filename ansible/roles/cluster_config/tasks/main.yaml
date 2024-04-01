@@ -13,3 +13,4 @@
     - ../kubernetes/core/00-container-networking
     - ../kubernetes/core/10-ingress-controller
     - ../kubernetes/core/20-argocd
+    - ../kubernetes/core/30-argocd-app-of-apps
