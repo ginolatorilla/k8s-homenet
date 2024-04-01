@@ -1,27 +1,34 @@
 ---
+- name: Virtual machine config directories
+  ansible.builtin.file:
+    path: ~/.lima/{{ item }}
+    state: directory
+    mode: "0755"
+  loop: "{{ virtual_machine_vms }}"
+
 - name: Virtual machine config
   ansible.builtin.template:
     src: templates/lima.yaml.j2
-    dest: "/tmp/{{ item }}.yaml"
+    dest: ~/.lima/{{ item }}/lima.yaml
     mode: "0644"
   register: virtual_machine_config
   loop: "{{ virtual_machine_vms }}"
   vars:
     virtual_machine_name: "{{ item }}"
 
-- name: Delete virtual machines
+- name: Stop virtual machines
   when: item.changed
   ansible.builtin.command:
-    cmd: limactl remove {{ virtual_machine_name }} --force
-    removes: ~/.lima/{{ virtual_machine_name }}/lima.yaml
+    cmd: limactl stop {{ virtual_machine_name }} --force
+    removes: ~/.lima/{{ virtual_machine_name }}/*.pid
   loop: "{{ virtual_machine_config.results }}"
   vars:
     virtual_machine_name: "{{ item.dest | basename | splitext | first }}"
 
-- name: Start virtual machines
+- name: Start virtual machines (async)
   ansible.builtin.command:
-    cmd: limactl start /tmp/{{ item }}.yaml --tty=false
-    creates: ~/.lima/{{ item }}/lima.yaml
+    cmd: limactl start {{ item }} --tty=false
+    creates: ~/.lima/{{ item }}/*.pid
   async: 300
   delay: 5
   poll: 0
