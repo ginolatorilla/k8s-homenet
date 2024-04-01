@@ -20,6 +20,29 @@
           ingress_controller: "{{ ingress_controller_addresses[1].address }}"
   become: true
 
+- name: Kubernetes CNI
+  tags: s2
+  hosts: localhost
+  tasks:
+    - name: Install CNI from manifests
+      ansible.builtin.command: kubectl apply -k ../kubernetes/core/00-container-networking
+      environment:
+        KUBECONFIG: "{{ kubeconfig }}"
+      register: cni_install
+      changed_when: cni_install.rc != 0
+    - name: Wait for CNI
+      ansible.builtin.command: kubectl wait -n kube-system deploy/calico-kube-controllers --for condition=available
+      environment:
+        KUBECONFIG: "{{ kubeconfig }}"
+      register: cni_wait
+      changed_when: cni_wait.rc != 0
+    - name: Restart CoreDNS # TODO: prevent default CRIO CNI plugin
+      ansible.builtin.command: kubectl rollout -n kube-system deploy/coredns restart
+      environment:
+        KUBECONFIG: "{{ kubeconfig }}"
+      register: coredns_restart
+      changed_when: coredns_restart.rc != 0
+
 - name: Kubernetes infra nodes
   tags: s3
   hosts: k8sinfra
@@ -35,7 +58,7 @@
   become: true
 
 - name: Kubernetes workers
-  tags: s3
+  tags: s4
   hosts: k8sworkers
   roles:
     - role: cluster_bootstrap
