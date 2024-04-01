@@ -23,7 +23,7 @@
     removes: ~/.lima/{{ virtual_machine_name }}/*.pid
   loop: "{{ virtual_machine_config.results }}"
   vars:
-    virtual_machine_name: "{{ item.dest | basename | splitext | first }}"
+    virtual_machine_name: "{{ item.dest | dirname | basename }}"
 
 - name: Start virtual machines (async)
   ansible.builtin.command:
