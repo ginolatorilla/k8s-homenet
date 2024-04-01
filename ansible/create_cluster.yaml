@@ -35,7 +35,7 @@
   become: true
 
 - name: Kubernetes workers
-  tags: s3
+  tags: s4
   hosts: k8sworkers
   roles:
     - role: cluster_bootstrap
