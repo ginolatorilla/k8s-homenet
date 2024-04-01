@@ -15,9 +15,9 @@ rosetta:
   enabled: true
   binfmt: true
 
-cpus: 2
-memory: 2GiB
-disk: 16GiB
+cpus: {{ vm_cpu }}
+memory: {{ vm_memory }}
+disk: {{ vm_disk }}
 
 containerd:
   user: false
