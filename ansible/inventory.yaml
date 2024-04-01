@@ -19,6 +19,11 @@ all:
     kubernetes_pod_cidr: "10.85.0.0/16" # CRIO's default (hardcoded)
     kubernetes_version: "1.29.0"
 
+    # Default values for virtual machines
+    vm_cpu: 2
+    vm_memory: 2GiB
+    vm_disk: 16GiB
+
 baremetal:
   hosts:
     localhost:
