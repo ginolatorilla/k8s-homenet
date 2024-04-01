@@ -15,6 +15,9 @@
   loop: "{{ virtual_machine_vms }}"
   vars:
     virtual_machine_name: "{{ item }}"
+    vm_cpu: "{{ hostvars['lima-' + item].vm_cpu }}"
+    vm_memory: "{{ hostvars['lima-' + item].vm_memory }}"
+    vm_disk: "{{ hostvars['lima-' + item].vm_disk }}"
 
 - name: Stop virtual machines
   when: item.changed
