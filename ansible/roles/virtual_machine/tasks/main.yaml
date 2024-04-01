@@ -25,10 +25,10 @@
   vars:
     virtual_machine_name: "{{ item.dest | basename | splitext | first }}"
 
-- name: Start virtual machines
+- name: Start virtual machines (async)
   ansible.builtin.command:
-    cmd: limactl start /tmp/{{ item }}.yaml --tty=false
-    creates: ~/.lima/{{ item }}/lima.yaml
+    cmd: limactl start {{ item }} --tty=false
+    creates: ~/.lima/{{ item }}/*.pid
   async: 300
   delay: 5
   poll: 0
