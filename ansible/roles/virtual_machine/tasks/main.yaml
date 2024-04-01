@@ -16,11 +16,11 @@
   vars:
     virtual_machine_name: "{{ item }}"
 
-- name: Delete virtual machines
+- name: Stop virtual machines
   when: item.changed
   ansible.builtin.command:
-    cmd: limactl remove {{ virtual_machine_name }} --force
-    removes: ~/.lima/{{ virtual_machine_name }}/lima.yaml
+    cmd: limactl stop {{ virtual_machine_name }} --force
+    removes: ~/.lima/{{ virtual_machine_name }}/*.pid
   loop: "{{ virtual_machine_config.results }}"
   vars:
     virtual_machine_name: "{{ item.dest | basename | splitext | first }}"
