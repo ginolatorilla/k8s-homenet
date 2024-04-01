@@ -9,7 +9,7 @@
 - name: Virtual machine config
   ansible.builtin.template:
     src: templates/lima.yaml.j2
-    dest: "/tmp/{{ item }}.yaml"
+    dest: ~/.lima/{{ item }}/lima.yaml
     mode: "0644"
   register: virtual_machine_config
   loop: "{{ virtual_machine_vms }}"
