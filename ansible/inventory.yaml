@@ -22,7 +22,7 @@ all:
     # Default values for virtual machines
     vm_cpu: 2
     vm_memory: 2GiB
-    vm_disk: 16GiB
+    vm_disk: 8GiB
 
 baremetal:
   hosts:
@@ -38,6 +38,7 @@ k8scontrollers:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
       kubernetes_node_type: "control"
       vm_host: localhost
+      vm_memory: 2.5GiB
       cluster_bootstrap_keepalived_state: MASTER
       cluster_bootstrap_keepalived_priority: "101"
 
@@ -47,6 +48,7 @@ k8sinfra:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-infra-0/ssh.config"
       kubernetes_node_type: "infra"
       vm_host: localhost
+      vm_memory: 2.5GiB
       cluster_bootstrap_keepalived_state: MASTER
       cluster_bootstrap_keepalived_priority: "101"
 
@@ -56,8 +58,12 @@ k8sworkers:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
       kubernetes_node_type: "worker"
       vm_host: localhost
+      vm_memory: 4GiB
+      vm_disk: 16GiB
 
     lima-k8s-homenet-worker-1:
       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
       kubernetes_node_type: "worker"
       vm_host: localhost
+      vm_memory: 4GiB
+      vm_disk: 16GiB
