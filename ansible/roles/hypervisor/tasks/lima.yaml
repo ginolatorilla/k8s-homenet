@@ -1,0 +1,17 @@
+---
+- name: Install limactl and dependencies using the host's package manager
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop:
+    - lima
+    - socket_vmnet
+
+- name: VM networks
+  ansible.builtin.template:
+    src: templates/networks.yaml
+    dest: ~/.lima/_config/networks.yaml
+    mode: "0644"
+  notify: vm network reconfig
+
+- name: Wait for handlers
+  ansible.builtin.meta: flush_handlers
