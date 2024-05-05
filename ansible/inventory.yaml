@@ -27,7 +27,7 @@ all:
 baremetal:
   hosts:
     homenet-baremetal-0.local:
-      hypervisor: qemu
+      hypervisor: lxd
     # localhost:
     #   ansible_connection: local
     #   node_network_gateway: "192.168.10.1"
