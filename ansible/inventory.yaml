@@ -26,11 +26,11 @@ all:
 
 baremetal:
   hosts:
-    localhost:
-      ansible_connection: local
-      node_network_gateway: "192.168.10.1"
-      node_network_dhcp_end: "192.168.10.30"
-      node_network_mask: "255.255.255.224"
+    # localhost:
+    #   ansible_connection: local
+    #   node_network_gateway: "192.168.10.1"
+    #   node_network_dhcp_end: "192.168.10.30"
+    #   node_network_mask: "255.255.255.224"
 
 k8scontrollers:
   hosts:
