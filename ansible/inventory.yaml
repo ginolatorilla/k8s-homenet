@@ -34,8 +34,16 @@ baremetal:
       virtual_machines:
         homenet-k8s-control-0:
           cpu: 2
-          memory: 2560MiB
+          memory: 2GiB
           ipv4_address: "10.0.0.2"
+        homenet-k8s-worker-small-b35aeecb-4c47:
+          cpu: 2
+          memory: 4GiB
+          ipv4_address: "10.0.0.3"
+        homenet-k8s-worker-medium-b35aeecb-9833:
+          cpu: 4
+          memory: 8GiB
+          ipv4_address: "10.0.0.4"
   # localhost:
   #   ansible_connection: local
   #   node_network_gateway: "192.168.10.1"
@@ -70,18 +78,27 @@ k8scontrollers:
 #       cluster_bootstrap_keepalived_state: MASTER
 #       cluster_bootstrap_keepalived_priority: "101"
 
-# k8sworkers:
-#   hosts:
-#     lima-k8s-homenet-worker-0:
-#       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
-#       kubernetes_node_type: "worker"
-#       vm_host: localhost
-#       vm_memory: 4GiB
-#       vm_disk: 16GiB
+k8sworkers:
+  hosts:
+    homenet-k8s-worker-small-b35aeecb-4c47:
+      ansible_host: "10.0.0.3"
+      ansible_host_key_checking: false
+      ansible_ssh_extra_args: >-
+        -o User=root
+        -o ForwardAgent=yes
+        -o ProxyJump=homenet-baremetal-0.local
+      kubernetes_node_type: worker
+    # homenet-k8s-worker-medium-b35aeecb-9833:
+    # lima-k8s-homenet-worker-0:
+    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
+    #   kubernetes_node_type: "worker"
+    #   vm_host: localhost
+    #   vm_memory: 4GiB
+    #   vm_disk: 16GiB
 
-#     lima-k8s-homenet-worker-1:
-#       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
-#       kubernetes_node_type: "worker"
-#       vm_host: localhost
-#       vm_memory: 4GiB
-#       vm_disk: 16GiB
+    # lima-k8s-homenet-worker-1:
+    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
+    #   kubernetes_node_type: "worker"
+    #   vm_host: localhost
+    #   vm_memory: 4GiB
+    #   vm_disk: 16GiB

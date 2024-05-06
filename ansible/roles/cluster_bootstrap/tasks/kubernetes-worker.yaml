@@ -29,8 +29,8 @@
           | map(attribute='value')
           | selectattr('kubernetes_node_type', 'defined')
           | selectattr('kubernetes_node_type', 'eq', 'control')
-          | selectattr('cluster_bootstrap_keepalived_state', 'defined')
-          | selectattr('cluster_bootstrap_keepalived_state', 'eq', 'MASTER')
+          | selectattr('kubernetes_node_role', 'defined')
+          | selectattr('kubernetes_node_role', 'eq', 'leader')
           | map(attribute='inventory_hostname')
           | first
         }}
