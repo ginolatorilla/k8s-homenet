@@ -11,10 +11,10 @@ spec:
       protocol: TCP
       port: 80
       targetPort: http
+      nodePort: 30080
     - name: https
       protocol: TCP
       port: 443
       targetPort: https
-  externalIPs:
-    - 192.168.100.251 # This is the ingress_controller_address (VIP)
-    - 192.168.10.26 # This is the ingress_controller_address (VIP)
+      nodePort: 30443
+  type: NodePort
