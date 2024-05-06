@@ -22,27 +22,3 @@
   become: true
   register: ufw
   changed_when: ufw.rc != 0
-
-- name: Create a VM
-  community.general.lxd_container:
-    name: mycontainer
-    ignore_volatile_options: true
-    state: started
-    type: virtual-machine
-    source:
-      type: image
-      mode: pull
-      server: https://cloud-images.ubuntu.com/releases/
-      protocol: simplestreams
-      alias: "22.04"
-    profiles: ["default"]
-    wait_for_ipv4_addresses: true
-    timeout: 600
-  become: true
-
-- name: Run a command in the VM
-  ansible.builtin.command: >-
-    lxc exec mycontainer -- ls -a
-  become: true
-  register: lxd_exec
-  changed_when: lxd_exec.rc != 0

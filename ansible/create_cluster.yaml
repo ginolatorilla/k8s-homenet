@@ -5,8 +5,6 @@
   roles:
     - role: hypervisor
     - role: virtual_machine
-      vars:
-        virtual_machine_vms: "{{ groups.all | difference(groups.baremetal) | map('replace', 'lima-', '') }}"
 
 - name: Kubernetes control plane
   tags: s2

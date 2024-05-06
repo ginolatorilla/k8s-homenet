@@ -1,0 +1,33 @@
+---
+- name: Create a VM
+  community.general.lxd_container:
+    name: "{{ item.key }}"
+    ignore_volatile_options: true
+    state: started
+    type: virtual-machine
+    source:
+      type: image
+      mode: pull
+      server: https://cloud-images.ubuntu.com/releases/
+      protocol: simplestreams
+      alias: "22.04"
+    config:
+      limits.cpu: "{{ item.value.vm_cpu }}"
+      limits.memory: "{{ item.value.vm_memory }}"
+    profiles: ["default"]
+    wait_for_ipv4_addresses: true
+    timeout: 600
+  loop: "{{ virtual_machines | dict2items }}"
+  become: true
+
+- name: Run a command in the VM
+  ansible.builtin.command: >-
+    lxc exec {{ item.key }} --
+    sh -c '
+      nproc;
+      free;
+    '
+  become: true
+  register: lxd_exec
+  changed_when: lxd_exec.rc != 0
+  loop: "{{ virtual_machines | dict2items }}"
