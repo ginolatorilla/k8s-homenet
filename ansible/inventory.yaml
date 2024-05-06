@@ -39,8 +39,9 @@ baremetal:
       hypervisor: lxd
       virtual_machines:
         homenet-k8s-control-0:
-          vm_cpu: 2
-          vm_memory: 2560MiB
+          cpu: 2
+          memory: 2560MiB
+          ipv4_address: "10.0.0.2"
   # localhost:
   #   ansible_connection: local
   #   node_network_gateway: "192.168.10.1"

@@ -12,8 +12,13 @@
       protocol: simplestreams
       alias: "22.04"
     config:
-      limits.cpu: "{{ item.vm_config.vm_cpu }}"
-      limits.memory: "{{ item.vm_config.vm_memory }}"
+      limits.cpu: "{{ item.vm_config.cpu }}"
+      limits.memory: "{{ item.vm_config.memory }}"
+    devices:
+      eth0:
+        type: nic
+        network: lxdbr0
+        ipv4.address: "{{ item.vm_config.ipv4_address }}"
     profiles: ["default"]
     wait_for_ipv4_addresses: true
     timeout: 600
@@ -33,10 +38,3 @@
       loop_control:
         label: "{{ item.vm_name }}"
       become: true
-    - name: Set SSH IP to inventory host variable
-      delegate_to: "{{ item.item.vm_name }}"
-      ansible.builtin.set_fact:
-        ansible_ssh_host: "{{ (item.addresses | dict2items(value_name='addresses') | first).addresses | first }}"
-      loop: "{{ vm_info.results }}"
-      loop_control:
-        label: "{{ item.item.vm_name }}"
