@@ -1,0 +1,48 @@
+---
+- name: Virtual machine config directories
+  ansible.builtin.file:
+    path: ~/.lima/{{ item }}
+    state: directory
+    mode: "0755"
+  loop: "{{ virtual_machine_vms }}"
+
+- name: Virtual machine config
+  ansible.builtin.template:
+    src: templates/lima.yaml.j2
+    dest: ~/.lima/{{ item }}/lima.yaml
+    mode: "0644"
+  register: virtual_machine_config
+  loop: "{{ virtual_machine_vms }}"
+  vars:
+    virtual_machine_name: "{{ item }}"
+    vm_cpu: "{{ hostvars['lima-' + item].vm_cpu }}"
+    vm_memory: "{{ hostvars['lima-' + item].vm_memory }}"
+    vm_disk: "{{ hostvars['lima-' + item].vm_disk }}"
+
+- name: Stop virtual machines
+  when: item.changed
+  ansible.builtin.command:
+    cmd: limactl stop {{ virtual_machine_name }} --force
+    removes: ~/.lima/{{ virtual_machine_name }}/*.pid
+  loop: "{{ virtual_machine_config.results }}"
+  vars:
+    virtual_machine_name: "{{ item.dest | dirname | basename }}"
+
+- name: Start virtual machines (async)
+  ansible.builtin.command:
+    cmd: limactl start {{ item }} --tty=false
+    creates: ~/.lima/{{ item }}/*.pid
+  async: 300
+  delay: 5
+  poll: 0
+  register: virtual_machine_start_async
+  loop: "{{ virtual_machine_vms }}"
+
+- name: Wait for virtual machines
+  ansible.builtin.async_status:
+    jid: "{{ item.ansible_job_id }}"
+  register: virtual_machine_start_jobs
+  until: virtual_machine_start_jobs.finished
+  delay: 10
+  retries: 30
+  loop: "{{ virtual_machine_start_async.results }}"
