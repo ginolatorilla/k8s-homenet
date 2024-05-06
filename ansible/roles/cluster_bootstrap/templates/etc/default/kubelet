@@ -1,1 +1,1 @@
-KUBELET_EXTRA_ARGS=--node-ip={{ kubernetes_node_ip }}
+KUBELET_EXTRA_ARGS=--node-ip={{ ansible_host }}

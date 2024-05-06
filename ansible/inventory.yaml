@@ -89,7 +89,14 @@ k8sworkers:
         -o ForwardAgent=yes
         -o ProxyJump=homenet-baremetal-0.local
       kubernetes_node_type: worker
-    # homenet-k8s-worker-medium-b35aeecb-9833:
+    homenet-k8s-worker-medium-b35aeecb-9833:
+      ansible_host: "10.0.0.4"
+      ansible_host_key_checking: false
+      ansible_ssh_extra_args: >-
+        -o User=root
+        -o ForwardAgent=yes
+        -o ProxyJump=homenet-baremetal-0.local
+      kubernetes_node_type: worker
     # lima-k8s-homenet-worker-0:
     #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
     #   kubernetes_node_type: "worker"
