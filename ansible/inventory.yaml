@@ -10,6 +10,7 @@ all:
     kubernetes_node_cidr: "10.0.0.1/16"
     kubernetes_service_cidr: "172.16.0.0/18"
     kubernetes_pod_cidr: "10.85.0.0/16" # CRIO's default (hardcoded)
+    kubeconfig: /tmp/kubeconfig
 
     # Default values for virtual machines
     vm_cpu: 2
