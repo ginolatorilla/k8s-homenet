@@ -4,6 +4,7 @@
   hosts: baremetal
   roles:
     - role: hypervisor
+    - role: loadbalancer
     - role: virtual_machine
 
 - name: Kubernetes control plane

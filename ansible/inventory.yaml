@@ -2,18 +2,10 @@ all:
   vars:
     cluster_name: k8s-homenet
     control_plane_hostname: api.k8s.homenet
-    control_plane_addresses:
-      - interface: bridge
-        address: "192.168.100.250"
-      - interface: vm
-        address: "192.168.10.25"
+    control_plane_address: "192.168.100.250"
     control_plane_port: "6443"
     ingress_controller_hostname: homenet
-    ingress_controller_addresses:
-      - interface: bridge
-        address: "192.168.100.251"
-      - interface: vm
-        address: "192.168.10.26"
+    ingress_controller_address: "192.168.100.251"
     ingress_controller_port: "443"
     kubernetes_node_cidr: "10.0.0.1/16"
     kubernetes_service_cidr: "172.16.0.0/18"
@@ -37,6 +29,9 @@ baremetal:
         3033313766306636360a623930343638623265376331323662303361633938373734653531343961
         6636
       hypervisor: lxd
+      loadbalancer:
+        role: MASTER
+        priority: "101"
       virtual_machines:
         homenet-k8s-control-0:
           cpu: 2
