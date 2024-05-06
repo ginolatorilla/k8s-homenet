@@ -22,30 +22,17 @@
   block:
     - name: CRIO apt repo signing keys
       ansible.builtin.apt_key:
-        url: "{{ item.url }}"
-        keyring: "{{ item.keyring }}"
-      loop:
-        - url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/Release.key
-          keyring: /usr/share/keyrings/libcontainers-archive-keyring.gpg
-        - url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.28/xUbuntu_22.04/Release.key
-          keyring: /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+        url: https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/Release.key
+        keyring: /etc/apt/keyrings/cri-o-apt-keyring.gpg
     - name: CRIO apt repo
       ansible.builtin.apt_repository:
-        repo: "{{ item }}"
-        state: present
-      loop:
-        - >-
-          deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg]
-          https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/ /
-        - >-
-          deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg]
-          https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.28/xUbuntu_22.04/ /
+        repo: >-
+          deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/ /
     - name: CRIO packages
       ansible.builtin.apt:
         update_cache: true
         package:
           - cri-o
-          - cri-o-runc
     - name: CRIO as a systemd service
       ansible.builtin.systemd_service:
         name: crio
