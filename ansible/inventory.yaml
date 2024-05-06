@@ -15,6 +15,7 @@ all:
       - interface: vm
         address: "192.168.10.26"
     ingress_controller_port: "443"
+    kubernetes_node_cidr: "10.0.0.1/16"
     kubernetes_service_cidr: "172.16.0.0/18"
     kubernetes_pod_cidr: "10.85.0.0/16" # CRIO's default (hardcoded)
     kubernetes_version: "1.29.0"
