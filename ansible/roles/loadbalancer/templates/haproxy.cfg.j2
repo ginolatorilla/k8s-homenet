@@ -47,5 +47,5 @@ backend apiserverbackend
     option ssl-hello-chk
     balance     roundrobin
         {% for host in groups.k8scontrollers -%}
-        server {{ host }} {{ hostvars[host].ansible_ssh_host }}:8443 check
+        server {{ host }} {{ hostvars[host].ansible_host }}:8443 check
         {% endfor -%}

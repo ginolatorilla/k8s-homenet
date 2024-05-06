@@ -14,9 +14,9 @@
       ansible.builtin.lineinfile:
         dest: /etc/hosts
         regexp: "\\s{{ control_plane_hostname }}$"
-        line: "{{ static_host_ips.control_plane }} {{ control_plane_hostname }}"
+        line: "{{ control_plane_address }} {{ control_plane_hostname }}"
     - name: Ingress controller static hostname
       ansible.builtin.lineinfile:
         dest: /etc/hosts
         regexp: "\\s{{ ingress_controller_hostname }}$"
-        line: "{{ static_host_ips.ingress_controller }} {{ ingress_controller_hostname }}"
+        line: "{{ ingress_controller_address }} {{ ingress_controller_hostname }}"

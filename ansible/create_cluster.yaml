@@ -12,11 +12,6 @@
   hosts: k8scontrollers
   roles:
     - role: cluster_bootstrap
-      vars:
-        kubernetes_node_ip: "{{ ansible_vm.ipv4.address }}"
-        static_host_ips:
-          control_plane: "{{ control_plane_addresses[1].address }}"
-          ingress_controller: "{{ ingress_controller_addresses[1].address }}"
   become: true
 
 - name: Kubernetes CNI

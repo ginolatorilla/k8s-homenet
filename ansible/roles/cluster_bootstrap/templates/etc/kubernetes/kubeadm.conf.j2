@@ -1,13 +1,14 @@
+---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: {{ kubernetes_node_ip }}
+  advertiseAddress: {{ ansible_host }}
   bindPort: 8443
 nodeRegistration:
   criSocket: unix:///var/run/crio/crio.sock
   imagePullPolicy: IfNotPresent
   kubeletExtraArgs:
-    node-ip: {{ kubernetes_node_ip }}
+    node-ip: {{ ansible_host }}
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
@@ -15,10 +16,8 @@ controlPlaneEndpoint: {{ control_plane_hostname }}:{{ control_plane_port }}
 apiServer:
   timeoutForControlPlane: 4m0s
   certSANs:
-    - {{ kubernetes_node_ip }}
-{% for item in control_plane_addresses %}
-    - {{ item.address }}
-{% endfor %}
+    - {{ ansible_host }}
+    - {{ control_plane_address }}
 
 certificatesDir: /etc/kubernetes/pki
 clusterName: {{ cluster_name }}
@@ -28,7 +27,7 @@ etcd:
   local:
     dataDir: /var/lib/etcd
 imageRepository: registry.k8s.io
-kubernetesVersion: {{ kubernetes_version }}
+kubernetesVersion: "1.29.0"
 networking:
   dnsDomain: cluster.local
   serviceSubnet: {{ kubernetes_service_cidr }}
