@@ -1,7 +1,7 @@
 ---
 - name: Create a VM
   community.general.lxd_container:
-    name: "{{ item.key }}"
+    name: "{{ item.vm_name }}"
     ignore_volatile_options: true
     state: started
     type: virtual-machine
@@ -12,22 +12,31 @@
       protocol: simplestreams
       alias: "22.04"
     config:
-      limits.cpu: "{{ item.value.vm_cpu }}"
-      limits.memory: "{{ item.value.vm_memory }}"
+      limits.cpu: "{{ item.vm_config.vm_cpu }}"
+      limits.memory: "{{ item.vm_config.vm_memory }}"
     profiles: ["default"]
     wait_for_ipv4_addresses: true
     timeout: 600
-  loop: "{{ virtual_machines | dict2items }}"
+  register: vm_info
+  loop: "{{ virtual_machines | dict2items(key_name='vm_name', value_name='vm_config') }}"
+  loop_control:
+    label: "{{ item.vm_name }}"
   become: true
 
-- name: Run a command in the VM
-  ansible.builtin.command: >-
-    lxc exec {{ item.key }} --
-    sh -c '
-      nproc;
-      free;
-    '
-  become: true
-  register: lxd_exec
-  changed_when: lxd_exec.rc != 0
-  loop: "{{ virtual_machines | dict2items }}"
+- name: Enable SSH to VM
+  block:
+    - name: Copy SSH authorised public keys to VM
+      ansible.builtin.command: lxc file push {{ ansible_user_dir }}/.ssh/authorized_keys {{ item.vm_name }}/root/.ssh/authorized_keys
+      register: lxc_push
+      changed_when: lxc_push.rc != 0
+      loop: "{{ virtual_machines | dict2items(key_name='vm_name', value_name='vm_config') }}"
+      loop_control:
+        label: "{{ item.vm_name }}"
+      become: true
+    - name: Set SSH IP to inventory host variable
+      delegate_to: "{{ item.item.vm_name }}"
+      ansible.builtin.set_fact:
+        ansible_ssh_host: "{{ (item.addresses | dict2items(value_name='addresses') | first).addresses | first }}"
+      loop: "{{ vm_info.results }}"
+      loop_control:
+        label: "{{ item.item.vm_name }}"

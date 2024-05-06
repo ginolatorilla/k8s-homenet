@@ -4,7 +4,7 @@
     path: ~/.lima/{{ item }}
     state: directory
     mode: "0755"
-  loop: "{{ virtual_machine_vms }}"
+  loop: "{{ virtual_machines }}"
 
 - name: Virtual machine config
   ansible.builtin.template:

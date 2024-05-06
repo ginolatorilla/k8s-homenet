@@ -26,7 +26,8 @@ all:
 
 baremetal:
   hosts:
-    homenet-baremetal-0.local:
+    homenet-baremetal-0:
+      ansible_ssh_host: homenet-baremetal-0.local
       hypervisor: lxd
       virtual_machines:
         homenet-k8s-control-0:
@@ -40,13 +41,20 @@ baremetal:
 
 k8scontrollers:
   hosts:
-    lima-k8s-homenet-control-0:
-      ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
-      kubernetes_node_type: "control"
-      vm_host: localhost
-      vm_memory: 2.5GiB
-      cluster_bootstrap_keepalived_state: MASTER
-      cluster_bootstrap_keepalived_priority: "101"
+    homenet-k8s-control-0:
+      # ansible_ssh_host: "10.203.193.111"
+      # ansible_host_key_checking: false
+      # ansible_ssh_extra_args: >-
+      #   -o User=root
+      #   -o ForwardAgent=yes
+      #   -o ProxyJump=homenet-baremetal-0.local
+    # lima-k8s-homenet-control-0:
+    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
+    #   kubernetes_node_type: "control"
+    #   vm_host: localhost
+    #   vm_memory: 2.5GiB
+    #   cluster_bootstrap_keepalived_state: MASTER
+    #   cluster_bootstrap_keepalived_priority: "101"
 # k8sinfra:
 #   hosts:
 #     lima-k8s-homenet-infra-0:

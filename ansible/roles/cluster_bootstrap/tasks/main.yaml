@@ -1,21 +1,27 @@
 ---
-- name: Initialise the VM (distro-specific)
-  ansible.builtin.include_tasks: distro-init.yaml
+- name: Run a command in the VM
+  ansible.builtin.command: >-
+    hostname
+  # register: lxd_exec
+  # changed_when: lxd_exec.rc != 0
 
-- name: Install a container runtime
-  ansible.builtin.include_tasks: container-runtime.yaml
+# - name: Initialise the VM (distro-specific)
+#   ansible.builtin.include_tasks: distro-init.yaml
 
-- name: Install Kubernetes components common for all nodes
-  ansible.builtin.include_tasks: kubernetes-common.yaml
+# - name: Install a container runtime
+#   ansible.builtin.include_tasks: container-runtime.yaml
 
-- name: Install Kubernetes components for control plane
-  when: kubernetes_node_type == "control"
-  ansible.builtin.include_tasks: kubernetes-control-plane.yaml
+# - name: Install Kubernetes components common for all nodes
+#   ansible.builtin.include_tasks: kubernetes-common.yaml
 
-- name: Install Kubernetes components for worker nodes
-  when: kubernetes_node_type == "infra"
-  ansible.builtin.include_tasks: kubernetes-infra.yaml
+# - name: Install Kubernetes components for control plane
+#   when: kubernetes_node_type == "control"
+#   ansible.builtin.include_tasks: kubernetes-control-plane.yaml
 
-- name: Install Kubernetes components for worker nodes
-  when: kubernetes_node_type == "worker"
-  ansible.builtin.include_tasks: kubernetes-worker.yaml
+# - name: Install Kubernetes components for worker nodes
+#   when: kubernetes_node_type == "infra"
+#   ansible.builtin.include_tasks: kubernetes-infra.yaml
+
+# - name: Install Kubernetes components for worker nodes
+#   when: kubernetes_node_type == "worker"
+#   ansible.builtin.include_tasks: kubernetes-worker.yaml
