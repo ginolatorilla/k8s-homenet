@@ -73,6 +73,24 @@
         force: true
         values_files:
           - ../kubernetes/helm-chart-apps/nginx-ingress/values.yaml
+
+- name: ArgoCD
+  block:
+    - name: Helm repo
+      kubernetes.core.helm_repository:
+        name: argo
+        repo_url: https://argoproj.github.io/argo-helm
+    - name: Helm chart
+      kubernetes.core.helm:
+        name: argocd
+        chart_ref: argo/argo-cd
+        chart_version: "6.7.18"
+        release_namespace: argocd
+        create_namespace: true
+        wait: true
+        force: true
+        values_files:
+          - ../kubernetes/helm-chart-apps/argocd/values.yaml
 # - name: Apply initial manifests
 #   ansible.builtin.command: kubectl apply -k {{ item }}
 #   environment:
