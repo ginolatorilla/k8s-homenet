@@ -71,6 +71,11 @@
         release_namespace: nginx-ingress
         create_namespace: true
         wait: true
+        values:
+          controller:
+            config:
+              entries:
+                external-status-address: "{{ ingress_controller_address }}"
         values_files:
           - ../kubernetes/helm-chart-apps/nginx-ingress/values.yaml
 
@@ -89,7 +94,7 @@
         create_namespace: true
         wait: true
         values_files:
-          - ../kubernetes/helm-chart-apps/argocd/values.yaml
+          - ../kubernetes/helm-chart-apps/argo-cd/values.yaml
 # - name: Apply initial manifests
 #   ansible.builtin.command: kubectl apply -k {{ item }}
 #   environment:

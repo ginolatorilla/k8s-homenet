@@ -1,3 +1,5 @@
+fullnameOverride: openebs
+
 localprovisioner:
   deviceClass:
     enabled: false

@@ -1,3 +1,5 @@
+fullnameOverride: dex
+
 config:
   issuer: https://auth.apps.homenet
   oauth2:
