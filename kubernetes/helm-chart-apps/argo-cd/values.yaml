@@ -1,0 +1,63 @@
+global:
+  domain: argocd.apps.homenet
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: "ingress-cert-issuer"
+    tls: true
+
+configs:
+  cm:
+    create: true
+    # oidc.config: |
+    #   name: GitHub
+    #   issuer: https://auth.apps.homenet
+    #   clientID: $argocd-client:ARGOCD_CLIENT_ID
+    #   clientSecret: $argocd-client:ARGOCD_CLIENT_SECRET
+    # oidc.tls.insecure.skip.verify: "true"
+
+  params:
+    server.insecure: true
+
+  rbac:
+    policy.csv: ""
+    scopes: "[groups]"
+
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: app-of-apps
+      namespace: argocd
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/ginolatorilla/k8s-homenet.git
+        targetRevision: HEAD
+        path: kubernetes/argocd
+      destination:
+        name: in-cluster
+        namespace: argocd
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: false
+        syncOptions:
+          - CreateNamespace=true
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+          - RespectIgnoreDifferences=true
+          - ApplyOutOfSyncOnly=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+
+      revisionHistoryLimit: 0
