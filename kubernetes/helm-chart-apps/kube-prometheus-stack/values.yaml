@@ -46,7 +46,7 @@ thanos-ruler:
     annotations:
       cert-manager.io/cluster-issuer: "ingress-cert-issuer"
     hosts:
-      - prometheus.apps.homenet
+      - thanos-ruler.apps.homenet
     tls:
       - hosts:
           - thanos-ruler.apps.homenet
