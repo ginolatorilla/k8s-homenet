@@ -18,7 +18,6 @@ apiServer:
   certSANs:
     - {{ ansible_host }}
     - {{ control_plane_address }}
-
 certificatesDir: /etc/kubernetes/pki
 clusterName: {{ cluster_name }}
 controllerManager: {}

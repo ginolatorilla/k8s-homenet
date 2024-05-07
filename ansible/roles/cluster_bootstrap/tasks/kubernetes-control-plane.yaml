@@ -10,4 +10,5 @@
     src: /etc/kubernetes/admin.conf
     dest: "{{ kubeconfig }}"
     flat: true
+    mode: "0600"
   when: kubernetes_node_role == "leader"

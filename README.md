@@ -7,14 +7,14 @@ I followed the instructions from the [official documentation of Kubernetes](http
 
 | Item                         | Value   |
 | ---------------------------- | ------- |
-| Hypervisor                   | limactl |
+| Hypervisor                   | LXD     |
 | Hypervisor version           | 0.20.0  |
 | Guest OS                     | Ubuntu  |
 | Guest OS version             | 22.04   |
 | Guest CPU architecture       | aarch64 |
 | Kubernetes version           | 1.29.0  |
 | Container runtime            | CRIO    |
-| Container runtime version    | 1.28    |
+| Container runtime version    | 1.29    |
 | Container networking         | Calico  |
 | Container networking version | 3.27.0  |
 | Ingress controller           | Nginx   |
@@ -25,6 +25,15 @@ I followed the instructions from the [official documentation of Kubernetes](http
 ## Requirements
 
 - Ansible
+- Python packages
+  - `kubernetes`
+- Kubernetes CLI (`kubectl`)
+- Helm
+- Physical hosts
+  - SSH server
+  - Disable automatic suspend or shutdown (e.g. for laptops, when the lid is closed).
+  - Disable swap
+- Home router DHCP should exclude the virtual IPs for the Kubernetes API server and ingress.
 
 ## Installation
 

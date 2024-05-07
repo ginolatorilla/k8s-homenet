@@ -2,10 +2,10 @@ all:
   vars:
     cluster_name: k8s-homenet
     control_plane_hostname: api.k8s.homenet
-    control_plane_address: "192.168.100.250"
+    control_plane_address: "192.168.100.250" # Virtual IP must be addressable in the home router's subnet
     control_plane_port: "6443"
     ingress_controller_hostname: homenet
-    ingress_controller_address: "192.168.100.251"
+    ingress_controller_address: "192.168.100.251" # Virtual IP must be addressable in the home router's subnet
     ingress_controller_port: "443"
     kubernetes_node_cidr: "10.0.0.1/16"
     kubernetes_service_cidr: "172.16.0.0/18"
@@ -34,11 +34,9 @@ baremetal:
         priority: "101"
       virtual_machines:
         homenet-k8s-control-0:
-          cpu: 2
-          memory: 2GiB
+          disk: 4GiB
           ipv4_address: "10.0.0.2"
         homenet-k8s-worker-small-b35aeecb-4c47:
-          cpu: 2
           memory: 4GiB
           ipv4_address: "10.0.0.3"
         homenet-k8s-worker-medium-b35aeecb-9833:
