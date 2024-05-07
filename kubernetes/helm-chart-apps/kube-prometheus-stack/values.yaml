@@ -1,3 +1,5 @@
+fullnameOverride: kps
+
 alertmanager:
   ingress:
     enabled: true

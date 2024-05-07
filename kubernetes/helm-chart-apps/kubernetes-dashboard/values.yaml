@@ -1,3 +1,5 @@
+fullnameOverride: kubernetes-dashboard
+
 app:
   ingress:
     enabled: true
