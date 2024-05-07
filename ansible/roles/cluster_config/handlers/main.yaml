@@ -1,0 +1,6 @@
+---
+- name: Restart coreDNS
+  ansible.builtin.command: kubectl rollout restart -n kube-system deploy/coredns
+  register: restart_coredns
+  changed_when: restart_coredns.rc != 0
+  listen: restart coredns

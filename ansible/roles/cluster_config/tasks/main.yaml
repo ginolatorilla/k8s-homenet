@@ -13,7 +13,6 @@
         release_namespace: tigera-operator
         create_namespace: true
         wait: true
-        force: true
     - name: Wait for CNI
       kubernetes.core.k8s:
         definition:
@@ -26,6 +25,9 @@
           type: Ready
           status: "True"
           reason: AllObjectsAvailable
+      notify: restart coredns
+    - name: Wait for handlers
+      ansible.builtin.meta: flush_handlers
 
 - name: Certificate manager
   block:
@@ -41,7 +43,6 @@
         release_namespace: cert-manager
         create_namespace: true
         wait: true
-        force: true
         values_files:
           - ../kubernetes/helm-chart-apps/cert-manager/values.yaml
     - name: Install secret from generated CA
@@ -70,7 +71,6 @@
         release_namespace: nginx-ingress
         create_namespace: true
         wait: true
-        force: true
         values_files:
           - ../kubernetes/helm-chart-apps/nginx-ingress/values.yaml
 
@@ -88,7 +88,6 @@
         release_namespace: argocd
         create_namespace: true
         wait: true
-        force: true
         values_files:
           - ../kubernetes/helm-chart-apps/argocd/values.yaml
 # - name: Apply initial manifests
