@@ -1,15 +1,102 @@
 ---
-- name: Install kubectl
-  community.general.homebrew:
-    name: kubernetes-cli
+- name: Container networking - Calico
+  block:
+    - name: Helm repo
+      kubernetes.core.helm_repository:
+        name: projectcalico
+        repo_url: https://docs.tigera.io/calico/charts
+    - name: Helm chart
+      kubernetes.core.helm:
+        name: calico
+        chart_ref: projectcalico/tigera-operator
+        chart_version: v3.27.3
+        release_namespace: tigera-operator
+        create_namespace: true
+        wait: true
+    - name: Wait for CNI
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: operator.tigera.io/v1
+          kind: Installation
+          metadata:
+            name: default
+        wait: true
+        wait_condition:
+          type: Ready
+          status: "True"
+          reason: AllObjectsAvailable
+      notify: restart coredns
+    - name: Wait for handlers
+      ansible.builtin.meta: flush_handlers
 
-- name: Apply initial manifests
-  ansible.builtin.command: kubectl apply -k {{ item }}
-  environment:
-    KUBECONFIG: "{{ kubeconfig }}"
-  register: cluster_config_kubectl_apply
-  changed_when: cluster_config_kubectl_apply.rc != 0
-  loop:
-    - ../kubernetes/core/10-ingress-controller
-    - ../kubernetes/core/20-argocd
-    - ../kubernetes/core/30-argocd-app-of-apps
+- name: Certificate manager
+  block:
+    - name: Helm repo
+      kubernetes.core.helm_repository:
+        name: jetstack
+        repo_url: https://charts.jetstack.io
+    - name: Helm chart
+      kubernetes.core.helm:
+        name: cert-manager
+        chart_ref: jetstack/cert-manager
+        chart_version: v1.14.5
+        release_namespace: cert-manager
+        create_namespace: true
+        wait: true
+        values_files:
+          - ../kubernetes/helm-chart-apps/cert-manager/values.yaml
+    - name: Install secret from generated CA
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: own-ca
+            namespace: cert-manager
+          data:
+            tls.crt: "{{ lookup('file', 'ownca.crt') | b64encode }}"
+            tls.key: "{{ lookup('file', 'ownca.key') | b64encode }}"
+      no_log: true
+    - name: Install cluster-wide certificate issuer for ingresses
+      kubernetes.core.k8s:
+        definition: "{{ lookup('kubernetes.core.kustomize', dir='kubernetes/kustomize-apps/certs') }}"
+
+- name: Ingress controller - Nginx
+  block:
+    - name: Helm chart
+      kubernetes.core.helm:
+        name: nginx-ingress
+        chart_ref: oci://ghcr.io/nginxinc/charts/nginx-ingress
+        chart_version: "1.2.0"
+        release_namespace: nginx-ingress
+        create_namespace: true
+        wait: true
+        values_files:
+          - ../kubernetes/helm-chart-apps/nginx-ingress/values.yaml
+
+- name: ArgoCD
+  block:
+    - name: Helm repo
+      kubernetes.core.helm_repository:
+        name: argo
+        repo_url: https://argoproj.github.io/argo-helm
+    - name: Helm chart
+      kubernetes.core.helm:
+        name: argocd
+        chart_ref: argo/argo-cd
+        chart_version: "6.7.18"
+        release_namespace: argocd
+        create_namespace: true
+        wait: true
+        values_files:
+          - ../kubernetes/helm-chart-apps/argocd/values.yaml
+# - name: Apply initial manifests
+#   ansible.builtin.command: kubectl apply -k {{ item }}
+#   environment:
+#     KUBECONFIG: "{{ kubeconfig }}"
+#   register: cluster_config_kubectl_apply
+#   changed_when: cluster_config_kubectl_apply.rc != 0
+#   loop:
+#     - ../kubernetes/core/10-ingress-controller
+#     - ../kubernetes/core/20-argocd
+#     - ../kubernetes/core/30-argocd-app-of-apps

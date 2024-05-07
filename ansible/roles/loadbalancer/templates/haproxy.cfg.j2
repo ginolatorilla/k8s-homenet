@@ -47,6 +47,22 @@ backend apiserverbackend
     option ssl-hello-chk
     balance     roundrobin
         {% for host in groups.k8scontrollers -%}
-        server {{ host | replace('lima-', '') }}-bridge {{ hostvars[host].ansible_bridge.ipv4.address }}:8443 check
-        server {{ host | replace('lima-', '') }}-vmnet {{ hostvars[host].ansible_vm.ipv4.address }}:8443 check
+        server {{ host }} {{ hostvars[host].ansible_host }}:8443 check
+        {% endfor %}
+
+frontend ingresshttps
+    bind *:{{ ingress_controller_port }}
+    mode tcp
+    option tcplog
+    default_backend ingresshttpsbackend
+
+backend ingresshttpsbackend
+    mode tcp
+    option ssl-hello-chk
+    balance     roundrobin
+        {% for host in groups.k8scontrollers -%}
+        server {{ host }} {{ hostvars[host].ansible_host }}:30443 check
         {% endfor -%}
+        {% for host in groups.k8sworkers -%}
+        server {{ host }} {{ hostvars[host].ansible_host }}:30443 check
+        {% endfor %}

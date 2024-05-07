@@ -1,0 +1,67 @@
+---
+- name: Install dependencies using the default package manager
+  ansible.builtin.package:
+    name: "{{ item }}"
+  loop:
+    - haproxy
+    - keepalived
+  become: true
+
+- name: Configure keepalived
+  block:
+    - name: Keepalived config directory
+      ansible.builtin.file:
+        path: /etc/keepalived
+        state: directory
+        mode: "0755"
+      register: keepalived_config_dir
+    - name: Keepalived config
+      ansible.builtin.template:
+        src: templates/keepalived/keepalived.conf.j2
+        dest: "{{ keepalived_config_dir.path }}/keepalived.conf"
+        mode: "0644"
+      vars:
+        interface: wlp2s0
+        keepalived_vips:
+          - name: kubernetes_api
+            address: "{{ control_plane_address }}"
+          - name: kubernetes_ingress
+            address: "{{ ingress_controller_address }}"
+      notify: keepalived reconfig
+    - name: Keepalived check script
+      ansible.builtin.template:
+        src: templates/keepalived/check_server.sh.j2
+        dest: "{{ keepalived_config_dir.path }}/check_server_{{ item.name }}.sh"
+        mode: "0744"
+      vars:
+        virtual_server_ip: "{{ item.address }}"
+        virtual_server_port: "{{ item.port }}"
+      loop:
+        - name: kubernetes_api
+          address: "{{ control_plane_address }}"
+          port: "{{ control_plane_port }}"
+        - name: kubernetes_ingress
+          address: "{{ ingress_controller_address }}"
+          port: "{{ ingress_controller_port }}"
+      notify: keepalived reconfig
+    - name: Wait for handlers
+      ansible.builtin.meta: flush_handlers
+  become: true
+
+- name: Configure HAProxy
+  block:
+    - name: HAProxy config directory
+      ansible.builtin.file:
+        path: /etc/haproxy
+        state: directory
+        mode: "0755"
+      register: haproxy_config_dir
+    - name: HAProxy config
+      ansible.builtin.template:
+        src: templates/haproxy.cfg.j2
+        dest: "{{ haproxy_config_dir.path }}/haproxy.cfg"
+        mode: "0644"
+      notify: haproxy reconfig
+    - name: Wait for handlers
+      ansible.builtin.meta: flush_handlers
+  become: true

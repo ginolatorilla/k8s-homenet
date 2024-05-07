@@ -1,5 +1,0 @@
-# Needs to be deployed separately because it requires a CRD from 20-argocd
-resources:
-  - app-of-apps.yaml
-
-namespace: argocd

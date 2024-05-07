@@ -1,0 +1,30 @@
+---
+- name: Personal Certificate Authority
+  block:
+    - name: Signing key
+      community.crypto.openssl_privatekey:
+        path: ownca.key
+      register: ownca_privatekey
+
+    - name: Signing request
+      community.crypto.openssl_csr:
+        path: ownca.csr
+        privatekey_path: "{{ ownca_privatekey.filename }}"
+        common_name: "The Latorilla Home Network"
+        create_subject_key_identifier: true
+        use_common_name_for_san: false
+        basic_constraints:
+          - "CA:TRUE"
+        basic_constraints_critical: true
+        key_usage:
+          - keyCertSign
+        key_usage_critical: true
+      register: ownca_csr
+
+    - name: Own CA
+      community.crypto.x509_certificate:
+        path: ownca.crt
+        privatekey_path: "{{ ownca_privatekey.filename }}"
+        csr_path: "{{ ownca_csr.filename }}"
+        provider: selfsigned
+      register: ownca_crt

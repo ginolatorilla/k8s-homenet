@@ -1,0 +1,31 @@
+config: {}
+networks:
+  - config:
+      ipv4.address: "{{ kubernetes_node_cidr }}"
+      ipv6.address: auto
+    description: ""
+    name: lxdbr0
+    type: ""
+    project: default
+storage_pools:
+  - config:
+      size: 32GiB
+    description: ""
+    name: homenet-k8s
+    driver: zfs
+storage_volumes: []
+profiles:
+  - config: {}
+    description: ""
+    devices:
+      eth0:
+        name: eth0
+        network: lxdbr0
+        type: nic
+      root:
+        path: /
+        pool: homenet-k8s
+        type: disk
+    name: default
+projects: []
+cluster: null
