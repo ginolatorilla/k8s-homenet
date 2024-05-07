@@ -44,6 +44,7 @@ baremetal:
         homenet-k8s-worker-medium-b35aeecb-9833:
           cpu: 4
           memory: 8GiB
+          disk: 16GiB
           ipv4_address: "10.0.0.4"
   # localhost:
   #   ansible_connection: local

@@ -1,7 +1,7 @@
 ---
-- name: Create a VM
+- name: Create a VM (async)
   community.general.lxd_container:
-    name: "{{ item.vm_name }}"
+    name: "{{ vm.name }}"
     ignore_volatile_options: true
     state: started
     type: virtual-machine
@@ -12,29 +12,49 @@
       protocol: simplestreams
       alias: "22.04"
     config:
-      limits.cpu: "{{ item.vm_config.cpu }}"
-      limits.memory: "{{ item.vm_config.memory }}"
+      limits.cpu: "{{ vm.config.cpu | default('vm_cpu') }}"
+      limits.memory: "{{ vm.config.memory | default('vm_memory') }}"
     devices:
       eth0:
         type: nic
         network: lxdbr0
-        ipv4.address: "{{ item.vm_config.ipv4_address }}"
+        ipv4.address: "{{ vm.config.ipv4_address | default('auto') }}"
+      root:
+        path: /
+        pool: homenet-k8s
+        size: "{{ vm.config.disk | default(vm_disk) }}"
+        type: disk
     profiles: ["default"]
     wait_for_ipv4_addresses: true
     timeout: 600
-  register: vm_info
-  loop: "{{ virtual_machines | dict2items(key_name='vm_name', value_name='vm_config') }}"
+  async: 300
+  delay: 5
+  poll: 0
+  register: virtual_machine_start_async
+  loop: "{{ virtual_machines | dict2items(key_name='name', value_name='config') }}"
   loop_control:
-    label: "{{ item.vm_name }}"
+    loop_var: vm
+    label: "{{ vm.name }}"
+  become: true
+
+- name: Wait for virtual machines
+  ansible.builtin.async_status:
+    jid: "{{ item.ansible_job_id }}"
+  register: virtual_machine_wait
+  until: virtual_machine_wait.finished
+  delay: 10
+  retries: 30
+  loop: "{{ virtual_machine_start_async.results }}"
   become: true
 
 - name: Enable SSH to VM
   block:
     - name: Copy SSH authorised public keys to VM
-      ansible.builtin.command: lxc file push {{ ansible_user_dir }}/.ssh/authorized_keys {{ item.vm_name }}/root/.ssh/authorized_keys
+      ansible.builtin.command: lxc file push {{ ansible_user_dir }}/.ssh/authorized_keys {{ vm.name }}/root/.ssh/authorized_keys
       register: lxc_push
       changed_when: lxc_push.rc != 0
-      loop: "{{ virtual_machines | dict2items(key_name='vm_name', value_name='vm_config') }}"
+      loop: "{{ virtual_machines | dict2items(key_name='name', value_name='config') }}"
       loop_control:
-        label: "{{ item.vm_name }}"
+        loop_var: vm
+        label: "{{ vm.name }}"
       become: true
