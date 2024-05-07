@@ -13,6 +13,7 @@
         release_namespace: tigera-operator
         create_namespace: true
         wait: true
+        force: true
     - name: Wait for CNI
       kubernetes.core.k8s:
         definition:
@@ -40,6 +41,7 @@
         release_namespace: cert-manager
         create_namespace: true
         wait: true
+        force: true
         values_files:
           - ../kubernetes/helm-chart-apps/cert-manager/values.yaml
     - name: Install secret from generated CA
@@ -53,9 +55,24 @@
           data:
             tls.crt: "{{ lookup('file', 'ownca.crt') | b64encode }}"
             tls.key: "{{ lookup('file', 'ownca.key') | b64encode }}"
+      no_log: true
     - name: Install cluster-wide certificate issuer for ingresses
       kubernetes.core.k8s:
         definition: "{{ lookup('kubernetes.core.kustomize', dir='kubernetes/kustomize-apps/certs') }}"
+
+- name: Ingress controller - Nginx
+  block:
+    - name: Helm chart
+      kubernetes.core.helm:
+        name: nginx-ingress
+        chart_ref: oci://ghcr.io/nginxinc/charts/nginx-ingress
+        chart_version: "1.2.0"
+        release_namespace: nginx-ingress
+        create_namespace: true
+        wait: true
+        force: true
+        values_files:
+          - ../kubernetes/helm-chart-apps/nginx-ingress/values.yaml
 # - name: Apply initial manifests
 #   ansible.builtin.command: kubectl apply -k {{ item }}
 #   environment:
