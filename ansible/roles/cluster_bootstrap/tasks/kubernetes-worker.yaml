@@ -43,7 +43,7 @@
   ansible.builtin.command: >-
     kubectl label node/{{ ansible_nodename }} node-role.kubernetes.io/{{ kubernetes_node_type }}=""
   environment:
-    KUBECONFIG: "{{ kubeconfig }}"
+    KUBECONFIG: "{{ kubeconfig | expanduser }}"
   register: cluster_bootstrap_node_role
   changed_when: cluster_bootstrap_node_role.rc != 0
   delegate_to: localhost

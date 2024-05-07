@@ -8,6 +8,6 @@
 - name: Get kubeconfig
   ansible.builtin.fetch:
     src: /etc/kubernetes/admin.conf
-    dest: /tmp/kubeconfig
+    dest: "{{ kubeconfig }}"
     flat: true
   when: kubernetes_node_role == "leader"
