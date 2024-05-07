@@ -1,4 +1,0 @@
-helmChart: argo-cd
-helmChartVersion: "6.7.18"
-helmChartURL: https://argoproj.github.io/argo-helm
-namespace: argocd
