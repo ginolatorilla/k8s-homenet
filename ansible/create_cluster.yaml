@@ -1,5 +1,19 @@
 ---
-- name: Virtual machines
+- name: Preparations
+  tags: s0
+  hosts: localhost
+  tasks:
+    - name: Install requirements
+      ansible.builtin.package:
+        name:
+          - kubernetes-cli
+          - helm
+      # Homebrew doesn't need root; uncomment if necessary in other OSes.
+      # become: true
+  roles:
+    - certificates
+
+- name: Compute
   tags: s1
   hosts: baremetal
   roles:
@@ -15,30 +29,29 @@
   become: true
 
 - name: Kubernetes CNI
-  tags: s3
   hosts: localhost
   tasks:
     - name: Install CNI from manifests
       ansible.builtin.command: kubectl apply -k ../kubernetes/core/00-container-networking
       environment:
-        KUBECONFIG: "{{ kubeconfig }}"
+        KUBECONFIG: "{{ kubeconfig | expanduser }}"
       register: cni_install
       changed_when: cni_install.rc != 0
     - name: Wait for CNI
       ansible.builtin.command: kubectl wait -n kube-system deploy/calico-kube-controllers --for condition=available
       environment:
-        KUBECONFIG: "{{ kubeconfig }}"
+        KUBECONFIG: "{{ kubeconfig | expanduser }}"
       register: cni_wait
       changed_when: cni_wait.rc != 0
     - name: Restart CoreDNS # TODO: prevent default CRIO CNI plugin
       ansible.builtin.command: kubectl rollout -n kube-system restart deploy/coredns
       environment:
-        KUBECONFIG: "{{ kubeconfig }}"
+        KUBECONFIG: "{{ kubeconfig | expanduser }}"
       register: coredns_restart
       changed_when: coredns_restart.rc != 0
 
 - name: Kubernetes workers
-  tags: s4
+  tags: s3
   hosts: k8sworkers
   roles:
     - role: cluster_bootstrap
@@ -47,7 +60,9 @@
   become: true
 
 - name: Kubernetes config
-  tags: s5
+  tags: s4
   hosts: localhost
   roles:
     - role: cluster_config
+      environment:
+        KUBECONFIG: "{{ kubeconfig | expanduser }}"
