@@ -33,7 +33,7 @@ envFrom:
   - secretRef:
       name: github-oauth
   - secretRef:
-      name: argocd-client
+      name: dex-clients
 
 ingress:
   enabled: true
