@@ -9,6 +9,4 @@ if [ ! -d "$VENV_DIR" ]; then
 fi
 
 source "$VENV_DIR"/bin/activate
-pushd "$(dirname "${BASH_SOURCE[0]}")/ansible" || exit
-ansible-playbook create_cluster.yaml -i inventory.yaml "$@"
-popd || exit
+ansible-playbook "$ANSIBLE_DIR"/create_cluster.yaml -i "$ANSIBLE_DIR"/inventory.yaml "$@"
