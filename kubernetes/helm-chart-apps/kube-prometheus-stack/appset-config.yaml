@@ -2,3 +2,4 @@ helmChart: kube-prometheus-stack
 helmChartVersion: 57.2.0
 helmChartURL: https://prometheus-community.github.io/helm-charts
 namespace: kube-prometheus-stack
+valuesRevision: 22-oidc-for-prometheus
