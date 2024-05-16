@@ -14,12 +14,13 @@ server:
 configs:
   cm:
     create: true
-    # oidc.config: |
-    #   name: GitHub
-    #   issuer: https://auth.apps.homenet
-    #   clientID: $argocd-client:ARGOCD_CLIENT_ID
-    #   clientSecret: $argocd-client:ARGOCD_CLIENT_SECRET
-    # oidc.tls.insecure.skip.verify: "true"
+    # The secret argocd-client must have this label: `app.kubernetes.io/part-of: argocd`
+    oidc.config: |
+      name: GitHub
+      issuer: https://auth.apps.homenet
+      clientID: $argocd-client:ARGOCD_CLIENT_ID
+      clientSecret: $argocd-client:ARGOCD_CLIENT_SECRET
+    oidc.tls.insecure.skip.verify: "true"
 
   params:
     server.insecure: true
