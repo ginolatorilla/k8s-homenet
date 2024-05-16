@@ -24,9 +24,7 @@ I followed the instructions from the [official documentation of Kubernetes](http
 
 ## Requirements
 
-- Ansible
-- Python packages
-  - `kubernetes`
+- Python 3
 - Kubernetes CLI (`kubectl`)
 - Helm
 - Physical hosts
