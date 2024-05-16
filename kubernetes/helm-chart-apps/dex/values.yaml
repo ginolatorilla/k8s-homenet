@@ -23,12 +23,17 @@ config:
       secret: "{{ .Env.ARGOCD_CLIENT_SECRET }}"
       redirectURIs:
         - https://argocd.apps.homenet/auth/callback
+    - name: Grafana
+      id: "{{ .Env.GRAFANA_CLIENT_ID }}"
+      secret: "{{ .Env.GRAFANA_CLIENT_SECRET }}"
+      redirectURIs:
+        - https:/grafana.apps.homenet/login/generic_oauth
 
 envFrom:
   - secretRef:
       name: github-oauth
   - secretRef:
-      name: argocd-client
+      name: dex-clients
 
 ingress:
   enabled: true
