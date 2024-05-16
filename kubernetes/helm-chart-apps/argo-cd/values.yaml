@@ -26,8 +26,11 @@ configs:
     server.insecure: true
 
   rbac:
-    policy.csv: ""
-    scopes: "[groups]"
+    policy.csv: |
+      g, pblatorilla+github@gmail.com, role:admin
+
+    policy.default: role:readonly
+    scopes: "[groups, email, preferred_username]"
 
 extraObjects:
   - apiVersion: argoproj.io/v1alpha1
