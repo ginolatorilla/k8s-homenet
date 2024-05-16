@@ -26,6 +26,8 @@ grafana:
           - grafana.apps.homenet
         secretName: grafana-ingress-tls
   grafana.ini:
+    server:
+      root_url: https://grafana.apps.homenet
     auth.generic_oauth:
       enabled: true
       name: Dex
