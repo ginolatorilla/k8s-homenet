@@ -16,7 +16,7 @@ configs:
     create: true
     # The secret argocd-client must have this label: `app.kubernetes.io/part-of: argocd`
     oidc.config: |
-      name: GitHub
+      name: GitHub via Dex
       issuer: https://auth.apps.homenet
       clientID: $argocd-client:ARGOCD_CLIENT_ID
       clientSecret: $argocd-client:ARGOCD_CLIENT_SECRET
