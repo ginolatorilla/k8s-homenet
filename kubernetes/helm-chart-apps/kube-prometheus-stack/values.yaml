@@ -25,6 +25,22 @@ grafana:
       - hosts:
           - grafana.apps.homenet
         secretName: grafana-ingress-tls
+  grafana.ini:
+    auth.generic_oauth:
+      enabled: true
+      name: Dex
+      scopes: openid email profile groups offline_access
+      auth_url: https://auth.apps.homenet/auth
+      token_url: https://auth.apps.homenet/token
+      api_url: https://auth.apps.homenet/userinfo
+      client_id: $__file{/etc/secrets/auth_generic_oauth/client_id}
+      client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
+  extraSecretMounts:
+    - name: auth-generic-oauth-secret-mount
+      secretName: grafana-auth-generic-oauth-secret
+      defaultMode: 0440
+      mountPath: /etc/secrets/auth_generic_oauth
+      readOnly: true
 
 prometheus:
   ingress:
