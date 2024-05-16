@@ -35,6 +35,7 @@ grafana:
       auth_url: https://auth.apps.homenet/auth
       token_url: https://auth.apps.homenet/token
       api_url: https://auth.apps.homenet/userinfo
+      tls_skip_verify_insecure: true
       client_id: $__file{/etc/secrets/auth_generic_oauth/client_id}
       client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
   extraSecretMounts:
