@@ -1,5 +1,0 @@
-helmChart: jira
-helmChartVersion: 1.20.0
-helmChartURL: https://atlassian.github.io/data-center-helm-charts
-namespace: jira
-valuesRevision: deploy-jira
