@@ -2,7 +2,7 @@ fullnameOverride: jira
 
 database:
   type: postgres72
-  url: jdbc:postgresql://postgresql-primary.postgresql:5432/jira
+  url: jdbc:postgresql://postgresql-primary.postgresql.svc.cluster.local:5432/jira
   driver: org.postgresql.Driver
   credentials:
     secretName: postgresql
