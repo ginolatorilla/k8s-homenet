@@ -1,0 +1,20 @@
+nameOverride: vault
+
+server:
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: ingress-cert-issuer
+    ingressClassName: nginx
+    hosts:
+      - vault.apps.homenet
+    tls:
+      - secretName: vault-tls
+        hosts:
+          - vault.apps.homenet
+
+  dataStorage:
+    storageClass: openebs-hostpath
+
+  standalone:
+    enabled: true
