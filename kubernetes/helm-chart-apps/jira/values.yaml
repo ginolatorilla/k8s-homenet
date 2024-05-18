@@ -18,7 +18,7 @@ ingress:
   https: true
   tlsSecretName: jira-tls
 
-jolumes:
+volumes:
   localHome:
     persistentVolumeClaim:
       create: true
