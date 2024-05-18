@@ -21,7 +21,8 @@ server:
       cert-manager.io/cluster-issuer: ingress-cert-issuer
     ingressClassName: nginx
     hosts:
-      - vault.apps.homenet
+      - host: vault.apps.homenet
+        path: []
     tls:
       - secretName: vault-tls
         hosts:
