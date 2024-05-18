@@ -1,4 +1,4 @@
-nameOverride: vault
+fullnameOverride: vault
 
 injector:
   resources:
