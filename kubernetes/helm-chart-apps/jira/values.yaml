@@ -1,0 +1,25 @@
+fullnameOverride: jira
+
+database:
+  type: postgres72
+  url: jdbc:postgresql://postgresql-primary.postgresql:5432/jira
+  driver: org.postgresql.Driver
+  credentials:
+    secretName: postgresql
+    usernameSecretKey: username
+    passwordSecretKey: password
+
+ingress:
+  create: true
+  nginx: false
+  host: jira.apps.homenet
+  annotations:
+    cert-manager.io/cluster-issuer: ingress-cert-issuer
+  https: true
+  tlsSecretName: jira-tls
+
+jolumes:
+  localHome:
+    persistentVolumeClaim:
+      create: true
+      storageClassName: openebs-jiva-csi-default
