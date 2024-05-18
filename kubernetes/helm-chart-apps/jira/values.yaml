@@ -19,6 +19,9 @@ ingress:
   tlsSecretName: jira-tls
 
 volumes:
+  sharedHome:
+    nfsPermissionFixer:
+      enabled: false
   localHome:
     persistentVolumeClaim:
       create: true
