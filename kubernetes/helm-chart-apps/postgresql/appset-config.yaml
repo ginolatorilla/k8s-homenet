@@ -2,4 +2,3 @@ helmChart: postgresql
 helmChartVersion: 15.3.3
 helmChartURL: https://charts.bitnami.com/bitnami
 namespace: postgresql
-valuesRevision: deploy-psql
