@@ -1,6 +1,22 @@
 nameOverride: vault
 
+injector:
+  resources:
+    requests:
+      cpu: 20m
+      memory: 50M
+    limits:
+      cpu: 25m
+      memory: 75M
+
 server:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 400M
+    limits:
+      cpu: 150m
+      memory: 600M
   ingress:
     enabled: true
     annotations:
@@ -14,7 +30,7 @@ server:
           - vault.apps.homenet
 
   dataStorage:
-    storageClass: openebs-hostpath
+    storageClass: openebs-jiva-csi-default
 
   standalone:
     enabled: true

@@ -13,6 +13,8 @@
         release_namespace: tigera-operator
         create_namespace: true
         wait: true
+        values_files:
+          - ../kubernetes/helm-chart-apps/tigera-operator/values.yaml
     - name: Wait for CNI
       kubernetes.core.k8s:
         definition:
@@ -95,13 +97,3 @@
         wait: true
         values_files:
           - ../kubernetes/helm-chart-apps/argo-cd/values.yaml
-# - name: Apply initial manifests
-#   ansible.builtin.command: kubectl apply -k {{ item }}
-#   environment:
-#     KUBECONFIG: "{{ kubeconfig }}"
-#   register: cluster_config_kubectl_apply
-#   changed_when: cluster_config_kubectl_apply.rc != 0
-#   loop:
-#     - ../kubernetes/core/10-ingress-controller
-#     - ../kubernetes/core/20-argocd
-#     - ../kubernetes/core/30-argocd-app-of-apps

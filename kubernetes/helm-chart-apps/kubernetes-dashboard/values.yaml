@@ -1,17 +1,63 @@
 fullnameOverride: kubernetes-dashboard
 
+kong:
+  fullnameOverride: kubernetes-dashboard-kong
+  resources:
+    requests:
+      cpu: 15m
+      memory: 750M
+    limits:
+      cpu: 20m
+      memory: 1125M
+
 app:
   ingress:
     enabled: true
     useDefaultAnnotations: false
     annotations:
-      nginx.org/ssl-services: helm-chart-apps-kubernetes-dashboard-kong-proxy
+      nginx.org/ssl-services: kubernetes-dashboard-kong-proxy
     hosts:
       - kubernetes-dashboard.apps.homenet
     ingressClassName: nginx
     issuer:
       name: ingress-cert-issuer
       scope: cluster
+
+auth:
+  resources:
+    requests:
+      cpu: 1m
+      memory: 20M
+    limits:
+      cpu: 5m
+      memory: 30M
+
+api:
+  resources:
+    requests:
+      cpu: 5m
+      memory: 24M
+    limits:
+      cpu: 10m
+      memory: 36M
+
+web:
+  resources:
+    requests:
+      cpu: 1m
+      memory: 30M
+    limits:
+      cpu: 5m
+      memory: 45M
+
+metricsScraper:
+  resources:
+    requests:
+      cpu: 1m
+      memory: 60M
+    limits:
+      cpu: 5m
+      memory: 90M
 
 extras:
   manifests:

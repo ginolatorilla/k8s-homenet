@@ -1,4 +1,11 @@
 controller:
+  resources:
+    requests:
+      cpu: 40m
+      memory: 100M
+    limits:
+      cpu: 40m
+      memory: 100M
   service:
     type: NodePort
     httpPort:

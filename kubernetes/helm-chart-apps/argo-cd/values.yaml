@@ -3,13 +3,74 @@ fullnameOverride: argocd
 global:
   domain: argocd.apps.homenet
 
+controller:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1G
+    limits:
+      cpu: "1"
+      memory: 1.5G
+
+dex:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100M
+    limits:
+      cpu: 15m
+      memory: 150M
+
+redis:
+  resources:
+    requests:
+      cpu: 3m
+      memory: 16M
+    limits:
+      cpu: 6m
+      memory: 24M
+
 server:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 120M
+    limits:
+      cpu: 100m
+      memory: 180M
   ingress:
     enabled: true
     ingressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "ingress-cert-issuer"
     tls: true
+
+repoServer:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500M
+    limits:
+      cpu: 200m
+      memory: 1G
+
+applicationSet:
+  resources:
+    requests:
+      cpu: 150m
+      memory: 150M
+    limits:
+      cpu: 250m
+      memory: 225M
+
+notifications:
+  resources:
+    requests:
+      cpu: 20m
+      memory: 80M
+    limits:
+      cpu: 25m
+      memory: 120M
 
 configs:
   cm:
