@@ -1,11 +1,14 @@
 fullnameOverride: kubernetes-dashboard
 
+kong:
+  nameOverride: kubernetes-dashboard-kong
+
 app:
   ingress:
     enabled: true
     useDefaultAnnotations: false
     annotations:
-      nginx.org/ssl-services: helm-chart-apps-kubernetes-dashboard-kong-proxy
+      nginx.org/ssl-services: kubernetes-dashboard-kong-proxy
     hosts:
       - kubernetes-dashboard.apps.homenet
     ingressClassName: nginx
