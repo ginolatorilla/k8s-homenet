@@ -6,8 +6,62 @@ localprovisioner:
 
   basePath: /var/openebs/local
 
+  resources:
+    requests:
+      cpu: 15m
+      memory: 50M
+    limits:
+      cpu: 20m
+      memory: 75M
+
+ndm:
+  resources:
+    requests:
+      cpu: 15m
+      memory: 50M
+    limits:
+      cpu: 20m
+      memory: 75M
+
+ndmOperator:
+  resources:
+    requests:
+      cpu: 40m
+      memory: 40M
+    limits:
+      cpu: 50m
+      memory: 60M
+
 jiva:
   enabled: true
+  fullnameOverride: openebs-jiva
+
+  jivaOperator:
+    resources:
+      requests:
+        cpu: 1m
+        memory: 60M
+      limits:
+        cpu: 5m
+        memory: 90M
+
+  csiController:
+    resources:
+      requests:
+        cpu: 5m
+        memory: 40M
+      limits:
+        cpu: 10m
+        memory: 60M
+
+  csiNode:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 40M
+      limits:
+        cpu: 15m
+        memory: 60M
 
   storageClass:
     name: openebs-jiva-csi-default
