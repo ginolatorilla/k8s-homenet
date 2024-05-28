@@ -3,3 +3,11 @@ fullnameOverride: metrics-server
 args:
   - --kubelet-preferred-address-types=InternalIP
   - --kubelet-insecure-tls
+
+resources:
+  requests:
+    cpu: 1m
+    memory: 80M
+  limits:
+    cpu: 5m
+    memory: 120M
