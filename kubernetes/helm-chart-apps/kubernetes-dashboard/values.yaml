@@ -7,7 +7,6 @@ kong:
       cpu: 15m
       memory: 750M
     limits:
-      cpu: 20m
       memory: 1125M
 
 app:
@@ -29,7 +28,6 @@ auth:
       cpu: 1m
       memory: 20M
     limits:
-      cpu: 5m
       memory: 30M
 
 api:
@@ -38,7 +36,6 @@ api:
       cpu: 5m
       memory: 24M
     limits:
-      cpu: 10m
       memory: 36M
 
 web:
@@ -47,7 +44,6 @@ web:
       cpu: 1m
       memory: 30M
     limits:
-      cpu: 5m
       memory: 45M
 
 metricsScraper:
@@ -56,7 +52,6 @@ metricsScraper:
       cpu: 1m
       memory: 60M
     limits:
-      cpu: 5m
       memory: 90M
 
 extras:

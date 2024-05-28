@@ -6,7 +6,6 @@ resources:
     cpu: 1m
     memory: 100M
   limits:
-    cpu: 5m
     memory: 150M
 
 webhook:
@@ -15,7 +14,6 @@ webhook:
       cpu: 5m
       memory: 40M
     limits:
-      cpu: 10m
       memory: 60M
 
 cainjector:
@@ -24,5 +22,4 @@ cainjector:
       cpu: 5m
       memory: 150M
     limits:
-      cpu: 10m
       memory: 225M
