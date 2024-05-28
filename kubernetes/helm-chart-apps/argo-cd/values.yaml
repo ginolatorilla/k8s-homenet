@@ -9,7 +9,6 @@ controller:
       cpu: 500m
       memory: 1G
     limits:
-      cpu: "1"
       memory: 1.5G
 
 dex:
@@ -18,7 +17,6 @@ dex:
       cpu: 10m
       memory: 100M
     limits:
-      cpu: 15m
       memory: 150M
 
 redis:
@@ -27,7 +25,6 @@ redis:
       cpu: 3m
       memory: 16M
     limits:
-      cpu: 6m
       memory: 24M
 
 server:
@@ -36,7 +33,6 @@ server:
       cpu: 50m
       memory: 120M
     limits:
-      cpu: 100m
       memory: 180M
   ingress:
     enabled: true
@@ -51,7 +47,6 @@ repoServer:
       cpu: 100m
       memory: 500M
     limits:
-      cpu: 200m
       memory: 1G
 
 applicationSet:
@@ -60,7 +55,6 @@ applicationSet:
       cpu: 150m
       memory: 150M
     limits:
-      cpu: 250m
       memory: 225M
 
 notifications:
@@ -69,7 +63,6 @@ notifications:
       cpu: 20m
       memory: 80M
     limits:
-      cpu: 25m
       memory: 120M
 
 configs:

@@ -6,7 +6,6 @@ injector:
       cpu: 20m
       memory: 50M
     limits:
-      cpu: 25m
       memory: 75M
 
 server:
@@ -15,7 +14,6 @@ server:
       cpu: 100m
       memory: 400M
     limits:
-      cpu: 150m
       memory: 600M
   ingress:
     enabled: true
