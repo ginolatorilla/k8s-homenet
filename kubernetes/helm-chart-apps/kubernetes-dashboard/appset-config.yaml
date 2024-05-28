@@ -2,3 +2,4 @@ helmChart: kubernetes-dashboard
 helmChartVersion: 7.1.3
 helmChartURL: https://kubernetes.github.io/dashboard
 namespace: kubernetes-dashboard
+valuesRevision: 41-impose-cpu-limits-in-all-pods
