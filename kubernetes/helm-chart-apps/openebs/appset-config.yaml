@@ -2,4 +2,3 @@ helmChart: openebs
 helmChartVersion: 3.10.0
 helmChartURL: https://openebs.github.io/charts
 namespace: openebs
-valuesRevision: 41-impose-cpu-limits-in-all-pods
