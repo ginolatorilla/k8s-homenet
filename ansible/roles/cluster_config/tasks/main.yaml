@@ -13,6 +13,8 @@
         release_namespace: tigera-operator
         create_namespace: true
         wait: true
+        values_files:
+          - ../kubernetes/helm-chart-apps/tigera-operator/values.yaml
     - name: Wait for CNI
       kubernetes.core.k8s:
         definition:
