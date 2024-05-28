@@ -4,3 +4,21 @@ global:
   storageClass: openebs-hostpath
 
 architecture: replication
+
+primary:
+  resources:
+    requests:
+      cpu: 15m
+      memory: 100M
+    limits:
+      cpu: 20m
+      memory: 150M
+
+readReplicas:
+  resources:
+    requests:
+      cpu: 15m
+      memory: 120M
+    limits:
+      cpu: 20m
+      memory: 180M
