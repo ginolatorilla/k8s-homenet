@@ -49,3 +49,11 @@ ingress:
     - hosts:
         - auth.apps.homenet
       secretName: dex-ingress-tls
+
+resources:
+  requests:
+    cpu: 5m
+    memory: 50M
+  limits:
+    cpu: 10m
+    memory: 100M
