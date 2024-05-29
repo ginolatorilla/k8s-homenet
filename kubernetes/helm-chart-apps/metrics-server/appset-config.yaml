@@ -1,4 +1,0 @@
-helmChart: metrics-server
-helmChartVersion: 3.12.0
-helmChartURL: https://kubernetes-sigs.github.io/metrics-server
-namespace: metrics-server
