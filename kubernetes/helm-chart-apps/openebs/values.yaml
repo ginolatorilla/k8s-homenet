@@ -3,9 +3,7 @@ fullnameOverride: openebs
 localprovisioner:
   deviceClass:
     enabled: false
-
   basePath: /var/openebs/local
-
   resources:
     requests:
       cpu: 15m
@@ -14,52 +12,7 @@ localprovisioner:
       memory: 75M
 
 ndm:
-  resources:
-    requests:
-      cpu: 15m
-      memory: 50M
-    limits:
-      memory: 75M
+  enabled: false
 
 ndmOperator:
-  resources:
-    requests:
-      cpu: 40m
-      memory: 40M
-    limits:
-      memory: 60M
-
-jiva:
-  enabled: true
-  fullnameOverride: openebs-jiva
-
-  jivaOperator:
-    resources:
-      requests:
-        cpu: 1m
-        memory: 60M
-      limits:
-        memory: 90M
-
-  csiController:
-    resources:
-      requests:
-        cpu: 5m
-        memory: 40M
-      limits:
-        memory: 60M
-
-  csiNode:
-    resources:
-      requests:
-        cpu: 10m
-        memory: 40M
-      limits:
-        memory: 60M
-
-  storageClass:
-    name: openebs-jiva-csi-default
-
-  defaultPolicy:
-    name: openebs-jiva-default-policy
-    replicas: 1
+  enabled: false
