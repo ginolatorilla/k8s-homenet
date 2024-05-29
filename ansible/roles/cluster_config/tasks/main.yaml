@@ -71,9 +71,8 @@
             name: postgresql
             namespace: postgresql
           data:
-            postgres-password: "{{ lookup('ansible.builtin.password', 'postgres-primary-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='postgres') }}"
-            replication-password: "{{ lookup('ansible.builtin.password', 'postgres-replica-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='replication') }}"
-      no_log: true
+            postgres-password: "{{ lookup('ansible.builtin.password', 'postgres-primary-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='postgres') | b64encode }}"
+            replication-password: "{{ lookup('ansible.builtin.password', 'postgres-replica-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='replication') | b64encode }}"
 
 - name: ArgoCD
   block:
