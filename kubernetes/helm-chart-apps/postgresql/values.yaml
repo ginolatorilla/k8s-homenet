@@ -2,6 +2,9 @@ fullnameOverride: postgresql
 
 global:
   storageClass: openebs-hostpath
+  postgresql:
+    auth:
+      existingSecret: postgresql
 
 architecture: replication
 

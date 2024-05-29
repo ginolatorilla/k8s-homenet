@@ -40,9 +40,6 @@
           kind: Namespace
           metadata:
             name: cert-manager
-            labels:
-              kubernetes.io/metadata.name: cert-manager
-              name: cert-manager
     - name: Install secret from generated CA
       kubernetes.core.k8s:
         definition:
@@ -54,6 +51,28 @@
           data:
             tls.crt: "{{ lookup('file', 'ownca.crt') | b64encode }}"
             tls.key: "{{ lookup('file', 'ownca.key') | b64encode }}"
+      no_log: true
+
+- name: PostgreSQL
+  block:
+    - name: Namespace
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: postgresql
+    - name: Install initial admin secret
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: postgresql
+            namespace: postgresql
+          data:
+            postgres-password: "{{ lookup('ansible.builtin.password', 'postgres-primary-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='postgres') }}"
+            replication-password: "{{ lookup('ansible.builtin.password', 'postgres-replica-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='replication') }}"
       no_log: true
 
 - name: ArgoCD
