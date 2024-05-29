@@ -3,9 +3,7 @@ fullnameOverride: openebs
 localprovisioner:
   deviceClass:
     enabled: false
-
   basePath: /var/openebs/local
-
   resources:
     requests:
       cpu: 15m
@@ -15,14 +13,9 @@ localprovisioner:
 
 ndm:
   enabled: false
-# ndmOperator:
-#   resources:
-#     requests:
-#       cpu: 40m
-#       memory: 40M
-#     limits:
-#       memory: 60M
 
+ndmOperator:
+  enabled: false
 # jiva:
 #   enabled: true
 #   fullnameOverride: openebs-jiva
