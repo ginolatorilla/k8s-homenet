@@ -2,3 +2,4 @@ helmChart: dex
 helmChartVersion: 0.17.0
 helmChartURL: https://charts.dexidp.io
 namespace: dex
+syncWave: -95
