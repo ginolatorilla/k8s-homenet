@@ -16,6 +16,8 @@ spec:
   template:
     metadata:
       name: "helm-chart-apps-{{ .helmChart }}"
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ default "0" .syncWave }}'
     spec:
       project: default
       destination:
