@@ -1,25 +1,20 @@
 fullnameOverride: openebs
-# localprovisioner:
-#   deviceClass:
-#     enabled: false
 
-#   basePath: /var/openebs/local
+localprovisioner:
+  deviceClass:
+    enabled: false
 
-#   resources:
-#     requests:
-#       cpu: 15m
-#       memory: 50M
-#     limits:
-#       memory: 75M
+  basePath: /var/openebs/local
 
-# ndm:
-#   resources:
-#     requests:
-#       cpu: 15m
-#       memory: 50M
-#     limits:
-#       memory: 75M
+  resources:
+    requests:
+      cpu: 15m
+      memory: 50M
+    limits:
+      memory: 75M
 
+ndm:
+  enabled: false
 # ndmOperator:
 #   resources:
 #     requests:
