@@ -1,2 +1,3 @@
 name: certs
 namespace: cert-manager
+syncWave: -99

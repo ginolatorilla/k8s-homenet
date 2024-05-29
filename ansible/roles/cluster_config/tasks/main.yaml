@@ -33,20 +33,13 @@
 
 - name: Certificate manager
   block:
-    - name: Helm repo
-      kubernetes.core.helm_repository:
-        name: jetstack
-        repo_url: https://charts.jetstack.io
-    - name: Helm chart
-      kubernetes.core.helm:
-        name: cert-manager
-        chart_ref: jetstack/cert-manager
-        chart_version: v1.14.5
-        release_namespace: cert-manager
-        create_namespace: true
-        wait: true
-        values_files:
-          - ../kubernetes/helm-chart-apps/cert-manager/values.yaml
+    - name: Namespace
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: cert-manager
     - name: Install secret from generated CA
       kubernetes.core.k8s:
         definition:
@@ -59,27 +52,28 @@
             tls.crt: "{{ lookup('file', 'ownca.crt') | b64encode }}"
             tls.key: "{{ lookup('file', 'ownca.key') | b64encode }}"
       no_log: true
-    - name: Install cluster-wide certificate issuer for ingresses
-      kubernetes.core.k8s:
-        definition: "{{ lookup('kubernetes.core.kustomize', dir='kubernetes/kustomize-apps/certs') }}"
 
-- name: Ingress controller - Nginx
+- name: PostgreSQL
   block:
-    - name: Helm chart
-      kubernetes.core.helm:
-        name: nginx-ingress
-        chart_ref: oci://ghcr.io/nginxinc/charts/nginx-ingress
-        chart_version: "1.2.0"
-        release_namespace: nginx-ingress
-        create_namespace: true
-        wait: true
-        values:
-          controller:
-            config:
-              entries:
-                external-status-address: "{{ ingress_controller_address }}"
-        values_files:
-          - ../kubernetes/helm-chart-apps/nginx-ingress/values.yaml
+    - name: Namespace
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: postgresql
+    - name: Install initial admin secret
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: postgresql
+            namespace: postgresql
+          data:
+            postgres-password: "{{ lookup('ansible.builtin.password', 'postgres-primary-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='postgres') }}"
+            replication-password: "{{ lookup('ansible.builtin.password', 'postgres-replica-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='replication') }}"
+      no_log: true
 
 - name: ArgoCD
   block:

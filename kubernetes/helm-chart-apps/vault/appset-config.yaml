@@ -3,3 +3,4 @@ helmChartVersion: 0.28.0
 helmChartURL: https://helm.releases.hashicorp.com
 namespace: vault
 valuesRevision: 23-implement-secrets-management
+syncWave: -97
