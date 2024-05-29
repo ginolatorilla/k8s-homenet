@@ -1,65 +1,64 @@
 fullnameOverride: openebs
+# localprovisioner:
+#   deviceClass:
+#     enabled: false
 
-localprovisioner:
-  deviceClass:
-    enabled: false
+#   basePath: /var/openebs/local
 
-  basePath: /var/openebs/local
+#   resources:
+#     requests:
+#       cpu: 15m
+#       memory: 50M
+#     limits:
+#       memory: 75M
 
-  resources:
-    requests:
-      cpu: 15m
-      memory: 50M
-    limits:
-      memory: 75M
+# ndm:
+#   resources:
+#     requests:
+#       cpu: 15m
+#       memory: 50M
+#     limits:
+#       memory: 75M
 
-ndm:
-  resources:
-    requests:
-      cpu: 15m
-      memory: 50M
-    limits:
-      memory: 75M
+# ndmOperator:
+#   resources:
+#     requests:
+#       cpu: 40m
+#       memory: 40M
+#     limits:
+#       memory: 60M
 
-ndmOperator:
-  resources:
-    requests:
-      cpu: 40m
-      memory: 40M
-    limits:
-      memory: 60M
+# jiva:
+#   enabled: true
+#   fullnameOverride: openebs-jiva
 
-jiva:
-  enabled: true
-  fullnameOverride: openebs-jiva
+#   jivaOperator:
+#     resources:
+#       requests:
+#         cpu: 1m
+#         memory: 60M
+#       limits:
+#         memory: 90M
 
-  jivaOperator:
-    resources:
-      requests:
-        cpu: 1m
-        memory: 60M
-      limits:
-        memory: 90M
+#   csiController:
+#     resources:
+#       requests:
+#         cpu: 5m
+#         memory: 40M
+#       limits:
+#         memory: 60M
 
-  csiController:
-    resources:
-      requests:
-        cpu: 5m
-        memory: 40M
-      limits:
-        memory: 60M
+#   csiNode:
+#     resources:
+#       requests:
+#         cpu: 10m
+#         memory: 40M
+#       limits:
+#         memory: 60M
 
-  csiNode:
-    resources:
-      requests:
-        cpu: 10m
-        memory: 40M
-      limits:
-        memory: 60M
+#   storageClass:
+#     name: openebs-jiva-csi-default
 
-  storageClass:
-    name: openebs-jiva-csi-default
-
-  defaultPolicy:
-    name: openebs-jiva-default-policy
-    replicas: 1
+#   defaultPolicy:
+#     name: openebs-jiva-default-policy
+#     replicas: 1
