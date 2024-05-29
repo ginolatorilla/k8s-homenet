@@ -27,9 +27,24 @@ server:
       - secretName: vault-tls
         hosts:
           - vault.apps.homenet
-
+  extraSecretEnvironmentVars:
+    - envName: VAULT_PG_CONNECTION_URL
+      secretName: postgresql
+      secretKey: connection-url
   dataStorage:
     enabled: false
-
   standalone:
     enabled: true
+    config: |
+      ui = true
+
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        telemetry {
+          unauthenticated_metrics_access = "true"
+        }
+      }
+      storage "postgresql" {
+      }
