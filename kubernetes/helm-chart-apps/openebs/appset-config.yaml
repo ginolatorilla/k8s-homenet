@@ -2,3 +2,4 @@ helmChart: openebs
 helmChartVersion: 3.10.0
 helmChartURL: https://openebs.github.io/charts
 namespace: openebs
+valuesRevision: debug-openebs
