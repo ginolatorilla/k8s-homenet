@@ -16,37 +16,3 @@ ndm:
 
 ndmOperator:
   enabled: false
-# jiva:
-#   enabled: true
-#   fullnameOverride: openebs-jiva
-
-#   jivaOperator:
-#     resources:
-#       requests:
-#         cpu: 1m
-#         memory: 60M
-#       limits:
-#         memory: 90M
-
-#   csiController:
-#     resources:
-#       requests:
-#         cpu: 5m
-#         memory: 40M
-#       limits:
-#         memory: 60M
-
-#   csiNode:
-#     resources:
-#       requests:
-#         cpu: 10m
-#         memory: 40M
-#       limits:
-#         memory: 60M
-
-#   storageClass:
-#     name: openebs-jiva-csi-default
-
-#   defaultPolicy:
-#     name: openebs-jiva-default-policy
-#     replicas: 1
