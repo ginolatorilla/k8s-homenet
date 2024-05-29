@@ -11,9 +11,11 @@ architecture: replication
 primary:
   initdb:
     scripts:
-      init.sql: |
-        CREATE_DATABASE vault WITH ENCODING 'UNICODE' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;
-        \c vault;
+      init.sh: |
+        createdb -U postgres vault
+        createuser -U postgres vault
+        psql -U postgres -c "\c vault;
+        GRANT ALL PRIVILEGES ON DATABASE VAULT to vault;
         CREATE TABLE vault_kv_store (
           parent_path TEXT COLLATE "C" NOT NULL,
           path        TEXT COLLATE "C",
@@ -21,7 +23,7 @@ primary:
           value       BYTEA,
           CONSTRAINT pkey PRIMARY KEY (path, key)
         );
-        CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
+        CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);"
 
   resources:
     requests:
