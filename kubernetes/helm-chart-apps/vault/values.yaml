@@ -29,7 +29,7 @@ server:
           - vault.apps.homenet
 
   dataStorage:
-    storageClass: openebs-jiva-csi-default
+    enabled: false
 
   standalone:
     enabled: true
