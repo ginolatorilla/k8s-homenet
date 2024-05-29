@@ -11,8 +11,8 @@ architecture: replication
 primary:
   initdb:
     scripts:
-      vault.sql: |
-        CREATE_DATABASE vault;
+      init.sql: |
+        CREATE_DATABASE vault WITH ENCODING 'UNICODE' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;
         \c vault;
         CREATE TABLE vault_kv_store (
           parent_path TEXT COLLATE "C" NOT NULL,
