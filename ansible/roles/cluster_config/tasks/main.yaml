@@ -56,24 +56,6 @@
             tls.key: "{{ lookup('file', 'ownca.key') | b64encode }}"
       no_log: true
 
-- name: Ingress controller - Nginx
-  block:
-    - name: Helm chart
-      kubernetes.core.helm:
-        name: nginx-ingress
-        chart_ref: oci://ghcr.io/nginxinc/charts/nginx-ingress
-        chart_version: "1.2.0"
-        release_namespace: nginx-ingress
-        create_namespace: true
-        wait: true
-        values:
-          controller:
-            config:
-              entries:
-                external-status-address: "{{ ingress_controller_address }}"
-        values_files:
-          - ../kubernetes/helm-chart-apps/nginx-ingress/values.yaml
-
 - name: ArgoCD
   block:
     - name: Helm repo

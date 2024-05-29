@@ -1,0 +1,4 @@
+helmChart: nginx-ingress
+helmChartVersion: 1.14.4
+helmChartURL: ghcr.io/nginxinc/charts
+namespace: nginx-ingress
