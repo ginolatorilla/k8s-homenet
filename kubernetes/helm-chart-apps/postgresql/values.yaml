@@ -11,11 +11,11 @@ architecture: replication
 primary:
   initdb:
     scripts:
-      10-init.sh: |
+      10-databases.sh: |
         export PGPASSWORD=$POSTGRES_PASSWORD
-        psql -U postgres -c "CREATE DATABASE vault;
-        CREATE USER vault;"
+        psql -U postgres -c "CREATE DATABASE vault;"
       20-vault.sql: |
+        CREATE USER vault;
         \c vault
         CREATE TABLE vault_kv_store (
           parent_path TEXT COLLATE "C" NOT NULL,
