@@ -12,6 +12,7 @@ primary:
   initdb:
     scripts:
       10-init.sh: |
+        export PGPASSWORD=$POSTGRES_PASSWORD
         psql -U postgres -c "CREATE DATABASE vault;
         CREATE USER vault;"
       20-vault.sql: |
