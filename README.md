@@ -37,3 +37,6 @@ I followed the instructions from the [official documentation of Kubernetes](http
 
 1. Change the variables in the inventory file at [ansible/inventory.yaml](./ansible/inventory.yaml).
 2. Run `./bootstrap.sh`.
+3. When the `vault-0` pod goes up in the `vault` namespace, connect to the pod with a shell and run the following
+   - `vault operator init` and make sure to store the output in a secure place.
+   - `vault operator unseal <key>` with three of the keys shown in the output of the previous command.
