@@ -91,8 +91,49 @@
             name: postgresql
             namespace: postgresql
           data:
-            postgres-password: "{{ lookup('ansible.builtin.password', 'postgres-primary-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='postgres') | b64encode }}"
-            replication-password: "{{ lookup('ansible.builtin.password', 'postgres-replica-password.key', chars=['ascii_letters', 'digits', 'punctuation'], seed='replication') | b64encode }}"
+            postgres-password: "{{ lookup('ansible.builtin.password', 'postgres-primary-password.key', chars=['ascii_letters', 'digits', '-_'], seed='postgres') | b64encode }}"
+            replication-password: "{{ lookup('ansible.builtin.password', 'postgres-replica-password.key', chars=['ascii_letters', 'digits', '-_'], seed='replication') | b64encode }}"
+            vault-password: "{{ lookup('ansible.builtin.password', 'postgres-vault-password.key', chars=['ascii_letters', 'digits', '-_'], seed='vault') | b64encode }}"
+      no_log: true
+    - name: Install secure initdb script to add user passwords
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: postgresql-initdb
+            namespace: postgresql
+          stringData:
+            30-vault-user.sql: |
+              ALTER USER vault with PASSWORD '{{ lookup('ansible.builtin.password', 'postgres-vault-password.key', chars=['ascii_letters', 'digits', '-_'], seed='vault') | b64encode }}'
+      no_log: true
+
+- name: HashiCorp Vault
+  block:
+    - name: Namespace
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: vault
+    - name: Install PostgreSQL connection URL
+      vars:
+        username: vault
+        password: "{{ lookup('ansible.builtin.password', 'postgres-vault-password.key', chars=['ascii_letters', 'digits', '-_'], seed='vault') | b64encode }}"
+        db_host: postgresql-primary.postgresql.svc.cluster.local
+        db_port: 5432
+        database: vault
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: postgresql
+            namespace: vault
+          stringData:
+            connection-url: "postgres://{{ username }}:{{ password }}@{{ db_host }}:{{ db_port }}/{{ database }}"
+      no_log: true
 
 - name: ArgoCD
   block:

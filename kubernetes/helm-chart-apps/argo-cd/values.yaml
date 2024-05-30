@@ -75,6 +75,11 @@ configs:
       clientID: $argocd-client:ARGOCD_CLIENT_ID
       clientSecret: $argocd-client:ARGOCD_CLIENT_SECRET
     oidc.tls.insecure.skip.verify: "true"
+    resource.customizations: |
+      admissionregistration.k8s.io/MutatingWebhookConfiguration:
+        ignoreDifferences: |
+          jsonPointers:
+          - /webhooks/0/clientConfig/caBundle
 
   params:
     server.insecure: true
