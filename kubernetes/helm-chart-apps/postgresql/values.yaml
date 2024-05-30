@@ -11,11 +11,11 @@ architecture: replication
 primary:
   initdb:
     scripts:
-      init.sh: |
-        createdb -U postgres vault
-        createuser -U postgres vault
-        psql -U postgres -c "\c vault;
-        GRANT ALL PRIVILEGES ON DATABASE VAULT to vault;
+      10-init.sh: |
+        psql -U postgres -c "CREATE DATABASE vault;
+        CREATE USER vault;"
+      20-vault.sql: |
+        \c vault
         CREATE TABLE vault_kv_store (
           parent_path TEXT COLLATE "C" NOT NULL,
           path        TEXT COLLATE "C",
@@ -23,7 +23,7 @@ primary:
           value       BYTEA,
           CONSTRAINT pkey PRIMARY KEY (path, key)
         );
-        CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);"
+        CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
 
   resources:
     requests:
