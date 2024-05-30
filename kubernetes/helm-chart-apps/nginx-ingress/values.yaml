@@ -1,6 +1,7 @@
 fullnameOverride: nginx-ingress
 
 controller:
+  customConfigMap: nginx-custom-config
   resources:
     requests:
       cpu: 40m

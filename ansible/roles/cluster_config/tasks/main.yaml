@@ -31,6 +31,26 @@
     - name: Wait for handlers
       ansible.builtin.meta: flush_handlers
 
+- name: Nginx Ingress
+  block:
+    - name: Namespace
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: nginx-ingress
+    - name: Install custom configuration
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: nginx-custom-config
+            namespace: nginx-ingress
+          data:
+            external-status-address: "{{ ingress_controller_address }}"
+
 - name: Certificate manager
   block:
     - name: Namespace
