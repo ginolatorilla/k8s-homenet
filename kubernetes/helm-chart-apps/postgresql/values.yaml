@@ -15,8 +15,9 @@ primary:
         export PGPASSWORD=$POSTGRES_PASSWORD
         psql -U postgres -c "CREATE DATABASE vault;"
       20-vault.sql: |
-        CREATE USER vault;
         \c vault
+        CREATE USER vault;
+        GRANT ALL PRIVILEGES ON DATABASE vault TO vault;
         CREATE TABLE vault_kv_store (
           parent_path TEXT COLLATE "C" NOT NULL,
           path        TEXT COLLATE "C",
@@ -25,6 +26,8 @@ primary:
           CONSTRAINT pkey PRIMARY KEY (path, key)
         );
         CREATE INDEX parent_path_idx ON vault_kv_store (parent_path);
+        GRANT ALL ON ALL TABLES IN SCHEMA public TO vault;
+    scriptsSecret: postgresql-initdb
 
   resources:
     requests:
