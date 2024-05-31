@@ -1,5 +1,6 @@
-helmChart: kube-prometheus-stack
-helmChartVersion: 57.2.0
-helmChartURL: https://prometheus-community.github.io/helm-charts
-namespace: kube-prometheus-stack
-syncWave: -95
+helmChart: grafana
+helmChartVersion: 7.3.11
+helmChartURL: https://grafana.github.io/helm-charts
+namespace: grafana
+syncWave: -94
+valuesRevision: split-kube-prometheus-stack
