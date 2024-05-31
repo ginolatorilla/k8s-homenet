@@ -3,3 +3,4 @@ helmChartVersion: 3.10.0
 helmChartURL: https://openebs.github.io/charts
 namespace: openebs
 syncWave: -99
+valuesRevision: split-kube-prometheus-stack

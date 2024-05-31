@@ -1,0 +1,6 @@
+helmChart: prometheus
+helmChartVersion: 25.21.0
+helmChartURL: https://prometheus-community.github.io/helm-charts
+namespace: prometheus
+syncWave: -95
+valuesRevision: split-kube-prometheus-stack
