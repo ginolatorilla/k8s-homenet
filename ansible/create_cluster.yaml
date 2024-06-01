@@ -18,7 +18,6 @@
   hosts: baremetal
   roles:
     - role: hypervisor
-    - role: registry
     - role: loadbalancer
     - role: virtual_machine
 
