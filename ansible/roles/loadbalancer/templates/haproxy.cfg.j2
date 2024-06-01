@@ -28,30 +28,24 @@ defaults
     timeout http-keep-alive 10s
     timeout check           10s
 
-#---------------------------------------------------------------------
-# apiserver frontend which proxys to the control plane nodes
-#---------------------------------------------------------------------
 frontend apiserver
-    bind *:{{ control_plane_port }}
+    bind {{ control_plane_address }}:{{ control_plane_port }}
     mode tcp
     option tcplog
     default_backend apiserverbackend
 
-#---------------------------------------------------------------------
-# round robin balancing for apiserver
-#---------------------------------------------------------------------
 backend apiserverbackend
     option httpchk GET /healthz
     http-check expect status 200
     mode tcp
     option ssl-hello-chk
     balance     roundrobin
-        {% for host in groups.k8scontrollers -%}
-        server {{ host }} {{ hostvars[host].ansible_host }}:8443 check
-        {% endfor %}
+    {% for host in groups.k8scontrollers -%}
+    server {{ host }} {{ hostvars[host].ansible_host }}:8443 check
+    {% endfor %}
 
 frontend ingresshttps
-    bind *:{{ ingress_controller_port }}
+    bind {{ ingress_controller_address }}:{{ ingress_controller_port }}
     mode tcp
     option tcplog
     default_backend ingresshttpsbackend
@@ -59,10 +53,20 @@ frontend ingresshttps
 backend ingresshttpsbackend
     mode tcp
     option ssl-hello-chk
-    balance     roundrobin
-        {% for host in groups.k8scontrollers -%}
-        server {{ host }} {{ hostvars[host].ansible_host }}:30443 check
-        {% endfor -%}
-        {% for host in groups.k8sworkers -%}
-        server {{ host }} {{ hostvars[host].ansible_host }}:30443 check
-        {% endfor %}
+    balance roundrobin
+    {% for host in groups.k8scontrollers -%}
+    server {{ host }} {{ hostvars[host].ansible_host }}:30443 check
+    {% endfor -%}
+    {% for host in groups.k8sworkers -%}
+    server {{ host }} {{ hostvars[host].ansible_host }}:30443 check
+    {% endfor %}
+
+frontend registry
+    bind {{ registry_address }}:{{ registry_port }} ssl crt /opt/registry/registry.pem
+    mode http
+    default_backend registrybackend
+
+backend registrybackend
+    mode http
+    balance roundrobin
+    server localhost_registry 127.0.0.1:5000 check
