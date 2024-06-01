@@ -28,41 +28,7 @@
     - name: Prepare packages directory
       ansible.builtin.file:
         path: /var/installers
-        state: directory
+        state: absent
         mode: "0755"
       register: vm_installers_dir
-    - name: CRIO apt repo signing keys
-      ansible.builtin.apt_key:
-        url: https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/Release.key
-        keyring: /etc/apt/keyrings/cri-o-apt-keyring.gpg
-    - name: CRIO apt repo
-      ansible.builtin.apt_repository:
-        repo: >-
-          deb [signed-by=/etc/apt/keyrings/cri-o-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/ /
-    - name: Kubernetes apt repo signing keys
-      ansible.builtin.apt_key:
-        url: https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
-        keyring: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    - name: Kubernetes apt repo
-      ansible.builtin.apt_repository:
-        repo: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
-        state: present
-    - name: Download Debian packages
-      ansible.builtin.shell:
-        chdir: "{{ vm_installers_dir.path }}"
-        cmd: |-
-          apt-get update
-          apt-get download {{ packages | join(' ') }}
-      vars:
-        packages:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - gpg
-          - cri-o
-          - kubelet
-          - kubeadm
-          - kubectl
-      register: download_pkg
-      changed_when: download_pkg.rc != 0
   become: true

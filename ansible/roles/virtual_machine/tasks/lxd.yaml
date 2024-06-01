@@ -24,10 +24,6 @@
         pool: homenet-k8s
         size: "{{ vm.config.disk | default(vm_disk) }}"
         type: disk
-      installers:
-        path: /opt/host-packages
-        source: "{{ vm_installers_dir.path }}"
-        type: disk
     profiles: ["default"]
     wait_for_ipv4_addresses: true
     timeout: 600
