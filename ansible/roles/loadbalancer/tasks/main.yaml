@@ -27,8 +27,6 @@
             address: "{{ control_plane_address }}"
           - name: kubernetes_ingress
             address: "{{ ingress_controller_address }}"
-          - name: registry
-            address: "{{ registry_address }}"
       notify: keepalived reconfig
     - name: Keepalived check script
       ansible.builtin.template:
@@ -45,9 +43,6 @@
         - name: kubernetes_ingress
           address: "{{ ingress_controller_address }}"
           port: "{{ ingress_controller_port }}"
-        - name: registry
-          address: "{{ registry_address }}"
-          port: "{{ registry_port }}"
       notify: keepalived reconfig
     - name: Wait for handlers
       ansible.builtin.meta: flush_handlers
