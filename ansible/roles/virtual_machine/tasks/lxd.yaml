@@ -12,8 +12,8 @@
       protocol: simplestreams
       alias: "22.04"
     config:
-      limits.cpu: "{{ vm.config.cpu | default('vm_cpu') }}"
-      limits.memory: "{{ vm.config.memory | default('vm_memory') }}"
+      limits.cpu: "{{ vm.config.cpu | default(vm_cpu) }}"
+      limits.memory: "{{ vm.config.memory | default(vm_memory) }}"
     devices:
       eth0:
         type: nic
