@@ -7,6 +7,8 @@ all:
     ingress_controller_hostname: homenet
     ingress_controller_address: "192.168.100.251" # Virtual IP must be addressable in the home router's subnet
     ingress_controller_port: "443"
+    registry_address: "192.168.100.252" # Virtual IP must be addressable in the home router's subnet
+    registry_port: "443"
     kubernetes_node_cidr: "10.0.0.1/16"
     kubernetes_service_cidr: "172.16.0.0/18"
     kubernetes_pod_cidr: "10.85.0.0/16" # CRIO's default (hardcoded); TODO: implement
