@@ -36,7 +36,7 @@ baremetal:
         size: 64GiB
       virtual_machines:
         homenet-k8s-control-0:
-          vm_memory: 4GiB
+          memory: 4GiB
           ipv4_address: "10.0.0.2"
         homenet-k8s-worker-small-b35aeecb-4c47:
           ipv4_address: "10.0.0.3"
