@@ -1,0 +1,9 @@
+[Unit]
+Description=Distribution registry
+
+[Service]
+Restart=always
+ExecStart={{ registry_dir.path }}/registry serve {{ registry_dir.path }}/config.yaml
+
+[Install]
+WantedBy=multi-user.target
