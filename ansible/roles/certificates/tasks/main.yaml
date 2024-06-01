@@ -28,29 +28,3 @@
         csr_path: "{{ ownca_csr.filename }}"
         provider: selfsigned
       register: ownca_crt
-
-- name: Registry TLS
-  block:
-    - name: Registry signing key
-      community.crypto.openssl_privatekey:
-        path: registry.key
-      register: registry_privatekey
-
-    - name: Registry certificate request
-      community.crypto.openssl_csr:
-        path: registry.csr
-        privatekey_path: "{{ registry_privatekey.filename }}"
-        common_name: registry.homenet
-        create_subject_key_identifier: true
-        use_common_name_for_san: true
-      register: registry_csr
-
-    - name: Registry certificate
-      community.crypto.x509_certificate:
-        path: registry.crt
-        privatekey_path: "{{ registry_privatekey.filename }}"
-        csr_path: "{{ registry_csr.filename }}"
-        ownca_path: "{{ ownca_crt.filename }}"
-        ownca_privatekey_path: "{{ ownca_privatekey.filename }}"
-        provider: selfsigned
-      register: registry_crt
