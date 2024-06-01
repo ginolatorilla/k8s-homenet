@@ -9,7 +9,7 @@ networks:
     project: default
 storage_pools:
   - config:
-      size: 32GiB
+      size: "{{ datastore.size }}"
     description: ""
     name: homenet-k8s
     driver: zfs

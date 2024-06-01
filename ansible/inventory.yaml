@@ -32,6 +32,8 @@ baremetal:
       loadbalancer:
         role: MASTER
         priority: "101"
+      datastore:
+        size: 64GiB
       virtual_machines:
         homenet-k8s-control-0:
           disk: 4GiB
