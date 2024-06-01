@@ -22,3 +22,13 @@
   become: true
   register: ufw
   changed_when: ufw.rc != 0
+
+- name: Download installers for the VMs
+  block:
+    - name: Prepare packages directory
+      ansible.builtin.file:
+        path: /var/installers
+        state: directory
+        mode: "0755"
+      register: vm_installers_dir
+  become: true
