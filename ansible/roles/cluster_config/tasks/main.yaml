@@ -151,3 +151,40 @@
         wait: true
         values_files:
           - ../kubernetes/helm-chart-apps/argo-cd/values.yaml
+    - name: Boostrap all ArgoCD apps
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: app-of-apps
+            namespace: argocd
+          spec:
+            project: default
+            source:
+              repoURL: https://github.com/ginolatorilla/k8s-homenet.git
+              targetRevision: HEAD
+              path: kubernetes/argocd
+            destination:
+              name: in-cluster
+              namespace: argocd
+
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+                allowEmpty: false
+              syncOptions:
+                - CreateNamespace=true
+                - PrunePropagationPolicy=foreground
+                - PruneLast=true
+                - RespectIgnoreDifferences=true
+                - ApplyOutOfSyncOnly=true
+              retry:
+                limit: 5
+                backoff:
+                  duration: 5s
+                  factor: 2
+                  maxDuration: 3m
+
+            revisionHistoryLimit: 0
