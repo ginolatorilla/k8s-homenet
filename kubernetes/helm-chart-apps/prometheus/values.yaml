@@ -1,6 +1,5 @@
-fullnameOverride: prometheus
-
 server:
+  fullnameOverride: prometheus
   ingress:
     enabled: true
     ingressClassName: nginx
