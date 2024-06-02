@@ -16,6 +16,3 @@ ndm:
 
 ndmOperator:
   enabled: false
-
-mayastor:
-  enabled: true
