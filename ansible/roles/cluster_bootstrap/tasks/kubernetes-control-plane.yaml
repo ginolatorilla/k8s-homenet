@@ -1,4 +1,52 @@
 ---
+- name: HA control plane - keepalived
+  block:
+    - name: Keepalived static pod manifest
+      ansible.builtin.copy:
+        src: files/etc/kubernetes/manifests/keepalived.yaml
+        dest: /etc/kubernetes/manifests/keepalived.yaml
+        mode: "0644"
+    - name: Keepalived config directory
+      ansible.builtin.file:
+        path: /etc/keepalived
+        state: directory
+        mode: "0755"
+      register: keepalived_config_dir
+    - name: Keepalived config
+      ansible.builtin.template:
+        src: templates/etc/keepalived/keepalived.conf.j2
+        dest: "{{ keepalived_config_dir.path }}/keepalived.conf"
+        mode: "0644"
+      vars:
+        vip: "{{ control_plane_address }}"
+    - name: Keepalived check script
+      ansible.builtin.template:
+        src: templates/etc/keepalived/check_server.sh.j2
+        dest: "{{ keepalived_config_dir.path }}/check_server.sh"
+        mode: "0744"
+      vars:
+        virtual_server_ip: "{{ control_plane_address }}"
+        virtual_server_port: "{{ control_plane_port }}"
+
+- name: HA control plane - haproxy
+  block:
+    - name: HAProxy static pod manifest
+      ansible.builtin.copy:
+        src: files/etc/kubernetes/manifests/haproxy.yaml
+        dest: /etc/kubernetes/manifests/haproxy.yaml
+        mode: "0644"
+    - name: HAProxy config directory
+      ansible.builtin.file:
+        path: /etc/haproxy
+        state: directory
+        mode: "0755"
+      register: haproxy_config_dir
+    - name: HAProxy config
+      ansible.builtin.template:
+        src: templates/etc/haproxy.cfg.j2
+        dest: "{{ haproxy_config_dir.path }}/haproxy.cfg"
+        mode: "0644"
+
 - name: Cluster bootstrapping
   ansible.builtin.command:
     cmd: kubeadm init --config {{ kubeadm.dest }}

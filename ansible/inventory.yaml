@@ -19,31 +19,6 @@ all:
 
 vm_hosts:
   hosts:
-    #   homenet-baremetal-0:
-    #     ansible_ssh_host: homenet-baremetal-0.local
-    #     ansible_become_pass: !vault |
-    #       $ANSIBLE_VAULT;1.1;AES256
-    #       65396332313230613033383663643034636638336533336135366662656561323135663666663635
-    #       6464643735313338663933636561616166636636316632310a363333343463366138376637313861
-    #       32323136303139663832333035666361373462646233376135613230623166653530613139363063
-    #       3033313766306636360a623930343638623265376331323662303361633938373734653531343961
-    #       6636
-    #     hypervisor: lxd
-    #     loadbalancer:
-    #       role: MASTER
-    #       priority: "101"
-    #     virtual_machines:
-    #       homenet-k8s-control-0:
-    #         disk: 4GiB
-    #         ipv4_address: "10.0.0.2"
-    #       homenet-k8s-worker-small-b35aeecb-4c47:
-    #         memory: 4GiB
-    #         ipv4_address: "10.0.0.3"
-    #       homenet-k8s-worker-medium-b35aeecb-9833:
-    #         cpu: 4
-    #         memory: 8GiB
-    #         disk: 16GiB
-    #         ipv4_address: "10.0.0.4"
     macbook-b0fde45e:
       ansible_connection: local
       ansible_become_pass: !vault |
@@ -59,62 +34,26 @@ vm_hosts:
         memory: 16GiB
         disk: 32GiB
 
-k8scontrollers:
+k8s_control_plane:
   hosts:
-    homenet-k8s-control-0:
-      ansible_host: "10.0.0.2"
-      ansible_host_key_checking: false
-      ansible_ssh_extra_args: >-
-        -o User=root
-        -o ForwardAgent=yes
-        -o ProxyJump=homenet-baremetal-0.local
+    homenet-baremetal-0:
+      ansible_ssh_host: homenet-baremetal-0.local
+      ansible_become_pass: !vault |
+        $ANSIBLE_VAULT;1.1;AES256
+        65396332313230613033383663643034636638336533336135366662656561323135663666663635
+        6464643735313338663933636561616166636636316632310a363333343463366138376637313861
+        32323136303139663832333035666361373462646233376135613230623166653530613139363063
+        3033313766306636360a623930343638623265376331323662303361633938373734653531343961
+        6636
       kubernetes_node_type: control
       kubernetes_node_role: leader
-    # lima-k8s-homenet-control-0:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
-    #   kubernetes_node_type: "control"
-    #   vm_host: localhost
-    #   vm_memory: 2.5GiB
-    #   cluster_bootstrap_keepalived_state: MASTER
-    #   cluster_bootstrap_keepalived_priority: "101"
-# k8sinfra:
-#   hosts:
-#     lima-k8s-homenet-infra-0:
-#       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-infra-0/ssh.config"
-#       kubernetes_node_type: "infra"
-#       vm_host: localhost
-#       vm_memory: 2.5GiB
-#       cluster_bootstrap_keepalived_state: MASTER
-#       cluster_bootstrap_keepalived_priority: "101"
+      keepalived:
+        interface: wlp2s0
+        priority: 101
 
-k8sworkers:
+k8s_workers:
   hosts:
-    homenet-k8s-worker-small-b35aeecb-4c47:
-      ansible_host: "10.0.0.3"
-      ansible_host_key_checking: false
-      ansible_ssh_extra_args: >-
-        -o User=root
-        -o ForwardAgent=yes
-        -o ProxyJump=homenet-baremetal-0.local
-      kubernetes_node_type: worker
-    homenet-k8s-worker-medium-b35aeecb-9833:
-      ansible_host: "10.0.0.4"
-      ansible_host_key_checking: false
-      ansible_ssh_extra_args: >-
-        -o User=root
-        -o ForwardAgent=yes
-        -o ProxyJump=homenet-baremetal-0.local
-      kubernetes_node_type: worker
-    # lima-k8s-homenet-worker-0:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
-    #   kubernetes_node_type: "worker"
-    #   vm_host: localhost
-    #   vm_memory: 4GiB
-    #   vm_disk: 16GiB
-
-    # lima-k8s-homenet-worker-1:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
-    #   kubernetes_node_type: "worker"
-    #   vm_host: localhost
-    #   vm_memory: 4GiB
-    #   vm_disk: 16GiB
+    macbook-b0fde45e:
+      ansible_ssh_extra_args: "-F macbook-b0fde45e-ssh.config"
+      kubernetes_node_type: "worker"
+      cluster_bootstrap_keepalived_priority: "101"

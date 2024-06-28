@@ -23,8 +23,8 @@
         vm_name: "{{ inventory_hostname }}"
 
 - name: Kubernetes control plane
-  tags: s2
-  hosts: k8scontrollers
+  tags: control_plane
+  hosts: k8s_control_plane
   roles:
     - role: cluster_bootstrap
   become: true

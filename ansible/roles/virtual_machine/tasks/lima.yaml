@@ -25,3 +25,8 @@
     creates: ~/.lima/{{ vm_name }}/*.pid
   register: vm_start
   changed_when: "{{ vm_start.rc != 0 }}"
+
+- name: Copy SSH config
+  ansible.builtin.copy:
+    src: ~/.lima/{{ vm_name}}/ssh.config
+    dest: "{{ vm_name }}-ssh.config"
