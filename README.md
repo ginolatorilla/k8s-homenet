@@ -40,3 +40,15 @@ I followed the instructions from the [official documentation of Kubernetes](http
 3. When the `vault-0` pod goes up in the `vault` namespace, connect to the pod with a shell and run the following
    - `vault operator init` and make sure to store the output in a secure place.
    - `vault operator unseal <key>` with three of the keys shown in the output of the previous command.
+
+## Issues
+
+1. LXC vms are difficult to assign external IPs. Need to find a way if the host network interface can be bridged,
+  or if downgrading to LXC containers will help. This blocks static manifests and having nodes in different physical hosts.
+2. Rate limits with the Docker public registry may prevent a full reinstall of the cluster.
+  Consider using mirroring like https://docs.gitlab.com/ee/user/packages/dependency_proxy/,
+  or change the image URLs to other public registries.
+3. Dex, ArgoCD, and Grafana needs the External secrets operator so it can bootstrap the GitHub oauth secrets.
+4. Certmanager cluster issuer might not bootstrap if controller is not available.
+5. Vault still needs a manual unseal step.
+6. Vault becomes unsealead on every pod restart.
