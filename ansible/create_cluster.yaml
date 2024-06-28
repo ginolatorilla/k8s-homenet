@@ -18,8 +18,9 @@
   tags: compute
   roles:
     - role: hypervisor
-    - role: loadbalancer
     - role: virtual_machine
+      vars:
+        vm_name: "{{ inventory_hostname }}"
 
 - name: Kubernetes control plane
   tags: s2

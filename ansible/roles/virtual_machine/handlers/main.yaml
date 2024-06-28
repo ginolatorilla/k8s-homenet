@@ -1,0 +1,6 @@
+---
+- name: Stop VM
+  ansible.builtin.command:
+    cmd: limactl stop {{ vm_name }} --force
+    removes: ~/.lima/{{ vm_name }}/*.pid
+  listen: vm reconfig

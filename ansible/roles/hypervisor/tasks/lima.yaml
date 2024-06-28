@@ -1,10 +1,9 @@
 ---
 - name: Install limactl and dependencies using the host's package manager
   ansible.builtin.package:
-    name: "{{ item }}"
-  loop:
-    - lima
-    - socket_vmnet
+    name:
+      - lima
+      - socket_vmnet
 
 - name: VM networks
   ansible.builtin.template:

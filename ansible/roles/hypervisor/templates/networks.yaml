@@ -22,21 +22,6 @@ paths:
 group: everyone
 
 networks:
-  user-v2:
-    mode: user-v2
-    # user-v2 network is experimental network mode which supports all functionalities of default usernet network and also allows vm -> vm communication.
-    # Doesn't support configuration of custom gateway; hardcoded to 192.168.5.0/24
-  shared:
-    mode: shared
-    gateway: "{{ node_network_gateway }}"
-    dhcpEnd: "{{ node_network_dhcp_end }}"
-    netmask: "{{ node_network_mask }}"
   bridged:
     mode: bridged
-    interface: en0
-    # bridged mode doesn't have a gateway; dhcp is managed by outside network
-  host:
-    mode: host
-    gateway: 192.168.106.1
-    dhcpEnd: 192.168.106.254
-    netmask: 255.255.255.0
+    interface: "{{ bridge_parent_interface }}"

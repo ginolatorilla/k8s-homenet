@@ -1,3 +1,4 @@
 ---
 - name: Select hypervisor
-  ansible.builtin.include_tasks: "{{ hypervisor }}.yaml"
+  ansible.builtin.include_tasks: lima.yaml
+  when: ansible_os_family == "Darwin"
