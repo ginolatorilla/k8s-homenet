@@ -36,6 +36,10 @@ vm_hosts:
         disk: 32GiB
 
 k8s_control_node_leader:
+  vars:
+    kubernetes_node_type: control
+    kubernetes_node_role: leader
+
   hosts:
     homenet-baremetal-0:
       ansible_ssh_host: homenet-baremetal-0.local
@@ -47,18 +51,20 @@ k8s_control_node_leader:
         3033313766306636360a623930343638623265376331323662303361633938373734653531343961
         6636
       kubernetes_node_network_interface: wlp2s0
-      kubernetes_node_type: control
-      kubernetes_node_role: leader
       kubernetes_remove_taint: true
 
 k8s_control_nodes:
   vars:
+    kubernetes_node_type: control
     kubernetes_node_role: follower
-    kubernetes_remove_taint: true
+  hosts:
+
+k8s_workers:
+  vars:
+    kubernetes_node_type: worker
 
   hosts:
     macbook-b0fde45e:
       ansible_ssh_extra_args: "-F ansible/macbook-b0fde45e-ssh.config"
       ansible_ssh_host: lima-macbook-b0fde45e
       kubernetes_node_network_interface: bridge
-      kubernetes_node_type: control

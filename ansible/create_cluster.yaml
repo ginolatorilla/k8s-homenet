@@ -39,11 +39,10 @@
   hosts: k8s_workers
   roles:
     - role: cluster_bootstrap
-      vars:
   become: true
 
-- name: Kubernetes config
-  tags: s4
+- name: Cluster config
+  tags: cluster_config
   hosts: localhost
   roles:
     - role: cluster_config
