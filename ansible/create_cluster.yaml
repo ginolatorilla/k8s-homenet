@@ -8,8 +8,7 @@
         name:
           - kubernetes-cli
           - helm
-      # Homebrew doesn't need root; uncomment if necessary in other OSes.
-      # become: true
+      become: "{{ ansible_os_family != 'Darwin' }}"
   roles:
     - role: certificates
       tags: certs
