@@ -8,8 +8,12 @@
 - name: Install Kubernetes components common for all nodes
   ansible.builtin.include_tasks: kubernetes-common.yaml
 
-- name: Install Kubernetes components for control plane
-  when: kubernetes_node_type == "control"
+- name: Install Kubernetes components for control plane (leader)
+  when: kubernetes_node_type == "control" and kubernetes_node_role == "leader"
+  ansible.builtin.include_tasks: kubernetes-control-plane-leader.yaml
+
+- name: Install Kubernetes components for control plane (follower)
+  when: kubernetes_node_type == "control" and kubernetes_node_role == "follower"
   ansible.builtin.include_tasks: kubernetes-control-plane.yaml
 
 - name: Install Kubernetes components for worker nodes

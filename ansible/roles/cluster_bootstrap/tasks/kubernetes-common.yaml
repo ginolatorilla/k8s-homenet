@@ -32,6 +32,8 @@
     dest: /etc/kubernetes/kubeadm.yaml
     mode: "0600"
   register: kubeadm
+  vars:
+    node_ip: "{{ ansible_facts[kubernetes_node_network_interface].ipv4.address }}"
   notify:
     - drain cluster
     - reset node

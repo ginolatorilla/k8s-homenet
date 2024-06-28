@@ -12,14 +12,14 @@ all:
     kubernetes_pod_cidr: "10.85.0.0/16" # CRIO's default (hardcoded); TODO: implement
     kubeconfig: ~/.kube/config.k8s-homenet
 
-    # Default values for virtual machines
+vm_hosts:
+  vars:
     vm_cpu: 2
     vm_memory: 2GiB
     vm_disk: 8GiB
 
-vm_hosts:
   hosts:
-    macbook-b0fde45e:
+    macbook:
       ansible_connection: local
       ansible_become_pass: !vault |
         $ANSIBLE_VAULT;1.1;AES256
@@ -30,11 +30,12 @@ vm_hosts:
         6538
       bridge_parent_interface: en0
       virtual_machine:
+        name: macbook-b0fde45e
         cpu: 8
         memory: 16GiB
         disk: 32GiB
 
-k8s_control_plane:
+k8s_control_node_leader:
   hosts:
     homenet-baremetal-0:
       ansible_ssh_host: homenet-baremetal-0.local
@@ -45,16 +46,19 @@ k8s_control_plane:
         32323136303139663832333035666361373462646233376135613230623166653530613139363063
         3033313766306636360a623930343638623265376331323662303361633938373734653531343961
         6636
+      kubernetes_node_network_interface: wlp2s0
       kubernetes_node_type: control
       kubernetes_node_role: leader
       kubernetes_remove_taint: true
-      keepalived:
-        interface: wlp2s0
-        priority: 101
 
-k8s_workers:
+k8s_control_nodes:
+  vars:
+    kubernetes_node_role: follower
+    kubernetes_remove_taint: true
+
   hosts:
     macbook-b0fde45e:
-      ansible_ssh_extra_args: "-F macbook-b0fde45e-ssh.config"
-      kubernetes_node_type: "worker"
-      cluster_bootstrap_keepalived_priority: "101"
+      ansible_ssh_extra_args: "-F ansible/macbook-b0fde45e-ssh.config"
+      ansible_ssh_host: lima-macbook-b0fde45e
+      kubernetes_node_network_interface: bridge
+      kubernetes_node_type: control

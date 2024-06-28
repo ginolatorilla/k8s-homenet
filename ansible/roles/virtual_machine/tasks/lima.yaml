@@ -1,14 +1,14 @@
 ---
 - name: VM config directory
   ansible.builtin.file:
-    path: ~/.lima/{{ vm_name }}
+    path: ~/.lima/{{ virtual_machine.name }}
     state: directory
     mode: "0755"
 
 - name: VM config
   ansible.builtin.template:
     src: templates/lima.yaml.j2
-    dest: ~/.lima/{{ vm_name }}/lima.yaml
+    dest: ~/.lima/{{ virtual_machine.name }}/lima.yaml
     mode: "0644"
   vars:
     vm_cpu: "{{ virtual_machine.cpu }}"
@@ -21,12 +21,12 @@
 
 - name: Start VM
   ansible.builtin.command:
-    cmd: limactl start {{ vm_name }} --tty=false
-    creates: ~/.lima/{{ vm_name }}/*.pid
+    cmd: limactl start {{ virtual_machine.name }} --tty=false
+    creates: ~/.lima/{{ virtual_machine.name }}/*.pid
   register: vm_start
   changed_when: "{{ vm_start.rc != 0 }}"
 
 - name: Copy SSH config
   ansible.builtin.copy:
-    src: ~/.lima/{{ vm_name}}/ssh.config
-    dest: "{{ vm_name }}-ssh.config"
+    src: ~/.lima/{{ virtual_machine.name }}/ssh.config
+    dest: "{{ virtual_machine.name }}-ssh.config"

@@ -14,9 +14,9 @@ vrrp_script check_server {
 
 vrrp_instance VR0 {
     state SLAVE
-    interface {{ keepalived.interface }}
+    interface {{ kubernetes_node_network_interface }}
     virtual_router_id 50
-    priority {{ keepalived.priority }}
+    priority {{ "101" if kubernetes_node_role == "leader" else "100" }}
     authentication {
         auth_type PASS
         auth_pass 12345

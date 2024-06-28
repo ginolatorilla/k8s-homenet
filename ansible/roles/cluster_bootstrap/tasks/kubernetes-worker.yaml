@@ -4,22 +4,15 @@
     src: templates/etc/default/kubelet
     dest: /etc/default/kubelet
     mode: "0644"
+  vars:
+    node_ip: "{{ ansible_facts[kubernetes_node_network_interface].ipv4.address }}"
 
 - name: Join cluster
   block:
     - name: Generate join command
       ansible.builtin.shell:
-        cmd: |-
-          set -o pipefail
-          if [ "$(kubeadm token list | tail +2 | wc -l)" -gt 0 ]; then
-            token="$(kubeadm token list | tail +2 | head -1 | awk '{print $1}')"
-            hash="$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
-              openssl dgst -sha256 -hex | sed 's/^.* //')"
-            echo kubeadm join {{ control_plane_endpoint }} --token $token --discovery-token-ca-cert-hash sha256:${hash}
-          else
-            kubeadm token create --print-join-command --description {{ cluster_name }}
-          fi
-        executable: /bin/bash
+        cmd: >-
+          echo $(kubeadm token create --print-join-command)
       register: kubernetes_join_cmd
       changed_when: kubernetes_join_cmd.rc != 0
       delegate_to: >-
@@ -34,6 +27,8 @@
           | map(attribute='inventory_hostname')
           | first
         }}
+      vars:
+        control_plane_endpoint: "{{ control_plane_hostname }}:{{ control_plane_port }}"
     - name: Run join command
       ansible.builtin.command:
         cmd: "{{ kubernetes_join_cmd.stdout }}"
