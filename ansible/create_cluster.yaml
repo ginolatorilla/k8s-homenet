@@ -1,9 +1,9 @@
 ---
 - name: Preparations
-  tags: s0
   hosts: localhost
   tasks:
     - name: Install requirements
+      tags: requirements
       ansible.builtin.package:
         name:
           - kubernetes-cli
@@ -11,11 +11,12 @@
       # Homebrew doesn't need root; uncomment if necessary in other OSes.
       # become: true
   roles:
-    - certificates
+    - role: certificates
+      tags: certs
 
 - name: Compute
-  tags: s1
-  hosts: baremetal
+  hosts: vm_hosts
+  tags: compute
   roles:
     - role: hypervisor
     - role: loadbalancer
