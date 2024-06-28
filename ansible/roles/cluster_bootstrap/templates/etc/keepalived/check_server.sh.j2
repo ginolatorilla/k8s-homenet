@@ -1,11 +1,11 @@
 #!/bin/sh
 
 errorExit() {
-    echo "*** $*" 1>&2
-    exit 1
+    echo "*** $1" 1>&2
+    exit $2
 }
 
-curl --silent --max-time 2 --insecure https://localhost:{{ virtual_server_port }}/ -o /dev/null || errorExit "Error GET https://localhost:{{ virtual_server_port }}/"
+nc localhost {{ virtual_server_port }} -z || errorExit "Error localhost:{{ virtual_server_port }} not open" 1
 if ip addr | grep -q {{ virtual_server_ip }}; then
-    curl --silent --max-time 2 --insecure https://{{ virtual_server_ip }}:{{ virtual_server_port }}/ -o /dev/null || errorExit "Error GET https://{{ virtual_server_ip }}:{{ virtual_server_port }}/"
+    nc {{ virtual_server_ip }} {{ virtual_server_port }} -z || errorExit "Error {{ virtual_server_ip }}:{{ virtual_server_port }} not open" 2
 fi
