@@ -32,23 +32,21 @@ baremetal:
       loadbalancer:
         role: MASTER
         priority: "101"
+      datastore:
+        size: 64GiB
       virtual_machines:
         homenet-k8s-control-0:
-          disk: 4GiB
+          memory: 4GiB
           ipv4_address: "10.0.0.2"
         homenet-k8s-worker-small-b35aeecb-4c47:
-          memory: 4GiB
+          disk: 18GiB
           ipv4_address: "10.0.0.3"
-        homenet-k8s-worker-medium-b35aeecb-9833:
-          cpu: 4
-          memory: 8GiB
-          disk: 16GiB
+        homenet-k8s-worker-small-b35aeecb-9833:
+          disk: 18GiB
           ipv4_address: "10.0.0.4"
-  # localhost:
-  #   ansible_connection: local
-  #   node_network_gateway: "192.168.10.1"
-  #   node_network_dhcp_end: "192.168.10.30"
-  #   node_network_mask: "255.255.255.224"
+        homenet-k8s-worker-small-b35aeecb-61ed:
+          disk: 18GiB
+          ipv4_address: "10.0.0.5"
 
 k8scontrollers:
   hosts:
@@ -61,22 +59,6 @@ k8scontrollers:
         -o ProxyJump=homenet-baremetal-0.local
       kubernetes_node_type: control
       kubernetes_node_role: leader
-    # lima-k8s-homenet-control-0:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-control-0/ssh.config"
-    #   kubernetes_node_type: "control"
-    #   vm_host: localhost
-    #   vm_memory: 2.5GiB
-    #   cluster_bootstrap_keepalived_state: MASTER
-    #   cluster_bootstrap_keepalived_priority: "101"
-# k8sinfra:
-#   hosts:
-#     lima-k8s-homenet-infra-0:
-#       ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-infra-0/ssh.config"
-#       kubernetes_node_type: "infra"
-#       vm_host: localhost
-#       vm_memory: 2.5GiB
-#       cluster_bootstrap_keepalived_state: MASTER
-#       cluster_bootstrap_keepalived_priority: "101"
 
 k8sworkers:
   hosts:
@@ -88,7 +70,7 @@ k8sworkers:
         -o ForwardAgent=yes
         -o ProxyJump=homenet-baremetal-0.local
       kubernetes_node_type: worker
-    homenet-k8s-worker-medium-b35aeecb-9833:
+    homenet-k8s-worker-small-b35aeecb-9833:
       ansible_host: "10.0.0.4"
       ansible_host_key_checking: false
       ansible_ssh_extra_args: >-
@@ -96,16 +78,11 @@ k8sworkers:
         -o ForwardAgent=yes
         -o ProxyJump=homenet-baremetal-0.local
       kubernetes_node_type: worker
-    # lima-k8s-homenet-worker-0:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-0/ssh.config"
-    #   kubernetes_node_type: "worker"
-    #   vm_host: localhost
-    #   vm_memory: 4GiB
-    #   vm_disk: 16GiB
-
-    # lima-k8s-homenet-worker-1:
-    #   ansible_ssh_extra_args: "-F /Users/gino.latorilla/.lima/k8s-homenet-worker-1/ssh.config"
-    #   kubernetes_node_type: "worker"
-    #   vm_host: localhost
-    #   vm_memory: 4GiB
-    #   vm_disk: 16GiB
+    homenet-k8s-worker-small-b35aeecb-61ed:
+      ansible_host: "10.0.0.5"
+      ansible_host_key_checking: false
+      ansible_ssh_extra_args: >-
+        -o User=root
+        -o ForwardAgent=yes
+        -o ProxyJump=homenet-baremetal-0.local
+      kubernetes_node_type: worker

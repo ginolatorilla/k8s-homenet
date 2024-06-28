@@ -1,6 +1,5 @@
-fullnameOverride: prometheus
-
 server:
+  fullnameOverride: prometheus
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -14,6 +13,8 @@ server:
         secretName: prometheus-ingress-tls
   statefulSet:
     enabled: true
+  persistentVolume:
+    storageClass: openebs-jiva-csi-default
 
 alertmanager:
   enabled: false
