@@ -60,3 +60,15 @@
     flat: true
     mode: "0600"
   when: kubernetes_node_role == "leader"
+
+- name: Remove taints
+  ansible.builtin.command: >-
+    kubectl taint node/{{ ansible_nodename }} node-role.kubernetes.io/control-plane-
+  environment:
+    KUBECONFIG: "{{ kubeconfig | expanduser }}"
+  register: remove_taint
+  changed_when: remove_taint.rc != 0
+  delegate_to: localhost
+  when: kubernetes_remove_taint
+  become: false
+  ignore_errors: true

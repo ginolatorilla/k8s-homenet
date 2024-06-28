@@ -47,6 +47,7 @@ k8s_control_plane:
         6636
       kubernetes_node_type: control
       kubernetes_node_role: leader
+      kubernetes_remove_taint: true
       keepalived:
         interface: wlp2s0
         priority: 101
