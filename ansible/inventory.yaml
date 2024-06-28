@@ -39,10 +39,13 @@ baremetal:
           memory: 4GiB
           ipv4_address: "10.0.0.2"
         homenet-k8s-worker-small-b35aeecb-4c47:
+          disk: 18GiB
           ipv4_address: "10.0.0.3"
         homenet-k8s-worker-small-b35aeecb-9833:
+          disk: 18GiB
           ipv4_address: "10.0.0.4"
         homenet-k8s-worker-small-b35aeecb-61ed:
+          disk: 18GiB
           ipv4_address: "10.0.0.5"
 
 k8scontrollers:
